@@ -214,7 +214,7 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
       </div>
 
       {/* Fault codes select */}
-      <div style={{ width: 540, flexShrink: 0 }}>
+      <div style={{ width: 420, flexShrink: 0 }}>
         <LabeledControl label="Fault codes">
           <Select<FaultCodeOption, true>
             isMulti
