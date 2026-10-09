@@ -13,9 +13,8 @@ export function todayISO(): ISODate {
   return toISO(new Date())
 }
 
-// Default end date is today — period shows recent history ending at today
 export function centeredEnd(_view: ViewMode): ISODate {
-  return todayISO()
+  return toISO(addDays(new Date(), 15))
 }
 
 // Returns [startDate, endDate] for a period ending at 'end'
