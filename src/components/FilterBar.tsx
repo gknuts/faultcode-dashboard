@@ -6,7 +6,7 @@ import type { Asset, FaultCode, ViewMode, Filters, ISODate } from '../data/types
 import { formatPeriodText } from '../lib/dates'
 
 const selectStyles = {
-  control: (base: object) => ({ ...base, background: '#1C1C1E', border: '1px solid #3A3A3C', borderRadius: 8, minHeight: 68, cursor: 'pointer', boxShadow: 'none' }),
+  control: (base: object) => ({ ...base, background: '#1C1C1E', border: '1px solid #3A3A3C', borderRadius: 8, minHeight: 48, cursor: 'pointer', boxShadow: 'none' }),
   menu: (base: object) => ({ ...base, background: '#1C1C1E', border: '1px solid #3A3A3C' }),
   option: (base: object, state: { isFocused: boolean }) => ({ ...base, background: state.isFocused ? '#2A2A2C' : '#1C1C1E', color: '#FFFFFF', cursor: 'pointer' }),
   multiValue: (base: object) => ({ ...base, background: '#2A2A2C' }),

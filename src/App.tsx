@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { useStore } from './store/index'
-import { Header } from './components/Header'
 import FilterBar from './components/FilterBar'
 import { AssetList } from './components/AssetList'
 import type { VirtualRow } from './components/AssetList'
@@ -348,9 +347,6 @@ export default function App() {
         background: '#000000',
       }}
     >
-      {/* Header — 48px */}
-      <Header />
-
       {/* FilterBar — 96px */}
       <FilterBar periodStart={periodStart} periodEnd={periodEnd} />
 
