@@ -45,7 +45,7 @@ export default function App() {
   const [menuReferenceEl, setMenuReferenceEl] = useState<Element | null>(null)
 
   // Timeline width state
-  const [timelineWidth, setTimelineWidth] = useState(800)
+  const [timelineWidth, setTimelineWidth] = useState(() => Math.max(0, window.innerWidth - 420 - 56))
   const timelineContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
