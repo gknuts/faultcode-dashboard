@@ -6,7 +6,7 @@ const ASSET_COUNT = 25
 const FAULT_CODE_COUNT = 120  // distributed among assets, not all per asset
 // Range: today-74 to today+15 = 90 days, covers centered 1M view (±15 days)
 const DAYS_BEFORE = 74
-const DAYS_AFTER = 15
+const DAYS_AFTER = 85
 const OCCURRENCE_RATE = 0.4
 const ABNORMAL_RATE = 0.3
 
@@ -122,6 +122,43 @@ for (const asset of assets) {
       }
 
       occurrences.push(occ)
+    }
+  }
+}
+
+// Gap-fill pass: ensure no (asset, faultCode) pair has more than 1 consecutive day without data
+const daysInRange: string[] = []
+for (let d = 0; d < DAYS_BEFORE + DAYS_AFTER + 1; d++) {
+  daysInRange.push(isoDate(addDays(subDays(t, DAYS_BEFORE), d)))
+}
+
+const pairDaysWithData = new Map<string, Set<string>>()
+for (const occ of occurrences) {
+  const key = occ.assetId + '|' + occ.faultCode
+  if (!pairDaysWithData.has(key)) pairDaysWithData.set(key, new Set())
+  pairDaysWithData.get(key)!.add(occ.date)
+}
+
+for (const asset of assets) {
+  const assignedCodes = assetFaultCodes.get(asset.id)!
+  for (const code of assignedCodes) {
+    const key = asset.id + '|' + code
+    if (!pairDaysWithData.has(key)) pairDaysWithData.set(key, new Set())
+    const hasDays = pairDaysWithData.get(key)!
+    let emptyStreak = 0
+    for (const date of daysInRange) {
+      if (hasDays.has(date)) {
+        emptyStreak = 0
+        continue
+      }
+      emptyStreak++
+      if (emptyStreak >= 4) {
+        const statusH = hash(asset.id + code + date + 'fillstatus')
+        const status: 'abnormal' | 'normal' = (statusH % 100) / 100 < ABNORMAL_RATE ? 'abnormal' : 'normal'
+        occurrences.push({ assetId: asset.id, faultCode: code, date, count: 1, status })
+        hasDays.add(date)
+        emptyStreak = 0
+      }
     }
   }
 }
