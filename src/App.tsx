@@ -151,6 +151,11 @@ export default function App() {
       // Fault code rows
       const codesInPeriod = selectedCodes.length > 0 ? selectedCodes : data.faultCodes.map((fc) => fc.code)
 
+      const bothStatusFilters = filters.abnormal && filters.normal
+      const abnormalCodeRows: Omit<VirtualRow, 'start' | 'index'>[] = []
+      const normalCodeRows: Omit<VirtualRow, 'start' | 'index'>[] = []
+      const otherCodeRows: Omit<VirtualRow, 'start' | 'index'>[] = []
+
       for (const code of codesInPeriod) {
         const rowKey = makeRowKey(asset.id, code)
         const occsInPeriod = occurrencesByRow.get(rowKey)
@@ -166,36 +171,26 @@ export default function App() {
         if (!showInteresting && !showNotInteresting) {
           // show nothing? show all by default when both unchecked
         } else if (showInteresting && !showNotInteresting) {
-          // only show interesting (not hidden)
           if (isHidden) continue
         } else if (!showInteresting && showNotInteresting) {
-          // only show not interesting (hidden)
           if (!isHidden) continue
         }
-        // both checked: show all
 
         // Apply row-level normal/abnormal filter
-        // Default (both unchecked): mixed only (≥1 abnormal AND ≥1 normal)
-        // normal checked: also include purely-normal rows (0 abnormal)
-        // abnormal checked: also include purely-abnormal rows (0 normal)
         const sf = rowStatusFlags.get(rowKey)
         const hasAbnormal = sf?.hasAbnormal ?? false
         const hasNormal = sf?.hasNormal ?? false
         if (!filters.normal && !filters.abnormal) {
-          // default: mixed only (has both types)
           if (!hasAbnormal || !hasNormal) continue
         } else if (filters.abnormal && !filters.normal) {
-          // purely abnormal only (no normal occurrences)
           if (!hasAbnormal || hasNormal) continue
         } else if (filters.normal && !filters.abnormal) {
-          // purely normal only (no abnormal occurrences)
           if (!hasNormal || hasAbnormal) continue
         } else {
-          // both checked: purely-abnormal + purely-normal, skip mixed
           if (hasAbnormal && hasNormal) continue
         }
 
-        const codeRow: VirtualRow = {
+        const codeRow: Omit<VirtualRow, 'start' | 'index'> = {
           type: 'code',
           key: `code-${asset.id}-${code}`,
           assetId: asset.id,
@@ -204,11 +199,30 @@ export default function App() {
           faultCodeDesc: faultCodeMap.get(code)?.description,
           isHidden,
           height: 64,
-          start: offset,
-          index: idx++,
         }
-        rows.push(codeRow)
-        offset += 64
+
+        if (bothStatusFilters) {
+          if (hasAbnormal) abnormalCodeRows.push(codeRow)
+          else normalCodeRows.push(codeRow)
+        } else {
+          otherCodeRows.push(codeRow)
+        }
+      }
+
+      // Emit rows, with separator between abnormal and normal groups when both filters checked
+      const codeRowsToEmit = bothStatusFilters
+        ? [...abnormalCodeRows, ...(abnormalCodeRows.length > 0 && normalCodeRows.length > 0 ? [null] : []), ...normalCodeRows]
+        : otherCodeRows
+
+      for (const r of codeRowsToEmit) {
+        if (r === null) {
+          // separator
+          rows.push({ type: 'separator', key: `sep-${asset.id}-${idx}`, assetId: '', assetLabel: '', isHidden: false, height: 192, start: offset, index: idx++ })
+          offset += 20
+        } else {
+          rows.push({ ...r, start: offset, index: idx++ })
+          offset += r.height
+        }
       }
     }
 
@@ -508,6 +522,22 @@ export default function App() {
               }}
             >
               {renderedVirtualRows.map((row) => {
+                if (row.type === 'separator') {
+                  return (
+                    <div
+                      key={row.key}
+                      style={{
+                        position: 'absolute',
+                        top: row.start,
+                        left: 0,
+                        width: timelineWidth,
+                        height: row.height,
+                        background: '#0B0B0C',
+                      }}
+                    />
+                  )
+                }
+
                 if (row.type === 'asset') {
                   return (
                     <div
@@ -599,6 +629,22 @@ export default function App() {
               }}
             >
               {renderedVirtualRows.map((row) => {
+                if (row.type === 'separator') {
+                  return (
+                    <div
+                      key={row.key}
+                      style={{
+                        position: 'absolute',
+                        top: row.start,
+                        left: 0,
+                        width: 56,
+                        height: row.height,
+                        background: '#0B0B0C',
+                      }}
+                    />
+                  )
+                }
+
                 if (row.type === 'asset') {
                   return (
                     <div

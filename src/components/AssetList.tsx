@@ -3,7 +3,7 @@ import { useStore } from '../store/index'
 import type { FaultCode } from '../data/types'
 
 export interface VirtualRow {
-  type: 'asset' | 'code'
+  type: 'asset' | 'code' | 'separator'
   key: string
   assetId: string
   assetLabel: string
@@ -27,6 +27,22 @@ export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
   return (
     <div style={{ position: 'relative', height: totalHeight, width: 420 }}>
       {rows.map((row) => {
+        if (row.type === 'separator') {
+          return (
+            <div
+              key={row.key}
+              style={{
+                position: 'absolute',
+                top: row.start,
+                left: 0,
+                width: 420,
+                height: row.height,
+                background: '#0B0B0C',
+              }}
+            />
+          )
+        }
+
         if (row.type === 'asset') {
           const isCollapsed = collapsedAssets.includes(row.assetId)
           return (
