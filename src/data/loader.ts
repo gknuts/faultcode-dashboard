@@ -44,12 +44,12 @@ export async function loadFaultData(): Promise<FaultData> {
 
   const occurrences = Array.from(occMap.values())
 
-  // Validate groups: all members of same groupId must share assetId and date
-  const groupMembers = new Map<string, { assetId: string; date: string }[]>()
+  // Validate groups: all members of same groupId must share assetId
+  const groupMembers = new Map<string, string[]>()
   for (const occ of occurrences) {
     if (!occ.groupId) continue
     const members = groupMembers.get(occ.groupId) ?? []
-    members.push({ assetId: occ.assetId, date: occ.date })
+    members.push(occ.assetId)
     groupMembers.set(occ.groupId, members)
   }
 
@@ -57,7 +57,7 @@ export async function loadFaultData(): Promise<FaultData> {
   for (const [groupId, members] of groupMembers) {
     const first = members[0]
     for (const m of members) {
-      if (m.assetId !== first.assetId || m.date !== first.date) {
+      if (m !== first) {
         console.warn('[fcd] Group violates constraint:', groupId)
         invalidGroups.add(groupId)
         break
