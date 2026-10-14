@@ -92,6 +92,27 @@ export default function App() {
     return map
   }, [data, dates])
 
+  // Build per-row status flags (considering validations): hasAbnormal, hasNormal
+  const rowStatusFlags = useMemo(() => {
+    if (!data) return new Map<string, { hasAbnormal: boolean; hasNormal: boolean }>()
+    const dateSet = new Set(dates)
+    const flags = new Map<string, { hasAbnormal: boolean; hasNormal: boolean }>()
+    for (const occ of data.occurrences) {
+      if (!dateSet.has(occ.date)) continue
+      const rowKey = makeRowKey(occ.assetId, occ.faultCode)
+      const bubbleKey = makeBubbleKey(occ.assetId, occ.faultCode, occ.date)
+      const effectiveStatus = validations[bubbleKey]?.status ?? occ.status
+      let entry = flags.get(rowKey)
+      if (!entry) {
+        entry = { hasAbnormal: false, hasNormal: false }
+        flags.set(rowKey, entry)
+      }
+      if (effectiveStatus === 'abnormal') entry.hasAbnormal = true
+      else entry.hasNormal = true
+    }
+    return flags
+  }, [data, dates, validations])
+
   // Build virtualRows
   const virtualRowItems = useMemo((): VirtualRow[] => {
     if (!data) return []
@@ -153,6 +174,27 @@ export default function App() {
         }
         // both checked: show all
 
+        // Apply row-level normal/abnormal filter
+        // Default (both unchecked): mixed only (≥1 abnormal AND ≥1 normal)
+        // normal checked: also include purely-normal rows (0 abnormal)
+        // abnormal checked: also include purely-abnormal rows (0 normal)
+        const sf = rowStatusFlags.get(rowKey)
+        const hasAbnormal = sf?.hasAbnormal ?? false
+        const hasNormal = sf?.hasNormal ?? false
+        if (!filters.normal && !filters.abnormal) {
+          // default: mixed only (has both types)
+          if (!hasAbnormal || !hasNormal) continue
+        } else if (filters.abnormal && !filters.normal) {
+          // purely abnormal only (no normal occurrences)
+          if (!hasAbnormal || hasNormal) continue
+        } else if (filters.normal && !filters.abnormal) {
+          // purely normal only (no abnormal occurrences)
+          if (!hasNormal || hasAbnormal) continue
+        } else {
+          // both checked: purely-abnormal + purely-normal, skip mixed
+          if (hasAbnormal && hasNormal) continue
+        }
+
         const codeRow: VirtualRow = {
           type: 'code',
           key: `code-${asset.id}-${code}`,
@@ -181,6 +223,7 @@ export default function App() {
     filters,
     faultCodeMap,
     occurrencesByRow,
+    rowStatusFlags,
   ])
 
   const totalHeight = virtualRowItems.reduce((sum, r) => sum + r.height, 0)
@@ -521,8 +564,6 @@ export default function App() {
                         const isValidated = !!validation
                         if (isValidated && !filters.validated) return null
                         if (!isValidated && !filters.notValidated) return null
-                        if (status === 'abnormal' && !filters.abnormal) return null
-                        if (status === 'normal' && !filters.normal) return null
 
                         const fill = status === 'normal' ? '#2ECC71' : '#F0436A'
                         const fillOpacity = status === 'normal' ? 0.4 : 1
