@@ -28,7 +28,7 @@ export function readUrlState(): UrlState {
   const filtersRaw = params.get('filters') ?? ''
   const filterSet = filtersRaw
     ? new Set(filtersRaw.split(',').filter(k => ALL_FILTER_KEYS.includes(k as never)))
-    : new Set(ALL_FILTER_KEYS)
+    : new Set(['val', 'nval', 'int', 'nint'])
 
   const filters: Filters = {
     validated:     filterSet.has('val'),
