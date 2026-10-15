@@ -61,6 +61,7 @@ export function QualificationMenu({ referenceEl, currentStatus, onQualify, onClo
     color: '#FFFFFF',
     cursor: 'pointer',
     fontFamily: 'inherit',
+    outline: 'none',
   })
 
   return (
