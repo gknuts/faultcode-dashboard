@@ -22,7 +22,7 @@ interface AssetListProps {
 }
 
 export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
-  const { collapsedAssets, toggleCollapsedAsset, setSelectedAssets, setFilter } = useStore()
+  const { collapsedAssets, toggleCollapsedAsset, setSelectedAssets, setSelectedCodes, setFilter } = useStore()
 
   return (
     <div style={{ position: 'relative', height: totalHeight, width: 420, background: '#000000' }}>
@@ -105,6 +105,7 @@ export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
           >
             {/* Badge */}
             <div
+              onClick={() => { if (row.faultCode) setSelectedCodes([row.faultCode]) }}
               style={{
                 marginLeft: 72,
                 background: '#1C1C1E',
@@ -117,6 +118,7 @@ export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
                 minWidth: 72,
                 textAlign: 'center',
                 flexShrink: 0,
+                cursor: 'pointer',
               }}
             >
               {row.faultCode}

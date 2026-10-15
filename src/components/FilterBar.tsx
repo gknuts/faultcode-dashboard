@@ -168,6 +168,25 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
     >
       {/* Asset select */}
       <div style={{ display: 'flex', alignItems: 'stretch', gap: 8, flexShrink: 0 }}>
+        {selectedCodes.length > 0 && (
+          <button
+            onClick={() => setSelectedCodes([])}
+            style={{
+              display: 'flex',
+              padding: '0 2px',
+              alignItems: 'center',
+              gap: 10,
+              alignSelf: 'stretch',
+              borderRadius: 16777200,
+              background: '#5831E2',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#FFFFFF',
+            }}
+          >
+            <ChevronLeft size={16} />
+          </button>
+        )}
         {selectedAssets.length > 0 && (
           <button
             onClick={() => {
