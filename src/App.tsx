@@ -81,6 +81,7 @@ export default function App() {
     const map = new Map<string, Map<string, number>>()
     for (const occ of data.occurrences) {
       if (!dateSet.has(occ.date)) continue
+      if (occ.count === 0) continue
       const key = makeRowKey(occ.assetId, occ.faultCode)
       let inner = map.get(key)
       if (!inner) {
@@ -99,6 +100,7 @@ export default function App() {
     const flags = new Map<string, { hasAbnormal: boolean; hasNormal: boolean }>()
     for (const occ of data.occurrences) {
       if (!dateSet.has(occ.date)) continue
+      if (occ.count === 0) continue
       const rowKey = makeRowKey(occ.assetId, occ.faultCode)
       const bubbleKey = makeBubbleKey(occ.assetId, occ.faultCode, occ.date)
       const effectiveStatus = validations[bubbleKey]?.status ?? occ.status
@@ -142,23 +144,7 @@ export default function App() {
         if (!hasAnyOccurrence) continue
       }
 
-      // Asset row
-      const assetRow: VirtualRow = {
-        type: 'asset',
-        key: `asset-${asset.id}`,
-        assetId: asset.id,
-        assetLabel: asset.label,
-        isHidden: false,
-        height: 56,
-        start: offset,
-        index: idx++,
-      }
-      rows.push(assetRow)
-      offset += 56
-
-      if (collapsedAssets.includes(asset.id)) continue
-
-      // Fault code rows
+      // Compute code rows before emitting asset row, so we can skip assets with no visible rows
       const codesInPeriod = selectedCodes.length > 0 ? selectedCodes : data.faultCodes.map((fc) => fc.code)
 
       const bothStatusFilters = filters.abnormal && filters.normal
@@ -219,11 +205,29 @@ export default function App() {
         }
       }
 
-      // Emit rows, with separator between abnormal and normal groups when both filters checked
       const codeRowsToEmit = bothStatusFilters
         ? [...abnormalCodeRows, ...(abnormalCodeRows.length > 0 && normalCodeRows.length > 0 ? [null] : []), ...normalCodeRows]
         : otherCodeRows
 
+      // Skip asset if no visible code rows
+      if (codeRowsToEmit.length === 0) continue
+
+      // Asset row
+      rows.push({
+        type: 'asset',
+        key: `asset-${asset.id}`,
+        assetId: asset.id,
+        assetLabel: asset.label,
+        isHidden: false,
+        height: 56,
+        start: offset,
+        index: idx++,
+      })
+      offset += 56
+
+      if (collapsedAssets.includes(asset.id)) continue
+
+      // Emit code rows, with separator between abnormal and normal groups when both filters checked
       for (const r of codeRowsToEmit) {
         if (r === null) {
           // separator
