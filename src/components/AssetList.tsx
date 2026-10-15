@@ -25,7 +25,7 @@ export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
   const { collapsedAssets, toggleCollapsedAsset } = useStore()
 
   return (
-    <div style={{ position: 'relative', height: totalHeight, width: 420 }}>
+    <div style={{ position: 'relative', height: totalHeight, width: 420, background: '#000000' }}>
       {rows.map((row) => {
         if (row.type === 'separator') {
           return (

@@ -250,13 +250,13 @@ export default function App() {
     rowStatusFlags,
   ])
 
-  const totalHeight = virtualRowItems.reduce((sum, r) => sum + r.height, 0)
+  const totalHeight = virtualRowItems.reduce((sum, r) => sum + r.height + (r.type === 'code' ? 7.5 : 0), 0)
 
   // Virtualizer
   const rowVirtualizer = useVirtualizer({
     count: virtualRowItems.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: (i) => virtualRowItems[i]?.height ?? 64,
+    estimateSize: (i) => (virtualRowItems[i]?.height ?? 64) + (virtualRowItems[i]?.type === 'code' ? 7.5 : 0),
     overscan: 5,
   })
 
@@ -478,7 +478,7 @@ export default function App() {
           onScroll={handleScroll}
           style={{ flex: 1, overflowY: 'auto', position: 'relative' }}
         >
-          <div style={{ position: 'relative', height: totalHeight }}>
+          <div style={{ position: 'relative', height: totalHeight, background: '#000000' }}>
             {/* Today vertical line — spanning full scrollable area */}
             {todayX !== null && (
               <div
