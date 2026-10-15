@@ -1,7 +1,8 @@
 import type { FaultData, Asset, FaultCode, Group, DailyOccurrence } from './types'
 
 export async function loadFaultData(): Promise<FaultData> {
-  const res = await fetch('/data/faults.json')
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+  const res = await fetch(`${base}/data/faults.json`)
   if (!res.ok) throw new Error('HTTP ' + res.status)
   const raw = await res.json() as Partial<FaultData>
 
