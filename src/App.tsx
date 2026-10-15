@@ -272,13 +272,13 @@ export default function App() {
     rowStatusFlags,
   ])
 
-  const totalHeight = virtualRowItems.reduce((sum, r) => sum + r.height + (r.type === 'code' ? 7.5 : 0), 0)
+  const totalHeight = virtualRowItems.reduce((sum, r) => sum + r.height + (r.type === 'code' || (r.type === 'asset' && !!r.faultCode) ? 7.5 : 0), 0)
 
   // Virtualizer
   const rowVirtualizer = useVirtualizer({
     count: virtualRowItems.length,
     getScrollElement: () => scrollRef.current,
-    estimateSize: (i) => (virtualRowItems[i]?.height ?? 64) + (virtualRowItems[i]?.type === 'code' ? 7.5 : 0),
+    estimateSize: (i) => (virtualRowItems[i]?.height ?? 64) + (virtualRowItems[i]?.type === 'code' || (virtualRowItems[i]?.type === 'asset' && !!virtualRowItems[i]?.faultCode) ? 7.5 : 0),
     overscan: 5,
   })
 
