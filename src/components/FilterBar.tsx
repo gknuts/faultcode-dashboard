@@ -122,7 +122,7 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
   }))
 
   const selectedAssetOptions = assetOptions.filter(o => selectedAssets.includes(o.value))
-  const selectedCodeOptions = faultCodeOptions.filter(o => selectedCodes.includes(o.value))
+  const selectedCodeOption = faultCodeOptions.find(o => selectedCodes.includes(o.value)) ?? null
 
   const periodText = formatPeriodText(periodStart, periodEnd)
 
@@ -132,10 +132,9 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
     return `${options.length} assets`
   }
 
-  function formatCodeValue(options: readonly FaultCodeOption[]) {
-    if (options.length === 0) return 'All'
-    if (options.length === 1) return options[0].faultCode.code
-    return `${options.length} fault codes`
+  function formatCodeValue(option: FaultCodeOption | null) {
+    if (!option) return 'All'
+    return option.faultCode.code
   }
 
   const assetControlStyles = {
@@ -241,11 +240,11 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
       {/* Fault codes select */}
       <div style={{ width: 420, flexShrink: 0 }}>
         <LabeledControl label="Fault codes">
-          <Select<FaultCodeOption, true>
-            isMulti
+          <Select<FaultCodeOption, false>
+            isClearable
             options={faultCodeOptions}
-            value={selectedCodeOptions}
-            onChange={opts => setSelectedCodes(opts.map(o => o.value))}
+            value={selectedCodeOption}
+            onChange={opt => setSelectedCodes(opt ? [opt.value] : [])}
             placeholder="All"
             styles={codeControlStyles as object}
             controlShouldRenderValue={false}
@@ -262,8 +261,8 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
             )}
             components={{
               ValueContainer: ({ children, ...props }) => {
-                const selected = props.getValue()
-                const displayText = formatCodeValue(selected as readonly FaultCodeOption[])
+                const selected = (props.getValue() as unknown as FaultCodeOption[])[0] ?? null
+                const displayText = formatCodeValue(selected)
                 return (
                   <div
                     style={{
@@ -276,7 +275,7 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
                     }}
                   >
                     <div style={{ flex: 1, overflow: 'hidden' }}>
-                      <span style={{ color: selected.length === 0 ? '#A1A1AA' : '#FFFFFF', fontSize: 14 }}>
+                      <span style={{ color: !selected ? '#A1A1AA' : '#FFFFFF', fontSize: 14 }}>
                         {displayText}
                       </span>
                       {Array.isArray(children) ? children[children.length - 1] : null}
