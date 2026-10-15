@@ -168,7 +168,31 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
       }}
     >
       {/* Asset select */}
-      <div style={{ width: 300, flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'stretch', gap: 8, flexShrink: 0 }}>
+        {selectedAssets.length > 0 && (
+          <button
+            onClick={() => {
+              setSelectedAssets([])
+              setFilter('abnormal', false)
+              setFilter('normal', false)
+            }}
+            style={{
+              display: 'flex',
+              padding: '0 2px',
+              alignItems: 'center',
+              gap: 10,
+              alignSelf: 'stretch',
+              borderRadius: 16777200,
+              background: '#5831E2',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#FFFFFF',
+            }}
+          >
+            <ChevronLeft size={16} />
+          </button>
+        )}
+        <div style={{ width: 300 }}>
         <LabeledControl label="Asset">
           <Select<AssetOption, true>
             isMulti
@@ -211,6 +235,7 @@ export default function FilterBar({ periodStart, periodEnd }: { periodStart: ISO
             }}
           />
         </LabeledControl>
+        </div>
       </div>
 
       {/* Fault codes select */}

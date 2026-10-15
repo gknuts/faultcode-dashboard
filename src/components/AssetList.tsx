@@ -22,7 +22,7 @@ interface AssetListProps {
 }
 
 export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
-  const { collapsedAssets, toggleCollapsedAsset } = useStore()
+  const { collapsedAssets, toggleCollapsedAsset, setSelectedAssets, setFilter } = useStore()
 
   return (
     <div style={{ position: 'relative', height: totalHeight, width: 420, background: '#000000' }}>
@@ -57,13 +57,14 @@ export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
                 background: '#000000',
                 display: 'flex',
                 alignItems: 'center',
-                cursor: 'pointer',
                 userSelect: 'none',
               }}
-              onClick={() => toggleCollapsedAsset(row.assetId)}
             >
               {/* Chevron */}
-              <div style={{ width: 24, display: 'flex', justifyContent: 'center', marginLeft: 4 }}>
+              <div
+                style={{ width: 24, display: 'flex', justifyContent: 'center', marginLeft: 4, cursor: 'pointer' }}
+                onClick={() => toggleCollapsedAsset(row.assetId)}
+              >
                 {isCollapsed
                   ? <ChevronDown size={14} color="#A1A1AA" />
                   : <ChevronUp size={14} color="#A1A1AA" />}
@@ -71,7 +72,14 @@ export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
               {/* Accent bar */}
               <div style={{ width: 6, height: 36, background: '#6C4BF5', borderRadius: 3, marginLeft: 22, flexShrink: 0 }} />
               {/* Label */}
-              <span style={{ marginLeft: 12, fontSize: 16, fontWeight: 700, color: '#FFFFFF' }}>
+              <span
+                style={{ marginLeft: 12, fontSize: 16, fontWeight: 700, color: '#FFFFFF', cursor: 'pointer' }}
+                onClick={() => {
+                  setSelectedAssets([row.assetId])
+                  setFilter('abnormal', true)
+                  setFilter('normal', true)
+                }}
+              >
                 {row.assetLabel}
               </span>
             </div>
