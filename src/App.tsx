@@ -132,6 +132,16 @@ export default function App() {
     let idx = 0
 
     for (const asset of sortedAssets) {
+      // When filtering by specific codes, skip assets with no occurrences for those codes
+      if (selectedCodes.length > 0) {
+        const hasAnyOccurrence = selectedCodes.some((code) => {
+          const rowKey = makeRowKey(asset.id, code)
+          const occs = occurrencesByRow.get(rowKey)
+          return occs && occs.size > 0
+        })
+        if (!hasAnyOccurrence) continue
+      }
+
       // Asset row
       const assetRow: VirtualRow = {
         type: 'asset',
