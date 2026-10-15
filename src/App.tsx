@@ -212,6 +212,24 @@ export default function App() {
       // Skip asset if no visible code rows
       if (codeRowsToEmit.length === 0) continue
 
+      // Single fault code mode: flatten — asset row shows bubbles inline, no sub-rows
+      if (selectedCodes.length === 1) {
+        const singleCodeRow = codeRowsToEmit[0] as Omit<VirtualRow, 'start' | 'index'>
+        rows.push({
+          type: 'asset',
+          key: `asset-${asset.id}`,
+          assetId: asset.id,
+          assetLabel: asset.label,
+          faultCode: selectedCodes[0],
+          isHidden: singleCodeRow.isHidden,
+          height: 64,
+          start: offset,
+          index: idx++,
+        })
+        offset += 64
+        continue
+      }
+
       // Asset row
       rows.push({
         type: 'asset',
@@ -552,7 +570,7 @@ export default function App() {
                   )
                 }
 
-                if (row.type === 'asset') {
+                if (row.type === 'asset' && !row.faultCode) {
                   return (
                     <div
                       key={row.key}
@@ -659,7 +677,7 @@ export default function App() {
                   )
                 }
 
-                if (row.type === 'asset') {
+                if (row.type === 'asset' && !row.faultCode) {
                   return (
                     <div
                       key={row.key}

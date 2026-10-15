@@ -60,14 +60,14 @@ export function AssetList({ rows, totalHeight, faultCodeMap }: AssetListProps) {
                 userSelect: 'none',
               }}
             >
-              {/* Chevron */}
+              {/* Chevron — hidden in single-code mode (faultCode on asset row = no sub-rows) */}
               <div
-                style={{ width: 24, display: 'flex', justifyContent: 'center', marginLeft: 4, cursor: 'pointer' }}
-                onClick={() => toggleCollapsedAsset(row.assetId)}
+                style={{ width: 24, display: 'flex', justifyContent: 'center', marginLeft: 4, cursor: row.faultCode ? 'default' : 'pointer' }}
+                onClick={() => { if (!row.faultCode) toggleCollapsedAsset(row.assetId) }}
               >
-                {isCollapsed
+                {!row.faultCode && (isCollapsed
                   ? <ChevronDown size={14} color="#A1A1AA" />
-                  : <ChevronUp size={14} color="#A1A1AA" />}
+                  : <ChevronUp size={14} color="#A1A1AA" />)}
               </div>
               {/* Accent bar */}
               <div style={{ width: 6, height: 36, background: '#6C4BF5', borderRadius: 3, marginLeft: 22, flexShrink: 0 }} />
