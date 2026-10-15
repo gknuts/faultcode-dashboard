@@ -579,7 +579,7 @@ export default function App() {
                       left: 0,
                       width: timelineWidth,
                       height: row.height,
-                      background: '#0B0B0C',
+                      background: '#18181B',
                       opacity: row.isHidden ? 0.35 : 1,
                     }}
                   >
