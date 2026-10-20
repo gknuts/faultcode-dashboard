@@ -61,12 +61,12 @@ export function PatternTimeline({ pattern, occurrences, dates, status }: Props) 
 
                 if (occ.status === 'normal') {
                   return (
-                    <circle key={date} cx={cx} cy={cy} r={2.5} fill="#27272A" />
+                    <circle key={date} cx={cx} cy={cy} r={3} fill="#2ECC71" fillOpacity={0.35} />
                   )
                 }
-                const r = Math.min(3 + occ.count, 8)
+                const r = Math.min(4 + occ.count, 10)
                 return (
-                  <circle key={date} cx={cx} cy={cy} r={r} fill={abnormalColor} fillOpacity={0.9} />
+                  <circle key={date} cx={cx} cy={cy} r={r} fill={abnormalColor} fillOpacity={0.95} />
                 )
               })}
             </g>

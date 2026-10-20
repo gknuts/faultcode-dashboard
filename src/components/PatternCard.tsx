@@ -54,35 +54,38 @@ export function PatternCard({
                 key={code}
                 style={{
                   display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  padding: '0 14px',
+                  alignItems: 'stretch',
                   borderBottom: i < pattern.faultCodes.length - 1 ? '1px solid #1A1A20' : undefined,
                   height: 36,
                   boxSizing: 'border-box',
                 }}
               >
-                {/* FC code badge */}
-                <span style={{
-                  fontFamily: 'monospace',
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: '#C4C4CC',
-                  background: '#1A1A22',
-                  border: '1px solid #2A2A34',
-                  borderRadius: 3,
-                  padding: '1px 5px',
-                  minWidth: 38,
-                  display: 'inline-block',
-                  textAlign: 'center',
-                  letterSpacing: '0.04em',
+                {/* FC code badge — full height, dark bg */}
+                <div style={{
+                  width: 64,
                   flexShrink: 0,
+                  background: '#090910',
+                  borderRight: '1px solid #1A1A20',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
-                  {code}
-                </span>
-                <span style={{ fontSize: 12, color: '#A0A0AA', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {fc?.description ?? '—'}
-                </span>
+                  <span style={{
+                    fontFamily: 'monospace',
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: '#FFFFFF',
+                    letterSpacing: '0.04em',
+                  }}>
+                    {code}
+                  </span>
+                </div>
+                {/* Description */}
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', padding: '0 12px', overflow: 'hidden' }}>
+                  <span style={{ fontSize: 12, color: '#A0A0AA', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {fc?.description ?? '—'}
+                  </span>
+                </div>
               </div>
             )
           })}
