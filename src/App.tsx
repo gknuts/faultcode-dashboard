@@ -96,39 +96,11 @@ export default function App() {
           onToggleOngoing={toggleShowOngoing}
         />
 
-        {/* Right panel: sticky date axis + scrollable patterns */}
+        {/* Right panel: sticky date axis + scrollable patterns + footer axis */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          {/* Sticky shared date axis */}
-          <div style={{
-            height: 28,
-            flexShrink: 0,
-            background: '#0A0A0D',
-            borderBottom: '1px solid #1F1F22',
-            display: 'flex',
-            alignItems: 'center',
-            position: 'relative',
-          }}>
-            {/* Spacer matching FC column */}
-            <div style={{ width: FC_COL_WIDTH + 32, flexShrink: 0 }} />
-            {/* Date labels */}
-            <div style={{ flex: 1, position: 'relative', height: '100%' }}>
-              <svg width="100%" height="100%" style={{ display: 'block', overflow: 'visible' }}>
-                {dates.map((date, i) => {
-                  const isFirst = i === 0
-                  const isLast = i === dates.length - 1
-                  if (!isFirst && !isLast && i % labelStep !== 0) return null
-                  const x = `${((i + 0.5) / dates.length) * 100}%`
-                  return (
-                    <text key={date} x={x} y={18} textAnchor="middle" fontSize={10} fill="#52525B">
-                      {formatAxisLabel(date)}
-                    </text>
-                  )
-                })}
-              </svg>
-            </div>
-          </div>
+          {/* Shared date axis — top */}
+          <DateAxisBar dates={dates} labelStep={labelStep} fcColWidth={FC_COL_WIDTH} borderedBottom />
 
-          {/* Scrollable pattern content */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
             {hasNoPatterns ? (
               <div style={{ color: '#52525B', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
@@ -178,7 +150,47 @@ export default function App() {
               </>
             )}
           </div>
+
+          {/* Shared date axis — bottom (footer) */}
+          <DateAxisBar dates={dates} labelStep={labelStep} fcColWidth={FC_COL_WIDTH} borderedTop />
         </div>
+      </div>
+    </div>
+  )
+}
+
+function DateAxisBar({ dates, labelStep, fcColWidth, borderedBottom, borderedTop }: {
+  dates: string[]
+  labelStep: number
+  fcColWidth: number
+  borderedBottom?: boolean
+  borderedTop?: boolean
+}) {
+  return (
+    <div style={{
+      height: 28,
+      flexShrink: 0,
+      background: '#0A0A0D',
+      borderBottom: borderedBottom ? '1px solid #1F1F22' : undefined,
+      borderTop: borderedTop ? '1px solid #1F1F22' : undefined,
+      display: 'flex',
+      alignItems: 'center',
+    }}>
+      <div style={{ width: fcColWidth + 32, flexShrink: 0 }} />
+      <div style={{ flex: 1, position: 'relative', height: '100%' }}>
+        <svg width="100%" height="100%" style={{ display: 'block', overflow: 'visible' }}>
+          {dates.map((date, i) => {
+            const isFirst = i === 0
+            const isLast = i === dates.length - 1
+            if (!isFirst && !isLast && i % labelStep !== 0) return null
+            const x = `${((i + 0.5) / dates.length) * 100}%`
+            return (
+              <text key={date} x={x} y={18} textAnchor="middle" fontSize={10} fill="#52525B">
+                {formatAxisLabel(date)}
+              </text>
+            )
+          })}
+        </svg>
       </div>
     </div>
   )
