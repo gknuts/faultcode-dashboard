@@ -1,10 +1,8 @@
-import type { Validation } from '../data/types'
-
-const VERSION = 1
+const PREFIX = 'fcd2'
 
 function get<T>(key: string): T | null {
   try {
-    const v = localStorage.getItem(key)
+    const v = localStorage.getItem(`${PREFIX}:${key}`)
     return v ? (JSON.parse(v) as T) : null
   } catch {
     return null
@@ -13,54 +11,36 @@ function get<T>(key: string): T | null {
 
 function set(key: string, value: unknown): void {
   try {
-    localStorage.setItem(key, JSON.stringify(value))
+    localStorage.setItem(`${PREFIX}:${key}`, JSON.stringify(value))
   } catch {}
 }
 
-function remove(key: string): void {
-  try {
-    localStorage.removeItem(key)
-  } catch {}
+export function loadLastSessionAt(): string | null {
+  return get<string>('lastSessionAt')
 }
 
-export function loadValidations(): Record<string, Validation> {
-  return get<Record<string, Validation>>('fcd:validations') ?? {}
+export function saveLastSessionAt(ts: string): void {
+  set('lastSessionAt', ts)
 }
 
-export function saveValidations(v: Record<string, Validation>): void {
-  set('fcd:validations', v)
+export function loadIgnoredPatterns(): string[] {
+  return get<string[]>('ignoredPatterns') ?? []
 }
 
-export function loadHiddenRows(): string[] {
-  return get<string[]>('fcd:hiddenRows') ?? []
+export function saveIgnoredPatterns(ids: string[]): void {
+  set('ignoredPatterns', ids)
 }
 
-export function saveHiddenRows(rows: string[]): void {
-  set('fcd:hiddenRows', rows)
+export function loadPatternValidations(): Record<string, 'abnormal' | 'normal'> {
+  return get<Record<string, 'abnormal' | 'normal'>>('patternValidations') ?? {}
 }
 
-export function loadCollapsedAssets(): string[] {
-  return get<string[]>('fcd:collapsedAssets') ?? []
-}
-
-export function saveCollapsedAssets(assets: string[]): void {
-  set('fcd:collapsedAssets', assets)
-}
-
-export function initStorage(): void {
-  const version = get<number>('fcd:version')
-  if (version !== VERSION) {
-    // Clear old data on version mismatch
-    remove('fcd:validations')
-    remove('fcd:hiddenRows')
-    remove('fcd:collapsedAssets')
-    set('fcd:version', VERSION)
-  }
+export function savePatternValidations(v: Record<string, 'abnormal' | 'normal'>): void {
+  set('patternValidations', v)
 }
 
 export function resetStorage(): void {
-  remove('fcd:validations')
-  remove('fcd:hiddenRows')
-  remove('fcd:collapsedAssets')
-  remove('fcd:version')
+  for (const k of Object.keys(localStorage)) {
+    if (k.startsWith(PREFIX)) localStorage.removeItem(k)
+  }
 }

@@ -13,23 +13,15 @@ export function todayISO(): ISODate {
   return toISO(new Date())
 }
 
-export function centeredEnd(_view: ViewMode): ISODate {
-  return toISO(addDays(new Date(), 15))
+// Returns [startDate, endDate] — endDate is always today
+export function getPeriodRange(view: ViewMode): [ISODate, ISODate] {
+  const end = todayISO()
+  const endDate = new Date()
+  if (view === '3D') return [toISO(subDays(endDate, 2)), end]
+  if (view === '1W') return [toISO(subDays(endDate, 6)), end]
+  return [toISO(subMonths(endDate, 1)), end]
 }
 
-// Returns [startDate, endDate] for a period ending at 'end'
-export function getPeriodRange(view: ViewMode, end: ISODate): [ISODate, ISODate] {
-  const endDate = fromISO(end)
-  if (view === '1W') {
-    return [toISO(subDays(endDate, 6)), end]
-  }
-  // 1M: same day of previous month; if it doesn't exist, last day of that month
-  const prev = subMonths(endDate, 1)
-  // date-fns subMonths handles overflow (e.g. Jan 31 → Dec 31)
-  return [toISO(prev), end]
-}
-
-// Returns ordered list of ISO dates in period
 export function getDatesInRange(start: ISODate, end: ISODate): ISODate[] {
   const dates: ISODate[] = []
   let cur = fromISO(start)
@@ -41,14 +33,15 @@ export function getDatesInRange(start: ISODate, end: ISODate): ISODate[] {
   return dates
 }
 
-// Navigate period end by one period — no future limit, view is centered on today
+// Keep for potential future use
 export function navigateEnd(view: ViewMode, end: ISODate, dir: -1 | 1): ISODate {
   const endDate = fromISO(end)
+  if (view === '3D') return toISO(addDays(endDate, dir * 3))
   if (view === '1W') return toISO(addDays(endDate, dir * 7))
   return toISO(dir === 1 ? addMonths(endDate, 1) : subMonths(endDate, 1))
 }
 
-export function formatPeriodText(start: ISODate, end: ISODate): string {
+export function formatPeriodLabel(start: ISODate, end: ISODate): string {
   const s = fromISO(start)
   const e = fromISO(end)
   if (s.getFullYear() !== e.getFullYear()) {
@@ -61,11 +54,7 @@ export function formatAxisLabel(date: ISODate): string {
   return format(fromISO(date), 'd MMM')
 }
 
-export function isToday(date: ISODate): boolean {
-  return date === todayISO()
-}
-
-export function isTodayInRange(dates: ISODate[]): boolean {
-  const t = todayISO()
-  return dates.includes(t)
+export function todayDefaultSessionAt(): string {
+  // Default: 7 days ago, so recent patterns show as "new" on first visit
+  return subDays(new Date(), 7).toISOString()
 }

@@ -1,10 +1,10 @@
 export type ISODate = string // 'YYYY-MM-DD'
 
-export interface FaultData {
+export interface PatternData {
   assets: Asset[]
   faultCodes: FaultCode[]
-  groups: Group[]
-  occurrences: DailyOccurrence[]
+  patterns: Pattern[]
+  occurrences: PatternOccurrence[]
 }
 
 export interface Asset {
@@ -17,47 +17,22 @@ export interface FaultCode {
   description: string
 }
 
-export interface Group {
+export interface Pattern {
   id: string
-  color?: string
+  assetId: string
+  faultCodes: string[]
+  startDate: ISODate
+  endDate?: ISODate
 }
 
-export interface DailyOccurrence {
-  assetId: string
+export interface PatternOccurrence {
+  patternId: string
   faultCode: string
   date: ISODate
   count: number
   status: 'abnormal' | 'normal'
-  groupId?: string
 }
 
-export type BubbleStatus = 'abnormal' | 'normal'
+export type DerivedStatus = 'new' | 'ongoing' | 'resolved' | 'ignored'
 
-export interface Validation {
-  status: BubbleStatus
-  validatedAt: string
-}
-
-// key = assetId|faultCode
-export type RowKey = string
-// key = assetId|faultCode|date
-export type BubbleKey = string
-
-export function makeRowKey(assetId: string, faultCode: string): RowKey {
-  return `${assetId}|${faultCode}`
-}
-
-export function makeBubbleKey(assetId: string, faultCode: string, date: ISODate): BubbleKey {
-  return `${assetId}|${faultCode}|${date}`
-}
-
-export interface Filters {
-  validated: boolean
-  notValidated: boolean
-  interesting: boolean
-  notInteresting: boolean
-  abnormal: boolean
-  normal: boolean
-}
-
-export type ViewMode = '1W' | '1M'
+export type ViewMode = '3D' | '1W' | '1M'
