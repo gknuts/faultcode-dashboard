@@ -8,6 +8,7 @@ interface Props {
   faultCodeMap: Map<string, FaultCode>
   occurrences: PatternOccurrence[]
   dates: string[]
+  labelStep: number
   patternValidations: Record<string, 'abnormal' | 'normal'>
   ignoredPatterns: Set<string>
   fcColWidth: number
@@ -29,6 +30,7 @@ export function PatternSection({
   faultCodeMap,
   occurrences,
   dates,
+  labelStep,
   patternValidations,
   ignoredPatterns,
   fcColWidth,
@@ -47,11 +49,11 @@ export function PatternSection({
         gap: 10,
         marginBottom: 10,
       }}>
-        <div style={{ width: 3, height: 14, background: color, borderRadius: 2 }} />
+        <div style={{ width: 4, height: 16, background: color, borderRadius: 2 }} />
         <span style={{
           fontSize: 11,
-          fontWeight: 700,
-          letterSpacing: '0.08em',
+          fontWeight: 800,
+          letterSpacing: '0.10em',
           color,
           textTransform: 'uppercase',
         }}>
@@ -59,8 +61,8 @@ export function PatternSection({
         </span>
         <span style={{
           fontSize: 11,
-          color: '#3F3F46',
-          fontWeight: 500,
+          color: '#3F3F52',
+          fontWeight: 600,
         }}>
           ({patterns.length})
         </span>
@@ -74,6 +76,7 @@ export function PatternSection({
           faultCodeMap={faultCodeMap}
           occurrences={occurrences}
           dates={dates}
+          labelStep={labelStep}
           validation={patternValidations[pattern.id]}
           isIgnored={ignoredPatterns.has(pattern.id)}
           fcColWidth={fcColWidth}

@@ -16,18 +16,28 @@ function dateRange(start, end) {
   return dates
 }
 
-function generateOccurrences(patternId, faultCodes, startDate, endDate) {
+const PERIOD_START = '2026-09-20' // 30 days before TODAY
+
+function generateOccurrences(patternId, faultCodes, _startDate, endDate) {
+  // Occurrences cover the full visible period so timeline always looks populated
   const end = endDate || TODAY
-  const dates = dateRange(startDate, end)
+  const dates = dateRange(PERIOD_START, end)
   const occs = []
+  // Use a simple deterministic pseudo-random based on patternId hash
+  const seed = patternId.split('').reduce((a, c) => a + c.charCodeAt(0), 0)
   for (const [fi, faultCode] of faultCodes.entries()) {
     for (const [di, date] of dates.entries()) {
-      const isAbnormal = (di + fi * 3) % 5 < 2
+      // Deterministic pseudo-random for variety
+      const r1 = (seed * 31 + di * 17 + fi * 53) % 97
+      const r2 = (seed * 13 + di * 41 + fi * 7) % 89
+      // Skip ~15% of days
+      if (r1 < 14) continue
+      const isAbnormal = r2 < 38
       occs.push({
         patternId,
         faultCode,
         date,
-        count: isAbnormal ? 2 + (di % 3) : 1,
+        count: isAbnormal ? 1 + (r1 % 5) : 1,
         status: isAbnormal ? 'abnormal' : 'normal',
       })
     }
