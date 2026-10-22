@@ -91,6 +91,7 @@ export function PatternCard({
       marginBottom: 8,
       opacity: isIgnored ? 0.5 : 1,
       overflow: 'hidden',
+      paddingLeft: 15,
     }}>
       {/* Per-FC rows: label row (full width) + dots row */}
       {pattern.faultCodes.map((code, i) => {
@@ -159,7 +160,7 @@ export function PatternCard({
                 </svg>
               </div>
               {/* Mini timeline for this FC code */}
-              <div style={{ flex: 1, background: hasAbnormal ? abnormalBg : 'transparent' }}>
+              <div style={{ flex: 1, background: '#211519' }}>
                 <svg width="100%" height={DOTS_HEIGHT} style={{ display: 'block' }}>
                   {/* Grid lines */}
                   {dates.map((_, di) => {
