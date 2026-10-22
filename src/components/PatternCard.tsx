@@ -107,14 +107,13 @@ export function PatternCard({
               display: 'flex',
               alignItems: 'stretch',
               height: LABEL_HEIGHT,
-              borderBottom: `1px solid ${cardBorder}`,
               background: 'rgba(0,0,0,0.18)',
             }}>
               {/* Badge */}
               <div style={{
                 width: BADGE_WIDTH,
                 flexShrink: 0,
-                background: '#050508',
+                background: hasAbnormal ? '#2D1D20' : '#050508',
                 borderRight: `1px solid ${cardBorder}`,
                 display: 'flex',
                 alignItems: 'center',
@@ -131,7 +130,7 @@ export function PatternCard({
                 </span>
               </div>
               {/* Description — spans full remaining width */}
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', padding: '0 12px', overflow: 'hidden' }}>
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', padding: '0 12px', overflow: 'hidden', borderBottom: `1px solid ${cardBorder}` }}>
                 <span style={{ fontSize: 12, color: '#8080A0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {fc?.description ?? '—'}
                 </span>
@@ -144,7 +143,7 @@ export function PatternCard({
               <div style={{
                 width: BADGE_WIDTH,
                 flexShrink: 0,
-                background: '#050508',
+                background: hasAbnormal ? '#2D1D20' : '#050508',
                 borderRight: `1px solid ${cardBorder}`,
                 display: 'flex',
                 alignItems: 'center',
