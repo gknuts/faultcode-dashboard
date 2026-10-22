@@ -100,7 +100,7 @@ export function PatternCard({
         const isLast = i === pattern.faultCodes.length - 1
 
         return (
-          <div key={code} style={{ borderBottom: !isLast ? `1px solid ${cardBorder}` : undefined }}>
+          <div key={code} style={{ marginBottom: !isLast ? 5 : 0 }}>
 
             {/* LABEL ROW — full card width */}
             <div style={{
