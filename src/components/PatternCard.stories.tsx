@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect } from 'storybook/test'
 import { PatternCard } from './PatternCard'
 import type { FaultCode, Pattern, PatternOccurrence } from '../data/types'
+import rawData from '../../public/data/patterns.json'
 
 function makeDates(count: number): string[] {
   const dates: string[] = []
@@ -16,34 +17,32 @@ function makeDates(count: number): string[] {
 
 const DATES_30 = makeDates(30)
 
-const FAULT_CODE_MAP = new Map<string, FaultCode>([
-  ['FC001', { code: 'FC001', description: 'Brake pressure anomaly detected' }],
-  ['FC002', { code: 'FC002', description: 'Engine temperature threshold exceeded' }],
-])
+const faultCodeMap = new Map<string, FaultCode>(
+  rawData.faultCodes.map((fc) => [fc.code, fc as FaultCode])
+)
 
-const PATTERN: Pattern = {
-  id: 'p1',
-  assetId: 'a1',
-  faultCodes: ['FC001', 'FC002'],
-  startDate: '2026-10-15',
+function pickPattern(id: string): Pattern {
+  const p = rawData.patterns.find((p) => p.id === id)
+  if (!p) throw new Error(`Pattern ${id} not found`)
+  return p as Pattern
 }
 
-const OCCURRENCES: PatternOccurrence[] = [
-  { patternId: 'p1', faultCode: 'FC001', date: '2026-10-20', count: 3, status: 'abnormal' },
-  { patternId: 'p1', faultCode: 'FC001', date: '2026-10-25', count: 1, status: 'normal' },
-  { patternId: 'p1', faultCode: 'FC001', date: '2026-11-01', count: 5, status: 'abnormal' },
-  { patternId: 'p1', faultCode: 'FC002', date: '2026-10-22', count: 2, status: 'abnormal' },
-  { patternId: 'p1', faultCode: 'FC002', date: '2026-10-28', count: 1, status: 'abnormal' },
-]
+function pickOccurrences(pattern: Pattern): PatternOccurrence[] {
+  return (rawData.occurrences as PatternOccurrence[]).filter(
+    (o) => o.patternId === pattern.id
+  )
+}
+
+const NEW_PATTERN = pickPattern('g14_485014')
+const ONGOING_PATTERN = pickPattern('g123_485003')
+const UNCLASSIFIED_PATTERN = (rawData.patterns as Pattern[]).find((p) => !!p.endDate)!
 
 const SHARED = {
-  faultCodeMap: FAULT_CODE_MAP,
-  occurrences: OCCURRENCES,
+  faultCodeMap,
   dates: DATES_30,
   labelStep: 5,
   fcColWidth: 200,
   onValidate: () => {},
-  onIgnore: () => {},
 }
 
 const meta = {
@@ -51,7 +50,8 @@ const meta = {
   tags: ['ai-generated'],
   args: {
     ...SHARED,
-    pattern: PATTERN,
+    pattern: NEW_PATTERN,
+    occurrences: pickOccurrences(NEW_PATTERN),
     status: 'new',
     validation: undefined,
     isIgnored: false,
@@ -63,8 +63,9 @@ type Story = StoryObj<typeof meta>
 
 export const New: Story = {
   play: async ({ canvas }) => {
-    await expect(canvas.getByText('FC001')).toBeVisible()
-    await expect(canvas.getByText('Brake pressure anomaly detected')).toBeVisible()
+    const firstCode = NEW_PATTERN.faultCodes[0]
+    await expect(canvas.getByText(firstCode)).toBeVisible()
+    await expect(canvas.getByText(faultCodeMap.get(firstCode)!.description)).toBeVisible()
   },
 }
 
@@ -78,14 +79,16 @@ export const CssCheck: Story = {
 
 export const Ongoing: Story = {
   args: {
-    pattern: { ...PATTERN, startDate: '2026-09-01' },
+    pattern: ONGOING_PATTERN,
+    occurrences: pickOccurrences(ONGOING_PATTERN),
     status: 'ongoing',
   },
 }
 
 export const Unclassified: Story = {
   args: {
-    pattern: { ...PATTERN, startDate: '2026-10-01', endDate: '2026-10-30' },
+    pattern: UNCLASSIFIED_PATTERN,
+    occurrences: pickOccurrences(UNCLASSIFIED_PATTERN),
     status: 'unclassified',
   },
 }

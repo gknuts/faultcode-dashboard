@@ -39,7 +39,7 @@ const STATUS_BORDER: Record<DerivedStatus, string> = {
 const ABNORMAL_COLORS: Record<DerivedStatus, string> = {
   new: '#E8394A',
   ongoing: '#D97010',
-  unclassified: '#52525B',
+  unclassified: '#999999',
 }
 
 const ABNORMAL_BG: Record<DerivedStatus, string> = {
@@ -173,10 +173,10 @@ export function PatternCard({
                     if (!occ) return null
                     const cx = `${((di + 0.5) / dates.length) * 100}%`
                     const cy = DOTS_HEIGHT / 2
-                    if (occ.occStatus === 'normal') {
+                    if (occ.occStatus === 'normal' && status !== 'unclassified') {
                       return <circle key={date} cx={cx} cy={cy} r={5} fill="#2ECC71" fillOpacity={0.8} />
                     }
-                    const r = Math.min(5 + occ.count * 0.9, 11)
+                    const r = occ.occStatus === 'normal' ? 5 : Math.min(5 + occ.count * 0.9, 11)
                     return <circle key={date} cx={cx} cy={cy} r={r} fill={abnormalColor} fillOpacity={0.92} />
                   })}
                 </svg>
