@@ -313,10 +313,6 @@ export function PatternCard({
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
-          <GhostButton label="Create an alert" onClick={() => {}} />
-          <span style={{ color: '#2A2A3A', fontSize: 11 }}>|</span>
-          <GhostButton label="Create a ticket" onClick={() => {}} />
-          <Divider />
           <div style={{ display: 'flex', border: '1px solid #2A2A3A', borderRadius: 20, overflow: 'hidden' }}>
             <SegmentButton label="Abnormal" active={validation === 'abnormal'} activeColor="#E8394A" onClick={() => onValidate('abnormal')} />
             <div style={{ width: 1, background: '#2A2A3A', flexShrink: 0 }} />
@@ -328,16 +324,6 @@ export function PatternCard({
   )
 }
 
-function GhostButton({ label, onClick }: { label: string; onClick: () => void }) {
-  return (
-    <button onClick={onClick} style={{
-      background: 'transparent', border: '1px solid #2A2A3A', borderRadius: 4,
-      color: '#71717A', fontSize: 11, fontWeight: 500, padding: '3px 10px', cursor: 'pointer',
-    }}>
-      {label}
-    </button>
-  )
-}
 
 function SegmentButton({ label, active, activeColor, onClick }: {
   label: string; active: boolean; activeColor: string; onClick: () => void
@@ -351,8 +337,4 @@ function SegmentButton({ label, active, activeColor, onClick }: {
       {label}
     </button>
   )
-}
-
-function Divider() {
-  return <div style={{ width: 1, height: 14, background: '#2A2A3A', flexShrink: 0 }} />
 }
