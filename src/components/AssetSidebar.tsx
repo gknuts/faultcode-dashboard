@@ -27,7 +27,7 @@ export function AssetSidebar({
   return (
     <div style={{
       width: sidebarWidth,
-      background: '#0C0C14',
+      background: '#151515',
       borderRight: '1px solid #1E1E28',
       display: 'flex',
       flexDirection: 'column',
@@ -100,7 +100,7 @@ export function AssetSidebar({
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                <span style={{ color: isSelected ? '#FFFFFF' : '#B0B0CC', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>
+                <span style={{ color: '#FFFFFF', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>
                   {asset.label}
                 </span>
                 {newCount > 0 && (
