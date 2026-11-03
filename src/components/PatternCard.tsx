@@ -193,7 +193,37 @@ export function PatternCard({
             background: 'rgba(153,153,153,0.15)',
             pointerEvents: 'none',
             zIndex: 5,
-          }} />
+          }}>
+            {/* Date range label above the frame */}
+            <div style={{
+              position: 'absolute',
+              bottom: '100%',
+              left: 0,
+              marginBottom: 4,
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4,
+              pointerEvents: 'none',
+            }}>
+              <span style={{ fontSize: 10, fontFamily: 'Roboto, sans-serif', fontWeight: 400, color: '#CCCCCC' }}>
+                {formatDate(dates[frameStartDi])} – {formatDate(dates[frameEndDi])}
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, aspectRatio: '1/1' }}>
+                <g clipPath="url(#clip0_4292_1863)">
+                  <path d="M7.5 2V1M7.5 2V3M7.5 2H5.25M1.5 5V9.5C1.5 10.0523 1.94771 10.5 2.5 10.5H9.5C10.0523 10.5 10.5 10.0523 10.5 9.5V5H1.5Z" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                  <path d="M1.5 5V3C1.5 2.44771 1.94771 2 2.5 2H3.5" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                  <path d="M3.5 1V3" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                  <path d="M10.5 5V3C10.5 2.44771 10.0523 2 9.5 2H9.25" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                </g>
+                <defs>
+                  <clipPath id="clip0_4292_1863">
+                    <rect width="12" height="12" fill="white"/>
+                  </clipPath>
+                </defs>
+              </svg>
+            </div>
+          </div>
         )}
 
       {pattern.faultCodes.map((code, i) => {
