@@ -409,6 +409,7 @@ export function PatternCard({
         padding: '7px 14px',
         borderTop: `1px solid ${cardBorder}`,
       }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <div style={{ position: 'relative', flexShrink: 0 }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ display: 'block', aspectRatio: '1/1' }}>
             <g clipPath="url(#clip0_4295_1920)">
@@ -442,7 +443,6 @@ export function PatternCard({
         </div>
 
         <button onClick={() => {}} style={{
-          marginLeft: 8,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -461,6 +461,7 @@ export function PatternCard({
             <circle cx="8" cy="13" r="1" fill="#999999"/>
           </svg>
         </button>
+        </div>
 
       </div>
     </div>
