@@ -2,89 +2,144 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect } from 'storybook/test'
 import { PatternCard } from './PatternCard'
 import type { FaultCode, Pattern, PatternOccurrence } from '../data/types'
-import rawData from '../../public/data/patterns.json'
+import rawRows from '../data/story_fixtures.json'
 
-function makeDates(count: number): string[] {
+// ── Date axis: actual period of the raw data ──────────────────────────────
+const PERIOD_START = '2026-10-08'
+const PERIOD_END   = '2026-11-08'
+
+function buildDates(start: string, end: string): string[] {
   const dates: string[] = []
-  const end = new Date('2026-11-03T12:00:00Z')
-  for (let i = count - 1; i >= 0; i--) {
-    const d = new Date(end)
-    d.setUTCDate(d.getUTCDate() - i)
-    dates.push(d.toISOString().slice(0, 10))
+  const cur = new Date(`${start}T00:00:00Z`)
+  const last = new Date(`${end}T00:00:00Z`)
+  while (cur <= last) {
+    dates.push(cur.toISOString().slice(0, 10))
+    cur.setUTCDate(cur.getUTCDate() + 1)
   }
   return dates
 }
 
-const DATES_30 = makeDates(30)
+const DATES = buildDates(PERIOD_START, PERIOD_END)
 
-const faultCodeMap = new Map<string, FaultCode>(
-  rawData.faultCodes.map((fc) => [fc.code, fc as FaultCode])
-)
-
-function pickPattern(id: string): Pattern {
-  const p = rawData.patterns.find((p) => p.id === id)
-  if (!p) throw new Error(`Pattern ${id} not found`)
-  return p as Pattern
+// ── Types matching the raw JSON ───────────────────────────────────────────
+interface RawRow {
+  date: string
+  locomotive: string
+  fault_code: string
+  name: string
+  occurences: number
+  is_anomalous: boolean
+  correlation_group_id: number
 }
 
-function pickOccurrences(pattern: Pattern): PatternOccurrence[] {
-  return (rawData.occurrences as (PatternOccurrence & { correlation_group_id?: number })[])
-    .filter((o) => o.patternId === pattern.id)
-    .map(({ correlation_group_id, ...o }) => ({
-      ...o,
-      ...(correlation_group_id != null ? { correlationGroupId: correlation_group_id } : {}),
+const rows = rawRows as RawRow[]
+
+// ── Transform helpers ─────────────────────────────────────────────────────
+function buildPattern(
+  groupId: number,
+  loco: string,
+  ended = false,
+): Pattern {
+  const groupRows = rows.filter(r => r.correlation_group_id === groupId && r.locomotive === loco)
+  const fcs = [...new Set(groupRows.map(r => r.fault_code))].sort()
+  const dates = groupRows.map(r => r.date).sort()
+  const startDate = dates[0]
+  const lastDate  = dates[dates.length - 1]
+  const id = `g${groupId}_${loco.replace(' ', '')}`
+  return {
+    id,
+    assetId: loco.replace(' ', ''),
+    faultCodes: fcs,
+    startDate,
+    ...(ended ? { endDate: lastDate } : {}),
+  }
+}
+
+function buildOccurrences(pattern: Pattern, groupId: number): PatternOccurrence[] {
+  return rows
+    .filter(r => r.correlation_group_id === groupId)
+    .map(r => ({
+      patternId: pattern.id,
+      faultCode: r.fault_code,
+      date: r.date,
+      count: r.occurences,
+      status: (r.is_anomalous ? 'abnormal' : 'normal') as 'abnormal' | 'normal',
+      correlationGroupId: r.correlation_group_id,
     }))
 }
 
-const NEW_PATTERN = pickPattern('g14_485014')
-const ONGOING_PATTERN = pickPattern('g123_485003')
-const UNCLASSIFIED_PATTERN = (rawData.patterns as Pattern[]).find((p) => !!p.endDate)!
+function buildFaultCodeMap(groupId: number): Map<string, FaultCode> {
+  const map = new Map<string, FaultCode>()
+  rows
+    .filter(r => r.correlation_group_id === groupId)
+    .forEach(r => map.set(r.fault_code, { code: r.fault_code, description: r.name }))
+  return map
+}
+
+// ── Story data ────────────────────────────────────────────────────────────
+// New: g32/485 003 — appeared 2026-10-07, only 2 days in view
+const NEW_PATTERN  = buildPattern(32, '485 003')
+const NEW_OCCS     = buildOccurrences(NEW_PATTERN, 32)
+const NEW_FC_MAP   = buildFaultCodeMap(32)
+
+// Ongoing: g137/485 011 — anomalous every day for the full 30-day period
+const ONGOING_PATTERN = buildPattern(137, '485 011')
+const ONGOING_OCCS    = buildOccurrences(ONGOING_PATTERN, 137)
+const ONGOING_FC_MAP  = buildFaultCodeMap(137)
+
+// Unclassified: g235/485 005 — active 2026-09-08→2026-09-26, ended before period end
+const UNC_PATTERN  = buildPattern(235, '485 005', true)
+const UNC_OCCS     = buildOccurrences(UNC_PATTERN, 235)
+const UNC_FC_MAP   = buildFaultCodeMap(235)
 
 const SHARED = {
-  faultCodeMap,
-  dates: DATES_30,
+  dates: DATES,
   labelStep: 5,
   fcColWidth: 200,
   onValidate: () => {},
+  validation: undefined,
 }
 
 const meta = {
   component: PatternCard,
-  tags: ['ai-generated'],
+  tags: ['autodocs'],
   args: {
     ...SHARED,
     pattern: NEW_PATTERN,
-    occurrences: pickOccurrences(NEW_PATTERN),
+    occurrences: NEW_OCCS,
+    faultCodeMap: NEW_FC_MAP,
     status: 'new',
-    validation: undefined,
-    isIgnored: false,
   },
 } satisfies Meta<typeof PatternCard>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
+// 2-day cluster, all 3 FCs anomalous on their first appearance
 export const New: Story = {
   play: async ({ canvas }) => {
     const firstCode = NEW_PATTERN.faultCodes[0]
     await expect(canvas.getByText(firstCode)).toBeVisible()
-    await expect(canvas.getByText(faultCodeMap.get(firstCode)!.description)).toBeVisible()
+    await expect(canvas.getByText(NEW_FC_MAP.get(firstCode)!.description)).toBeVisible()
   },
 }
 
-
+// Anomalous every single day for 30 days — frame spans the full timeline
 export const Ongoing: Story = {
   args: {
     pattern: ONGOING_PATTERN,
-    occurrences: pickOccurrences(ONGOING_PATTERN),
+    occurrences: ONGOING_OCCS,
+    faultCodeMap: ONGOING_FC_MAP,
     status: 'ongoing',
   },
 }
 
+// Active for 16 days then stopped — endDate set, frame ends mid-timeline
 export const Unclassified: Story = {
   args: {
-    pattern: UNCLASSIFIED_PATTERN,
-    occurrences: pickOccurrences(UNCLASSIFIED_PATTERN),
+    pattern: UNC_PATTERN,
+    occurrences: UNC_OCCS,
+    faultCodeMap: UNC_FC_MAP,
     status: 'unclassified',
   },
 }
@@ -97,9 +152,12 @@ export const ValidatedNormal: Story = {
   args: { validation: 'normal' },
 }
 
-export const Ignored: Story = {
+export const ValidatedAbnormalOngoing: Story = {
   args: {
-    status: 'ignored',
-    isIgnored: true,
+    pattern: ONGOING_PATTERN,
+    occurrences: ONGOING_OCCS,
+    faultCodeMap: ONGOING_FC_MAP,
+    status: 'ongoing',
+    validation: 'abnormal',
   },
 }

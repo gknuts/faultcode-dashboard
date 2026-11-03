@@ -1,0 +1,893 @@
+[
+  {
+    "date": "2026-10-08",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-08",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-08",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-08",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-09",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-09",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-09",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-09",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 2,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-09",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 3,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-09",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 7,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-10",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 16,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-10",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 21,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-10",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 18,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-10",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-11",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 97,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-11",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 110,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-11",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 97,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-11",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-12",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-12",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-12",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-12",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-13",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-14",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-14",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-14",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-14",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 1,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-14",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-14",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 5,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-15",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 10,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-15",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 13,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-15",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 13,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-15",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-16",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 43,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-16",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 43,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-16",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 59,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-16",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-17",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 49,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-17",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 61,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-17",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 53,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-17",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-18",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 302,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-18",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 363,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-18",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 304,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-18",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-19",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-19",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-19",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-20",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-21",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 143,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-21",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 164,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-21",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 159,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-21",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-22",
+    "locomotive": "485 005",
+    "fault_code": "444B",
+    "name": "Temperaturgeb. 22 f. K\u00fchlmitteltemperat.",
+    "occurences": 17,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-22",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 17,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-22",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 21,
+    "is_anomalous": false,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-22",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-23",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-23",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 1,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-23",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-23",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 5,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-24",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-24",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-25",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-26",
+    "locomotive": "485 005",
+    "fault_code": "4FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-26",
+    "locomotive": "485 005",
+    "fault_code": "4FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 5,
+    "is_anomalous": false,
+    "correlation_group_id": 235
+  },
+  {
+    "date": "2026-10-26",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 4,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-26",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 4,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-26",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 8,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-27",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-28",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-29",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-10-30",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-01",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-01",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-01",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 5,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-02",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-02",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-02",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 5,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-03",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 1,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-03",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-03",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 5,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-04",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-05",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 2,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-05",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 2,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-05",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 10,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-06",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 2,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-06",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 2,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-06",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 10,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-07",
+    "locomotive": "485 003",
+    "fault_code": "0509",
+    "name": "AUX1 failure (control unit not ready)",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 32
+  },
+  {
+    "date": "2026-11-07",
+    "locomotive": "485 003",
+    "fault_code": "1823",
+    "name": "Device failure AUX1",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 32
+  },
+  {
+    "date": "2026-11-07",
+    "locomotive": "485 003",
+    "fault_code": "5425",
+    "name": "Programming error AUX Controller",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 32
+  },
+  {
+    "date": "2026-11-07",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 1,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-07",
+    "locomotive": "485 011",
+    "fault_code": "3FF7",
+    "name": "Meld Druck/Temp/Vist-Einzelwerte",
+    "occurences": 1,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-07",
+    "locomotive": "485 011",
+    "fault_code": "3FF8",
+    "name": "Meld Umfeld-Historie (Druck/Temp/Vist)",
+    "occurences": 5,
+    "is_anomalous": false,
+    "correlation_group_id": 137
+  },
+  {
+    "date": "2026-11-08",
+    "locomotive": "485 003",
+    "fault_code": "0509",
+    "name": "AUX1 failure (control unit not ready)",
+    "occurences": 2,
+    "is_anomalous": true,
+    "correlation_group_id": 32
+  },
+  {
+    "date": "2026-11-08",
+    "locomotive": "485 003",
+    "fault_code": "1823",
+    "name": "Device failure AUX1",
+    "occurences": 2,
+    "is_anomalous": true,
+    "correlation_group_id": 32
+  },
+  {
+    "date": "2026-11-08",
+    "locomotive": "485 003",
+    "fault_code": "5425",
+    "name": "Programming error AUX Controller",
+    "occurences": 2,
+    "is_anomalous": true,
+    "correlation_group_id": 32
+  },
+  {
+    "date": "2026-11-08",
+    "locomotive": "485 011",
+    "fault_code": "3762",
+    "name": "Fehler Drehzahlgeber FM1 (CTR)",
+    "occurences": 0,
+    "is_anomalous": true,
+    "correlation_group_id": 137
+  }
+]

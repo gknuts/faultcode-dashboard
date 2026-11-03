@@ -91,10 +91,12 @@ export function PatternCard({
     const frameDates = groupOccs.map(o => o.date)
     const minDate = frameDates.reduce((a, b) => a < b ? a : b)
     const maxDate = frameDates.reduce((a, b) => a > b ? a : b)
-    return {
-      frameStartDi: dates.indexOf(minDate),
-      frameEndDi: dates.indexOf(maxDate),
+    const startDi = dates.findIndex(d => d >= minDate)
+    let endDi = -1
+    for (let i = dates.length - 1; i >= 0; i--) {
+      if (dates[i] <= maxDate) { endDi = i; break }
     }
+    return { frameStartDi: startDi, frameEndDi: endDi }
   }, [occurrences, pattern.id, dates])
 
   const hasFrame = frameStartDi >= 0 && frameEndDi >= 0
