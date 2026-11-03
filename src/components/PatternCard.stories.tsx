@@ -5,8 +5,8 @@ import type { FaultCode, Pattern, PatternOccurrence } from '../data/types'
 import rawRows from '../data/story_fixtures.json'
 
 // ── Date axis: actual period of the raw data ──────────────────────────────
-const PERIOD_START = '2026-10-08'
-const PERIOD_END   = '2026-11-08'
+const PERIOD_START = '2026-10-04'
+const PERIOD_END   = '2026-11-03'
 
 function buildDates(start: string, end: string): string[] {
   const dates: string[] = []
