@@ -75,11 +75,11 @@ export const OngoingPatterns: Story = {
   },
 }
 
-export const ResolvedPatterns: Story = {
+export const UnclassifiedPatterns: Story = {
   args: {
     ...SHARED,
-    title: 'Resolved',
-    status: 'resolved',
+    title: 'Unclassified',
+    status: 'unclassified',
     patterns: [{ ...PATTERNS[0], endDate: '2026-10-30' }],
   },
 }

@@ -83,10 +83,10 @@ export const Ongoing: Story = {
   },
 }
 
-export const Resolved: Story = {
+export const Unclassified: Story = {
   args: {
     pattern: { ...PATTERN, startDate: '2026-10-01', endDate: '2026-10-30' },
-    status: 'resolved',
+    status: 'unclassified',
   },
 }
 
