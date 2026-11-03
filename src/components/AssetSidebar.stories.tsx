@@ -27,12 +27,8 @@ const meta = {
     assets: ASSETS,
     patterns: PATTERNS,
     selectedAssetId: 'a1',
-    showNew: true,
-    showOngoing: true,
     deriveStatus,
     onSelect: () => {},
-    onToggleNew: () => {},
-    onToggleOngoing: () => {},
     sidebarWidth: 210,
   },
 } satisfies Meta<typeof AssetSidebar>
@@ -53,6 +49,3 @@ export const NoneSelected: Story = {
   args: { selectedAssetId: null },
 }
 
-export const FiltersOff: Story = {
-  args: { showNew: false, showOngoing: false },
-}

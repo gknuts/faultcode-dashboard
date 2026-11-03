@@ -13,9 +13,9 @@ export default function App() {
   const {
     data, loadingState, loadData, retryLoad,
     lastSessionAt, ignoredPatterns, patternValidations,
-    selectedAssetId, view, showNew, showOngoing,
+    selectedAssetId, view,
     setSelectedAsset, setView, simulateNewSession,
-    ignorePattern, validatePattern, toggleShowNew, toggleShowOngoing,
+    ignorePattern, validatePattern,
   } = useStore()
 
   useEffect(() => { loadData() }, [loadData])
@@ -56,10 +56,8 @@ export default function App() {
   }
   if (!data) return null
 
-  const visibleNew = showNew ? assetPatterns.new : []
-  const visibleOngoing = showOngoing ? assetPatterns.ongoing : []
   const resolvedAndIgnored = [...assetPatterns.resolved, ...assetPatterns.ignored]
-  const hasNoPatterns = visibleNew.length === 0 && visibleOngoing.length === 0 && resolvedAndIgnored.length === 0
+  const hasNoPatterns = assetPatterns.new.length === 0 && assetPatterns.ongoing.length === 0 && resolvedAndIgnored.length === 0
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#0B0B10' }}>
@@ -112,12 +110,8 @@ export default function App() {
           assets={data.assets}
           patterns={data.patterns}
           selectedAssetId={selectedAssetId}
-          showNew={showNew}
-          showOngoing={showOngoing}
           deriveStatus={derive}
           onSelect={setSelectedAsset}
-          onToggleNew={toggleShowNew}
-          onToggleOngoing={toggleShowOngoing}
           sidebarWidth={SIDEBAR_WIDTH}
         />
 
@@ -140,11 +134,11 @@ export default function App() {
             </div>
           ) : (
             <>
-              <PatternSection title="New Anomalous Patterns" status="new" patterns={visibleNew}
+              <PatternSection title="New Anomalous Patterns" status="new" patterns={assetPatterns.new}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations} ignoredPatterns={ignoredPatterns}
                 fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} onIgnore={ignorePattern} />
-              <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={visibleOngoing}
+              <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations} ignoredPatterns={ignoredPatterns}
                 fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} onIgnore={ignorePattern} />

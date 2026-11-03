@@ -33,8 +33,6 @@ export interface AppState {
 
   selectedAssetId: string | null
   view: ViewMode
-  showNew: boolean
-  showOngoing: boolean
 
   loadData: () => Promise<void>
   retryLoad: () => void
@@ -43,8 +41,6 @@ export interface AppState {
   simulateNewSession: () => void
   ignorePattern: (id: string) => void
   validatePattern: (id: string, status: 'abnormal' | 'normal') => void
-  toggleShowNew: () => void
-  toggleShowOngoing: () => void
 }
 
 const storedSession = loadLastSessionAt() ?? todayDefaultSessionAt()
@@ -61,8 +57,6 @@ export const useStore = create<AppState>((set, get) => ({
 
   selectedAssetId: null,
   view: '1M',
-  showNew: true,
-  showOngoing: true,
 
   loadData: async () => {
     set({ loadingState: 'loading' })
@@ -105,8 +99,6 @@ export const useStore = create<AppState>((set, get) => ({
     set({ patternValidations: next })
   },
 
-  toggleShowNew: () => set((s) => ({ showNew: !s.showNew })),
-  toggleShowOngoing: () => set((s) => ({ showOngoing: !s.showOngoing })),
 }))
 
 if (typeof window !== 'undefined') {

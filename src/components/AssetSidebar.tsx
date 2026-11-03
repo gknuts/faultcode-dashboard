@@ -4,18 +4,14 @@ interface Props {
   assets: Asset[]
   patterns: Pattern[]
   selectedAssetId: string | null
-  showNew: boolean
-  showOngoing: boolean
   deriveStatus: (p: Pattern) => DerivedStatus
   onSelect: (id: string) => void
-  onToggleNew: () => void
-  onToggleOngoing: () => void
   sidebarWidth: number
 }
 
 export function AssetSidebar({
-  assets, patterns, selectedAssetId, showNew, showOngoing,
-  deriveStatus, onSelect, onToggleNew, onToggleOngoing, sidebarWidth,
+  assets, patterns, selectedAssetId,
+  deriveStatus, onSelect, sidebarWidth,
 }: Props) {
   function countFor(assetId: string, status: DerivedStatus) {
     return patterns.filter(p => p.assetId === assetId && deriveStatus(p) === status).length
@@ -30,24 +26,6 @@ export function AssetSidebar({
       flexDirection: 'column',
       flexShrink: 0,
     }}>
-      {/* Filter toggles — top of sidebar, mirroring mockup */}
-      <div style={{
-        padding: '8px 12px',
-        borderBottom: '1px solid #1A1A22',
-        display: 'flex',
-        gap: 14,
-        flexShrink: 0,
-      }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer' }}>
-          <Checkbox checked={showNew} onChange={onToggleNew} color="#E8394A" />
-          <span style={{ fontSize: 12, color: showNew ? '#E8394A' : '#42424E', fontWeight: 600 }}>New</span>
-        </label>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer' }}>
-          <Checkbox checked={showOngoing} onChange={onToggleOngoing} color="#D97010" />
-          <span style={{ fontSize: 12, color: showOngoing ? '#D97010' : '#42424E', fontWeight: 600 }}>Ongoing</span>
-        </label>
-      </div>
-
       {/* Asset list */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '6px 8px', display: 'flex', flexDirection: 'column', gap: 3 }}>
         {assets.map((asset) => {
@@ -62,42 +40,48 @@ export function AssetSidebar({
               style={{
                 display: 'flex',
                 flexDirection: 'column',
+                justifyContent: 'center',
                 alignItems: 'flex-start',
-                gap: 5,
+                alignSelf: 'stretch',
+                gap: 2,
                 width: '100%',
-                padding: '8px 10px',
-                background: isSelected ? 'rgba(90,60,220,0.30)' : 'transparent',
-                border: isSelected ? '1px solid rgba(108,75,245,0.5)' : '1px solid transparent',
-                borderRadius: 8,
+                padding: '4px 4px 4px 9px',
+                background: '#000',
+                border: '2px solid #000',
+                borderRadius: 12,
                 cursor: 'pointer',
                 textAlign: 'left',
                 boxSizing: 'border-box',
               }}
             >
-              <span style={{ color: isSelected ? '#FFFFFF' : '#B0B0CC', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                {asset.label}
-              </span>
-              {(newCount > 0 || ongoingCount > 0) && (
-                <div style={{ display: 'flex', gap: 4 }}>
-                  {newCount > 0 && (
-                    <span style={{
-                      background: '#C4223A', color: '#FFD0D8',
-                      fontSize: 10, fontWeight: 700, padding: '2px 7px',
-                      borderRadius: 10, whiteSpace: 'nowrap',
-                    }}>
-                      {newCount} new
-                    </span>
-                  )}
-                  {ongoingCount > 0 && (
-                    <span style={{
-                      background: '#B55A08', color: '#FFD8A8',
-                      fontSize: 10, fontWeight: 700, padding: '2px 7px',
-                      borderRadius: 10, whiteSpace: 'nowrap',
-                    }}>
-                      {ongoingCount} ongoing
-                    </span>
-                  )}
-                </div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                <span style={{ color: isSelected ? '#FFFFFF' : '#B0B0CC', fontSize: 13, fontWeight: 700, whiteSpace: 'nowrap' }}>
+                  {asset.label}
+                </span>
+                {newCount > 0 && (
+                  <span style={{
+                    display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10,
+                    padding: '0 5px 1px 5px',
+                    borderRadius: 4,
+                    border: '1px solid rgba(255, 106, 0, 0.19)',
+                    background: 'rgba(255, 106, 0, 0.20)',
+                    fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap',
+                  }}>
+                    {newCount} new
+                  </span>
+                )}
+              </div>
+              {ongoingCount > 0 && (
+                <span style={{
+                  display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10,
+                  padding: '0 5px 1px 5px',
+                  borderRadius: 4,
+                  border: '1px solid rgba(139, 106, 255, 0.19)',
+                  background: 'rgba(139, 106, 255, 0.20)',
+                  fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap',
+                }}>
+                  {ongoingCount} ongoing
+                </span>
               )}
             </button>
           )
@@ -107,19 +91,3 @@ export function AssetSidebar({
   )
 }
 
-function Checkbox({ checked, onChange, color }: { checked: boolean; onChange: () => void; color: string }) {
-  return (
-    <div onClick={onChange} style={{
-      width: 13, height: 13, borderRadius: 3,
-      border: `2px solid ${checked ? color : '#2A2A3A'}`,
-      background: checked ? color : 'transparent',
-      cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-    }}>
-      {checked && (
-        <svg width={7} height={5} viewBox="0 0 7 5" fill="none">
-          <path d="M1 2.5l1.5 1.5 3.5-3.5" stroke="#fff" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      )}
-    </div>
-  )
-}
