@@ -31,6 +31,7 @@ export interface PatternOccurrence {
   date: ISODate
   count: number
   status: 'abnormal' | 'normal'
+  correlationGroupId?: number
 }
 
 export type DerivedStatus = 'new' | 'ongoing' | 'unclassified'

@@ -82,6 +82,25 @@ export function PatternCard({
     return map
   }, [occurrences, pattern.id])
 
+  // Compute correlation group frame bounds
+  const { frameStartDi, frameEndDi } = useMemo(() => {
+    const groupOccs = occurrences.filter(o => o.patternId === pattern.id && o.correlationGroupId != null)
+    if (!groupOccs.length) return { frameStartDi: -1, frameEndDi: -1 }
+    const frameDates = groupOccs.map(o => o.date)
+    const minDate = frameDates.reduce((a, b) => a < b ? a : b)
+    const maxDate = frameDates.reduce((a, b) => a > b ? a : b)
+    return {
+      frameStartDi: dates.indexOf(minDate),
+      frameEndDi: dates.indexOf(maxDate),
+    }
+  }, [occurrences, pattern.id, dates])
+
+  const hasFrame = frameStartDi >= 0 && frameEndDi >= 0
+  const startFraction = hasFrame ? frameStartDi / dates.length : 0
+  const widthFraction = hasFrame ? (frameEndDi - frameStartDi + 1) / dates.length : 0
+  const frameLeft = `calc(${BADGE_WIDTH}px + ${startFraction} * (100% - ${BADGE_WIDTH}px))`
+  const frameWidth = `calc(${widthFraction} * (100% - ${BADGE_WIDTH}px))`
+
   return (
     <div
       style={{
@@ -149,6 +168,34 @@ export function PatternCard({
       )}
 
       {/* Per-FC rows: label row (full width) + dots row */}
+      <div style={{ position: 'relative', zIndex: 0 }}>
+        {/* #232323 background behind FC rows for frame range */}
+        {hasFrame && (
+          <div style={{
+            position: 'absolute',
+            top: 0, bottom: 0,
+            left: frameLeft,
+            width: frameWidth,
+            background: '#232323',
+            zIndex: -1,
+          }} />
+        )}
+
+        {/* Dashed border overlay on top of FC rows */}
+        {hasFrame && (
+          <div style={{
+            position: 'absolute',
+            top: 0, bottom: 0,
+            left: frameLeft,
+            width: frameWidth,
+            borderRadius: 6,
+            border: '1px dashed #CCC',
+            background: 'rgba(153,153,153,0.15)',
+            pointerEvents: 'none',
+            zIndex: 5,
+          }} />
+        )}
+
       {pattern.faultCodes.map((code, i) => {
         const fc = faultCodeMap.get(code)
         const fcMap = occMap.get(code)
@@ -217,6 +264,16 @@ export function PatternCard({
               {/* Mini timeline for this FC code */}
               <div style={{ flex: 1, background: '#1A1A1A' }}>
                 <svg width="100%" height={DOTS_HEIGHT} style={{ display: 'block' }} onMouseMove={handleSvgMouseMove}>
+                  {/* Frame background rect */}
+                  {hasFrame && (
+                    <rect
+                      x={`${startFraction * 100}%`}
+                      y={0}
+                      width={`${widthFraction * 100}%`}
+                      height={DOTS_HEIGHT}
+                      fill="#474747"
+                    />
+                  )}
                   {/* Grid lines */}
                   {dates.map((_, di) => {
                     if (di % labelStep !== 0) return null
@@ -237,6 +294,11 @@ export function PatternCard({
                     if (!occ) return null
                     const cx = `${((di + 0.5) / dates.length) * 100}%`
                     const cy = DOTS_HEIGHT / 2
+                    const inFrame = hasFrame && di >= frameStartDi && di <= frameEndDi
+                    if (inFrame) {
+                      const r = Math.min(5 + occ.count * 0.9, 11)
+                      return <circle key={date} cx={cx} cy={cy} r={r} fill="#999999" fillOpacity={0.92} />
+                    }
                     if (occ.occStatus === 'normal' && status !== 'unclassified') {
                       return <circle key={date} cx={cx} cy={cy} r={5} fill="#2ECC71" fillOpacity={0.8} />
                     }
@@ -250,6 +312,7 @@ export function PatternCard({
           </div>
         )
       })}
+      </div>
 
       {/* Footer: date range + actions */}
       <div style={{

@@ -28,9 +28,12 @@ function pickPattern(id: string): Pattern {
 }
 
 function pickOccurrences(pattern: Pattern): PatternOccurrence[] {
-  return (rawData.occurrences as PatternOccurrence[]).filter(
-    (o) => o.patternId === pattern.id
-  )
+  return (rawData.occurrences as (PatternOccurrence & { correlation_group_id?: number })[])
+    .filter((o) => o.patternId === pattern.id)
+    .map(({ correlation_group_id, ...o }) => ({
+      ...o,
+      ...(correlation_group_id != null ? { correlationGroupId: correlation_group_id } : {}),
+    }))
 }
 
 const NEW_PATTERN = pickPattern('g14_485014')
