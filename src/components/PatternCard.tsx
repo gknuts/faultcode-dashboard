@@ -63,6 +63,7 @@ export function PatternCard({
   const abnormalBg = ABNORMAL_BG[status]
 
   const [hoveredDi, setHoveredDi] = useState<number | null>(null)
+  const [frameSelected, setFrameSelected] = useState(false)
 
   const handleSvgMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -145,7 +146,6 @@ export function PatternCard({
         borderLeft: `3px solid ${accent}`,
         borderRadius: 4,
         marginBottom: 8,
-        overflow: 'hidden',
         paddingLeft: 15,
         position: 'relative',
       }}
@@ -225,14 +225,14 @@ export function PatternCard({
             left: frameLeft,
             width: frameWidth,
             borderRadius: FRAME_STYLE.borderRadius,
-            borderTop: FRAME_STYLE.borderTop,
-            borderBottom: FRAME_STYLE.borderBottom,
-            borderLeft: FRAME_STYLE.borderLeft,
-            borderRight: FRAME_STYLE.borderRight,
+            borderTop: frameSelected ? FRAME_STYLE.borderTop.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderTop,
+            borderBottom: frameSelected ? FRAME_STYLE.borderBottom.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderBottom,
+            borderLeft: frameSelected ? FRAME_STYLE.borderLeft.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderLeft,
+            borderRight: frameSelected ? FRAME_STYLE.borderRight.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderRight,
             background: FRAME_STYLE.overlayBg,
-            pointerEvents: 'none',
+            cursor: 'pointer',
             zIndex: 5,
-          }}>
+          }} onClick={() => setFrameSelected(s => !s)}>
             {/* Date range label above the frame */}
             <div style={{
               position: 'absolute',
@@ -262,6 +262,24 @@ export function PatternCard({
                 </defs>
               </svg>
             </div>
+            {/* Abnormal/Normal buttons below the frame */}
+            {frameSelected && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                marginTop: 6,
+                display: 'flex',
+                pointerEvents: 'all',
+              }} onClick={e => e.stopPropagation()}>
+                <div style={{ display: 'flex', border: '1px solid #2A2A3A', borderRadius: 20, overflow: 'hidden' }}>
+                  <SegmentButton label="Abnormal" active={validation === 'abnormal'} activeColor="#E8394A" onClick={() => onValidate('abnormal')} />
+                  <div style={{ width: 1, background: '#2A2A3A', flexShrink: 0 }} />
+                  <SegmentButton label="Normal" active={validation === 'normal'} activeColor="#22C55E" onClick={() => onValidate('normal')} />
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -444,13 +462,6 @@ export function PatternCard({
           </svg>
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
-          <div style={{ display: 'flex', border: '1px solid #2A2A3A', borderRadius: 20, overflow: 'hidden' }}>
-            <SegmentButton label="Abnormal" active={validation === 'abnormal'} activeColor="#E8394A" onClick={() => onValidate('abnormal')} />
-            <div style={{ width: 1, background: '#2A2A3A', flexShrink: 0 }} />
-            <SegmentButton label="Normal" active={validation === 'normal'} activeColor="#22C55E" onClick={() => onValidate('normal')} />
-          </div>
-        </div>
       </div>
     </div>
   )
