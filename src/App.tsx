@@ -43,6 +43,17 @@ export default function App() {
     return groups
   }, [data, selectedAssetId, derive])
 
+  const totalCounts = useMemo(() => {
+    if (!data) return { new: 0, ongoing: 0 }
+    let newCount = 0, ongoingCount = 0
+    for (const p of data.patterns) {
+      const s = derive(p)
+      if (s === 'new') newCount++
+      else if (s === 'ongoing') ongoingCount++
+    }
+    return { new: newCount, ongoing: ongoingCount }
+  }, [data, derive])
+
   const labelStep = dates.length <= 7 ? 1 : dates.length <= 14 ? 2 : 5
 
   if (loadingState === 'loading') {
@@ -65,8 +76,8 @@ export default function App() {
       <FilterBar
         view={view} onSetView={setView} onSimulateSession={simulateNewSession}
         panelMode={panelMode} onSetPanelMode={setPanelMode}
-        newCount={assetPatterns.new.length}
-        ongoingCount={assetPatterns.ongoing.length}
+        newCount={totalCounts.new}
+        ongoingCount={totalCounts.ongoing}
       />
 
       {panelMode === 'dashboard' ? (

@@ -42,12 +42,6 @@ const ABNORMAL_COLORS: Record<DerivedStatus, string> = {
   unclassified: '#999999',
 }
 
-const ABNORMAL_BG: Record<DerivedStatus, string> = {
-  new: 'rgba(232,57,74,0.10)',
-  ongoing: 'rgba(217,112,16,0.10)',
-  unclassified: 'rgba(82,82,91,0.04)',
-}
-
 function formatDate(d: string) {
   return format(fromISO(d), 'd MMM yyyy')
 }
@@ -60,7 +54,6 @@ export function PatternCard({
   const cardBg = STATUS_CARD_BG[status]
   const cardBorder = STATUS_BORDER[status]
   const abnormalColor = ABNORMAL_COLORS[status]
-  const abnormalBg = ABNORMAL_BG[status]
 
   const [hoveredDi, setHoveredDi] = useState<number | null>(null)
   const [frameSelected, setFrameSelected] = useState(false)
@@ -289,8 +282,7 @@ export function PatternCard({
       {pattern.faultCodes.map((code, i) => {
         const fc = faultCodeMap.get(code)
         const fcMap = occMap.get(code)
-        const hasAbnormal = dates.some(d => fcMap?.get(d)?.occStatus === 'abnormal')
-        const isLast = i === pattern.faultCodes.length - 1
+const isLast = i === pattern.faultCodes.length - 1
 
         return (
           <div key={code} style={{ marginBottom: !isLast ? 5 : 0 }}>
