@@ -62,7 +62,12 @@ export default function App() {
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#0B0B10' }}>
-      <FilterBar view={view} onSetView={setView} onSimulateSession={simulateNewSession} panelMode={panelMode} onSetPanelMode={setPanelMode} />
+      <FilterBar
+        view={view} onSetView={setView} onSimulateSession={simulateNewSession}
+        panelMode={panelMode} onSetPanelMode={setPanelMode}
+        newCount={assetPatterns.new.length}
+        ongoingCount={assetPatterns.ongoing.length}
+      />
 
       {/* Column header row: ASSET | ANOMALOUS PATTERNS | date axis */}
       <div style={{
