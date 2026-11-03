@@ -115,23 +115,36 @@ export function PatternCard({
         <div style={{ width: BADGE_WIDTH, flexShrink: 0 }} />
         <div style={{ flex: 1, position: 'relative' }}>
           {hoveredDi !== null && (
+            <>
             <div style={{
               position: 'absolute',
               left: `${((hoveredDi + 0.5) / dates.length) * 100}%`,
               transform: 'translateX(-50%)',
-              top: 3,
-              background: '#1E1E2E',
-              border: '1px solid #4A4A6A',
-              borderRadius: 3,
-              padding: '1px 7px',
-              fontSize: 11,
-              color: '#C0C0E0',
+              top: 0,
+              fontSize: 10,
+              fontFamily: 'Roboto, sans-serif',
+              fontWeight: 400,
+              lineHeight: '15px',
+              color: '#FFFFFF',
               whiteSpace: 'nowrap',
               pointerEvents: 'none',
               zIndex: 10,
             }}>
               {formatDate(dates[hoveredDi])}
             </div>
+            <div style={{
+              position: 'absolute',
+              left: `${((hoveredDi + 0.5) / dates.length) * 100}%`,
+              transform: 'translateX(-50%)',
+              top: 12,
+              width: 0,
+              height: 0,
+              borderLeft: '5px solid transparent',
+              borderRight: '5px solid transparent',
+              borderTop: '6px solid white',
+              pointerEvents: 'none',
+            }} />
+            </>
           )}
         </div>
       </div>
