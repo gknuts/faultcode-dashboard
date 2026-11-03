@@ -64,6 +64,7 @@ export function PatternCard({
 
   const [hoveredDi, setHoveredDi] = useState<number | null>(null)
   const [frameSelected, setFrameSelected] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const handleSvgMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -232,7 +233,7 @@ export function PatternCard({
             background: FRAME_STYLE.overlayBg,
             cursor: 'pointer',
             zIndex: 5,
-          }} onClick={() => setFrameSelected(s => !s)}>
+          }} onClick={() => { setFrameSelected(s => { if (!s) setMenuOpen(false); return !s }) }}>
             {/* Date range label above the frame */}
             <div style={{
               position: 'absolute',
@@ -442,25 +443,46 @@ export function PatternCard({
           </div>
         </div>
 
-        <button onClick={() => {}} style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 24,
-          height: 24,
-          background: 'transparent',
-          border: '1px solid #3D3D3D',
-          borderRadius: 6,
-          cursor: 'pointer',
-          flexShrink: 0,
-          padding: 0,
-        }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <circle cx="8" cy="3" r="1" fill="#999999"/>
-            <circle cx="8" cy="8" r="1" fill="#999999"/>
-            <circle cx="8" cy="13" r="1" fill="#999999"/>
-          </svg>
-        </button>
+        {menuOpen ? (
+          <div style={{ display: 'flex', gap: 4 }}>
+            {(['Ignore this pattern', 'Create an alert', 'Add to pattern', 'Inspect pattern'] as const).map(label => (
+              <button key={label} onClick={() => {}} style={{
+                background: 'transparent',
+                border: '1px solid #3D3D3D',
+                borderRadius: 6,
+                color: '#999999',
+                fontSize: 11,
+                fontFamily: 'Roboto, sans-serif',
+                fontWeight: 500,
+                padding: '3px 8px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+              }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        ) : (
+          <button onClick={() => { setMenuOpen(true); setFrameSelected(false) }} style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 24,
+            height: 24,
+            background: 'transparent',
+            border: '1px solid #3D3D3D',
+            borderRadius: 6,
+            cursor: 'pointer',
+            flexShrink: 0,
+            padding: 0,
+          }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="3" r="1" fill="#999999"/>
+              <circle cx="8" cy="8" r="1" fill="#999999"/>
+              <circle cx="8" cy="13" r="1" fill="#999999"/>
+            </svg>
+          </button>
+        )}
         </div>
 
       </div>
