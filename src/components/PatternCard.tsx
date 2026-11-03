@@ -291,7 +291,28 @@ export function PatternCard({
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <button onClick={() => {}} style={{
+          marginLeft: 8,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: 24,
+          height: 24,
+          background: 'transparent',
+          border: '1px solid #3D3D3D',
+          borderRadius: 6,
+          cursor: 'pointer',
+          flexShrink: 0,
+          padding: 0,
+        }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="3" r="1" fill="#999999"/>
+            <circle cx="8" cy="8" r="1" fill="#999999"/>
+            <circle cx="8" cy="13" r="1" fill="#999999"/>
+          </svg>
+        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
           <GhostButton label="Create an alert" onClick={() => {}} />
           <span style={{ color: '#2A2A3A', fontSize: 11 }}>|</span>
           <GhostButton label="Create a ticket" onClick={() => {}} />
