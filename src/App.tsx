@@ -69,7 +69,143 @@ export default function App() {
         ongoingCount={assetPatterns.ongoing.length}
       />
 
-      {/* Column header row: ASSET | ANOMALOUS PATTERNS | date axis */}
+      {panelMode === 'dashboard' ? (
+        <DashboardView
+          dates={dates}
+          labelStep={labelStep}
+          data={data}
+          selectedAssetId={selectedAssetId}
+          onSelectAsset={setSelectedAsset}
+          deriveStatus={derive}
+          assetPatterns={assetPatterns}
+          faultCodeMap={faultCodeMap}
+          patternValidations={patternValidations}
+          onValidate={validatePattern}
+          hasNoPatterns={hasNoPatterns}
+        />
+      ) : (
+        <>
+          {/* Column header row: ASSET | ANOMALOUS PATTERNS | date axis */}
+          <div style={{
+            height: 36,
+            flexShrink: 0,
+            display: 'flex',
+            background: '#0F0F16',
+            borderBottom: '1px solid #1E1E28',
+          }}>
+            <div style={{
+              width: SIDEBAR_WIDTH,
+              flexShrink: 0,
+              borderRight: '1px solid #1E1E28',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 16px',
+            }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#52526A', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                Asset
+              </span>
+            </div>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'stretch' }}>
+              <div style={{
+                width: FC_COL_WIDTH,
+                flexShrink: 0,
+                borderRight: '1px solid #1A1A26',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: '#2A2A3C', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                  Code
+                </span>
+              </div>
+              <DateAxisSvg dates={dates} labelStep={labelStep} showTodayMarker />
+            </div>
+          </div>
+
+          {/* Main content */}
+          <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+            <AssetSidebar
+              assets={data.assets}
+              patterns={data.patterns}
+              selectedAssetId={selectedAssetId}
+              deriveStatus={derive}
+              onSelect={setSelectedAsset}
+              sidebarWidth={SIDEBAR_WIDTH}
+            />
+            <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', position: 'relative' }}>
+              <div style={{
+                position: 'absolute',
+                top: 0, bottom: 0,
+                left: `calc(76px + ${(dates.length - 0.5) / dates.length} * (100% - 92px))`,
+                width: 1,
+                background: 'rgba(110,110,200,0.18)',
+                pointerEvents: 'none',
+                zIndex: 2,
+              }} />
+              {hasNoPatterns ? (
+                <div style={{ color: '#3F3F52', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
+                  No patterns to display for this asset.
+                </div>
+              ) : (
+                <>
+                  <PatternSection title="New Anomalous Patterns" status="new" patterns={assetPatterns.new}
+                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
+                    patternValidations={patternValidations}
+                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+                  <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
+                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
+                    patternValidations={patternValidations}
+                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+                  <PatternSection title="Unclassified Patterns" status="unclassified" patterns={assetPatterns.unclassified}
+                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
+                    patternValidations={patternValidations}
+                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Footer date axis */}
+          <div style={{
+            height: 36,
+            flexShrink: 0,
+            display: 'flex',
+            background: '#0F0F16',
+            borderTop: '1px solid #1E1E28',
+          }}>
+            <div style={{ width: SIDEBAR_WIDTH, flexShrink: 0, borderRight: '1px solid #1E1E28' }} />
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+              <div style={{ width: FC_COL_WIDTH, flexShrink: 0 }} />
+              <DateAxisSvg dates={dates} labelStep={labelStep} />
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+interface DashboardViewProps {
+  dates: string[]
+  labelStep: number
+  data: import('./data/types').PatternData
+  selectedAssetId: string | null
+  onSelectAsset: (id: string) => void
+  deriveStatus: (p: { id: string; assetId: string; faultCodes: string[]; startDate: string; endDate?: string }) => import('./data/types').DerivedStatus
+  assetPatterns: { new: import('./data/types').Pattern[]; ongoing: import('./data/types').Pattern[]; unclassified: import('./data/types').Pattern[] }
+  faultCodeMap: Map<string, import('./data/types').FaultCode>
+  patternValidations: Record<string, 'abnormal' | 'normal'>
+  onValidate: (id: string, status: 'abnormal' | 'normal') => void
+  hasNoPatterns: boolean
+}
+
+function DashboardView({
+  dates, labelStep, data, selectedAssetId, onSelectAsset, deriveStatus,
+  assetPatterns, faultCodeMap, patternValidations, onValidate, hasNoPatterns,
+}: DashboardViewProps) {
+  return (
+    <>
+      {/* Column header row */}
       <div style={{
         height: 36,
         flexShrink: 0,
@@ -77,7 +213,6 @@ export default function App() {
         background: '#0F0F16',
         borderBottom: '1px solid #1E1E28',
       }}>
-        {/* ASSET label only */}
         <div style={{
           width: SIDEBAR_WIDTH,
           flexShrink: 0,
@@ -90,10 +225,7 @@ export default function App() {
             Asset
           </span>
         </div>
-
-        {/* Right panel header: badge spacer + date axis */}
         <div style={{ flex: 1, display: 'flex', alignItems: 'stretch' }}>
-          {/* Badge-width spacer with "CODE" label */}
           <div style={{
             width: FC_COL_WIDTH,
             flexShrink: 0,
@@ -116,18 +248,14 @@ export default function App() {
           assets={data.assets}
           patterns={data.patterns}
           selectedAssetId={selectedAssetId}
-          deriveStatus={derive}
-          onSelect={setSelectedAsset}
+          deriveStatus={deriveStatus}
+          onSelect={onSelectAsset}
           sidebarWidth={SIDEBAR_WIDTH}
         />
-
         <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', position: 'relative' }}>
-          {/* Continuous today vertical line across all cards */}
           <div style={{
             position: 'absolute',
             top: 0, bottom: 0,
-            // FC_COL_WIDTH(60) + padding-left(16) = 76px offset, then todayFraction of remaining width
-            // padding left+right = 32px total
             left: `calc(76px + ${(dates.length - 0.5) / dates.length} * (100% - 92px))`,
             width: 1,
             background: 'rgba(110,110,200,0.18)',
@@ -143,15 +271,15 @@ export default function App() {
               <PatternSection title="New Anomalous Patterns" status="new" patterns={assetPatterns.new}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
-                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+                fcColWidth={FC_COL_WIDTH} onValidate={onValidate} />
               <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
-                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+                fcColWidth={FC_COL_WIDTH} onValidate={onValidate} />
               <PatternSection title="Unclassified Patterns" status="unclassified" patterns={assetPatterns.unclassified}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
-                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+                fcColWidth={FC_COL_WIDTH} onValidate={onValidate} />
             </>
           )}
         </div>
@@ -171,7 +299,7 @@ export default function App() {
           <DateAxisSvg dates={dates} labelStep={labelStep} />
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
