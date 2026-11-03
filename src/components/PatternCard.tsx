@@ -130,19 +130,23 @@ export function PatternCard({
               borderTop: '6px solid white',
               pointerEvents: 'none',
             }} />
-            <div style={{
-              position: 'absolute',
-              top: 19,
-              bottom: 0,
-              left: `${((hoveredDi + 0.5) / dates.length) * 100}%`,
-              width: 1,
-              background: 'rgba(150,150,220,0.5)',
-              pointerEvents: 'none',
-            }} />
             </>
           )}
         </div>
       </div>
+      {/* Single full-height hover line — starts below triangle, covers all FC rows */}
+      {hoveredDi !== null && (
+        <div style={{
+          position: 'absolute',
+          top: 19,
+          bottom: 0,
+          left: `calc(75px + (100% - 75px) * ${(hoveredDi + 0.5) / dates.length})`,
+          width: 1,
+          background: 'rgba(150,150,220,0.5)',
+          pointerEvents: 'none',
+          zIndex: 5,
+        }} />
+      )}
 
       {/* Per-FC rows: label row (full width) + dots row */}
       {pattern.faultCodes.map((code, i) => {
@@ -227,18 +231,6 @@ export function PatternCard({
                     y2={DOTS_HEIGHT}
                     stroke="rgba(150,150,220,0.22)" strokeWidth={1.5} strokeDasharray="3 3"
                   />
-                  {/* Hover vertical line */}
-                  {hoveredDi !== null && (
-                    <line
-                      x1={`${((hoveredDi + 0.5) / dates.length) * 100}%`}
-                      y1={0}
-                      x2={`${((hoveredDi + 0.5) / dates.length) * 100}%`}
-                      y2={DOTS_HEIGHT}
-                      stroke="rgba(150,150,220,0.5)"
-                      strokeWidth={1}
-                      pointerEvents="none"
-                    />
-                  )}
                   {/* Dots */}
                   {dates.map((date, di) => {
                     const occ = fcMap?.get(date)
