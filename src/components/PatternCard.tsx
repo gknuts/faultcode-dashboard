@@ -20,13 +20,13 @@ interface Props {
 
 const STATUS_ACCENT: Record<DerivedStatus, string> = {
   new: '#E8394A',
-  ongoing: '#D97010',
+  ongoing: '#8B6AFF',
   unclassified: '#3F3F52',
 }
 
 const STATUS_CARD_BG: Record<DerivedStatus, string> = {
   new: '#150C0F',
-  ongoing: '#130E08',
+  ongoing: '#0E0A17',
   unclassified: '#0D0D11',
 }
 
@@ -38,7 +38,7 @@ const STATUS_BORDER: Record<DerivedStatus, string> = {
 
 const ABNORMAL_COLORS: Record<DerivedStatus, string> = {
   new: '#E8394A',
-  ongoing: '#D97010',
+  ongoing: '#2EB175',
   unclassified: '#999999',
 }
 
