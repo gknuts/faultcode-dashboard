@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { Asset, Pattern, DerivedStatus } from '../data/types'
 
 interface Props {
@@ -13,9 +14,15 @@ export function AssetSidebar({
   assets, patterns, selectedAssetId,
   deriveStatus, onSelect, sidebarWidth,
 }: Props) {
+  const [search, setSearch] = useState('')
+
   function countFor(assetId: string, status: DerivedStatus) {
     return patterns.filter(p => p.assetId === assetId && deriveStatus(p) === status).length
   }
+
+  const filteredAssets = search.trim()
+    ? assets.filter(a => a.label.toLowerCase().includes(search.toLowerCase()))
+    : assets
 
   return (
     <div style={{
@@ -26,9 +33,47 @@ export function AssetSidebar({
       flexDirection: 'column',
       flexShrink: 0,
     }}>
+      {/* Search box */}
+      <div style={{ padding: '8px 8px 4px 8px', flexShrink: 0 }}>
+        <div style={{
+          display: 'flex',
+          width: '100%',
+          height: 28,
+          padding: '5px 10px',
+          alignItems: 'center',
+          gap: 8,
+          borderRadius: 32,
+          border: '1px solid #3C3C3C',
+          boxSizing: 'border-box',
+        }}>
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search"
+            className="asset-search"
+            style={{
+              flex: 1,
+              background: 'transparent',
+              border: 'none',
+              outline: 'none',
+              color: '#fff',
+              fontFamily: 'Roboto',
+              fontSize: 12,
+              fontWeight: 500,
+              lineHeight: '16px',
+              minWidth: 0,
+            }}
+          />
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+            <path d="M11.3335 11.3334L14.0002 14" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="white" strokeOpacity="0.3"/>
+            <path d="M2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667C8.80867 12.6667 10.1441 12.0677 11.1096 11.0995C12.0718 10.1348 12.6667 8.80353 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333Z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="white" strokeOpacity="0.3"/>
+          </svg>
+        </div>
+      </div>
+
       {/* Asset list */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '6px 8px', display: 'flex', flexDirection: 'column', gap: 3 }}>
-        {assets.map((asset) => {
+        {filteredAssets.map((asset) => {
           const newCount = countFor(asset.id, 'new')
           const ongoingCount = countFor(asset.id, 'ongoing')
           const isSelected = asset.id === selectedAssetId
