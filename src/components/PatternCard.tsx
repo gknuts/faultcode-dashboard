@@ -19,13 +19,13 @@ interface Props {
 }
 
 const STATUS_ACCENT: Record<DerivedStatus, string> = {
-  new: '#E8394A',
+  new: '#FF6A00',
   ongoing: '#8B6AFF',
   unclassified: '#3F3F52',
 }
 
 const STATUS_CARD_BG: Record<DerivedStatus, string> = {
-  new: '#150C0F',
+  new: '#170A00',
   ongoing: '#0E0A17',
   unclassified: '#0D0D11',
 }
@@ -304,7 +304,7 @@ export function PatternCard({
               <div style={{
                 width: BADGE_WIDTH,
                 flexShrink: 0,
-                background: status === 'unclassified' ? '#1A1A1A' : status === 'ongoing' ? '#1A1623' : hasAbnormal ? '#2D1D20' : '#050508',
+                background: status === 'unclassified' ? '#1A1A1A' : status === 'ongoing' ? '#1A1623' : '#23170D',
                 borderTop: '1px solid #3D3D3D',
                 borderLeft: '1px solid #3D3D3D',
                 borderRight: '1px solid #3D3D3D',
@@ -337,7 +337,7 @@ export function PatternCard({
               <div style={{
                 width: BADGE_WIDTH,
                 flexShrink: 0,
-                background: status === 'unclassified' ? '#1A1A1A' : status === 'ongoing' ? '#1A1623' : hasAbnormal ? '#2D1D20' : '#050508',
+                background: status === 'unclassified' ? '#1A1A1A' : status === 'ongoing' ? '#1A1623' : '#23170D',
                 borderLeft: '1px solid #3D3D3D',
                 borderRight: '1px solid #3D3D3D',
                 display: 'flex',
@@ -350,7 +350,7 @@ export function PatternCard({
                 </svg>
               </div>
               {/* Mini timeline for this FC code */}
-              <div style={{ flex: 1, background: status === 'ongoing' ? '#1A1623' : '#1A1A1A' }}>
+              <div style={{ flex: 1, background: status === 'ongoing' ? '#1A1623' : status === 'new' ? '#23170D' : '#1A1A1A' }}>
                 <svg width="100%" height={DOTS_HEIGHT} style={{ display: 'block' }} onMouseMove={handleSvgMouseMove}>
                   {/* Frame background rect */}
                   {hasFrame && FRAME_STYLE && (
