@@ -169,7 +169,7 @@ export function PatternCard({
               <div style={{
                 width: BADGE_WIDTH,
                 flexShrink: 0,
-                background: hasAbnormal ? '#2D1D20' : '#050508',
+                background: status === 'unclassified' ? '#1A1A1A' : hasAbnormal ? '#2D1D20' : '#050508',
                 borderTop: '1px solid #3D3D3D',
                 borderLeft: '1px solid #3D3D3D',
                 borderRight: '1px solid #3D3D3D',
@@ -202,7 +202,7 @@ export function PatternCard({
               <div style={{
                 width: BADGE_WIDTH,
                 flexShrink: 0,
-                background: hasAbnormal ? '#2D1D20' : '#050508',
+                background: status === 'unclassified' ? '#1A1A1A' : hasAbnormal ? '#2D1D20' : '#050508',
                 borderLeft: '1px solid #3D3D3D',
                 borderRight: '1px solid #3D3D3D',
                 display: 'flex',
@@ -215,7 +215,7 @@ export function PatternCard({
                 </svg>
               </div>
               {/* Mini timeline for this FC code */}
-              <div style={{ flex: 1, background: '#211519' }}>
+              <div style={{ flex: 1, background: '#1A1A1A' }}>
                 <svg width="100%" height={DOTS_HEIGHT} style={{ display: 'block' }} onMouseMove={handleSvgMouseMove}>
                   {/* Grid lines */}
                   {dates.map((_, di) => {
