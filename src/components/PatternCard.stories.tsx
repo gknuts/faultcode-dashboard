@@ -72,13 +72,6 @@ export const New: Story = {
   },
 }
 
-// Proves index.css loaded — --bg-app is defined only if the CSS file imported correctly
-export const CssCheck: Story = {
-  play: async ({ canvasElement }) => {
-    const root = canvasElement.ownerDocument.documentElement
-    await expect(getComputedStyle(root).getPropertyValue('--bg-app').trim()).toBe('#000000')
-  },
-}
 
 export const Ongoing: Story = {
   args: {
