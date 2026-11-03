@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useStore, derivePatternStatus } from './store/index'
 import FilterBar from './components/FilterBar'
 import { AssetSidebar } from './components/AssetSidebar'
 import { PatternSection } from './components/PatternSection'
 import { getPeriodRange, getDatesInRange, formatAxisLabel } from './lib/dates'
-import type { DerivedStatus } from './data/types'
+import type { DerivedStatus, PanelMode } from './data/types'
 
 const FC_COL_WIDTH = 60  // = BADGE_WIDTH — dates align with dots start
 const SIDEBAR_WIDTH = 200
@@ -17,6 +17,8 @@ export default function App() {
     setSelectedAsset, setView, simulateNewSession,
     validatePattern,
   } = useStore()
+
+  const [panelMode, setPanelMode] = useState<PanelMode>('dashboard')
 
   useEffect(() => { loadData() }, [loadData])
 
@@ -60,7 +62,7 @@ export default function App() {
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#0B0B10' }}>
-      <FilterBar view={view} onSetView={setView} onSimulateSession={simulateNewSession} />
+      <FilterBar view={view} onSetView={setView} onSimulateSession={simulateNewSession} panelMode={panelMode} onSetPanelMode={setPanelMode} />
 
       {/* Column header row: ASSET | ANOMALOUS PATTERNS | date axis */}
       <div style={{

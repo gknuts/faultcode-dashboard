@@ -1,14 +1,16 @@
-import type { ViewMode } from '../data/types'
+import type { ViewMode, PanelMode } from '../data/types'
 
 interface Props {
   view: ViewMode
   onSetView: (v: ViewMode) => void
   onSimulateSession: () => void
+  panelMode: PanelMode
+  onSetPanelMode: (m: PanelMode) => void
 }
 
 const VIEWS: ViewMode[] = ['3D', '1W', '1M']
 
-export default function FilterBar({ view, onSetView, onSimulateSession }: Props) {
+export default function FilterBar({ view, onSetView, onSimulateSession, panelMode, onSetPanelMode }: Props) {
   return (
     <div style={{ flexShrink: 0, background: '#12121A', borderBottom: '1px solid #1E1E2C' }}>
       {/* Top nav row */}
@@ -137,6 +139,44 @@ export default function FilterBar({ view, onSetView, onSimulateSession }: Props)
               {v}
             </button>
           ))}
+        </div>
+
+        {/* Dashboard / Inspect toggle */}
+        <div style={{
+          display: 'flex',
+          paddingRight: 15,
+          alignItems: 'center',
+          gap: 10,
+          borderRadius: 38,
+          border: '1px solid #848EA0',
+        }}>
+          {(['dashboard', 'inspect'] as PanelMode[]).map((m) => {
+            const selected = panelMode === m
+            const label = m === 'dashboard' ? 'Dashboard' : 'Inspect'
+            return (
+              <button
+                key={m}
+                onClick={() => onSetPanelMode(m)}
+                style={{
+                  background: selected ? '#fff' : 'transparent',
+                  border: 'none',
+                  borderRadius: 38,
+                  color: selected ? '#000' : '#C1C8D3',
+                  fontFamily: 'Roboto, sans-serif',
+                  fontSize: 11,
+                  fontWeight: 700,
+                  fontStyle: 'normal',
+                  lineHeight: 'normal',
+                  textAlign: 'center',
+                  padding: '6px 14px',
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {label}
+              </button>
+            )
+          })}
         </div>
       </div>
     </div>

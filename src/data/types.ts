@@ -36,3 +36,4 @@ export interface PatternOccurrence {
 export type DerivedStatus = 'new' | 'ongoing' | 'unclassified'
 
 export type ViewMode = '3D' | '1W' | '1M'
+export type PanelMode = 'dashboard' | 'inspect'
