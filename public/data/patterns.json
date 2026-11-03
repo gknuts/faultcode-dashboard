@@ -5047,420 +5047,480 @@
       "faultCode": "344B",
       "date": "2026-10-12",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-12",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-12",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-13",
       "count": 65,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-13",
       "count": 65,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-13",
       "count": 103,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-14",
       "count": 11,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-14",
       "count": 11,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-14",
       "count": 28,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-17",
       "count": 62,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-17",
       "count": 72,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-17",
       "count": 102,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-18",
       "count": 1,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-18",
       "count": 1,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-18",
       "count": 1,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-19",
       "count": 261,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-19",
       "count": 272,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-19",
       "count": 355,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-20",
       "count": 24,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-20",
       "count": 24,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-20",
       "count": 39,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-21",
       "count": 106,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-21",
       "count": 112,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-21",
       "count": 163,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-22",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-22",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-22",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-23",
       "count": 88,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-23",
       "count": 88,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-23",
       "count": 155,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-24",
       "count": 14,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-24",
       "count": 14,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-24",
       "count": 20,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-25",
       "count": 8,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-25",
       "count": 8,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-25",
       "count": 23,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-26",
       "count": 74,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-26",
       "count": 85,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-26",
       "count": 126,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-27",
       "count": 90,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-27",
       "count": 98,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-27",
       "count": 129,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-28",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-28",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-28",
       "count": 0,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-29",
       "count": 27,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-29",
       "count": 27,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-29",
       "count": 46,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-10-31",
       "count": 132,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-10-31",
       "count": 143,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-10-31",
       "count": 201,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-11-01",
       "count": 63,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-11-01",
       "count": 69,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-11-01",
       "count": 90,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-11-02",
       "count": 109,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-11-02",
       "count": 119,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-11-02",
       "count": 178,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "344B",
       "date": "2026-11-03",
       "count": 32,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF7",
       "date": "2026-11-03",
       "count": 36,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g123_485003",
       "faultCode": "3FF8",
       "date": "2026-11-03",
       "count": 68,
-      "status": "abnormal"
+      "status": "abnormal",
+      "correlation_group_id": 3
     },
     {
       "patternId": "g51_485012",
@@ -13663,56 +13723,64 @@
       "faultCode": "04A6",
       "date": "2026-10-24",
       "count": 1,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 2
     },
     {
       "patternId": "g14_485014",
       "faultCode": "3F00",
       "date": "2026-10-24",
       "count": 1,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 2
     },
     {
       "patternId": "g14_485014",
       "faultCode": "04A6",
       "date": "2026-10-26",
       "count": 1,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 2
     },
     {
       "patternId": "g14_485014",
       "faultCode": "04A7",
       "date": "2026-10-26",
       "count": 1,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 2
     },
     {
       "patternId": "g14_485014",
       "faultCode": "3704",
       "date": "2026-10-26",
       "count": 1,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 2
     },
     {
       "patternId": "g14_485014",
       "faultCode": "3F00",
       "date": "2026-10-26",
       "count": 1,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 2
     },
     {
       "patternId": "g14_485014",
       "faultCode": "4704",
       "date": "2026-10-26",
       "count": 1,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 2
     },
     {
       "patternId": "g14_485014",
       "faultCode": "4F00",
       "date": "2026-10-26",
       "count": 1,
-      "status": "normal"
+      "status": "normal",
+      "correlation_group_id": 2
     },
     {
       "patternId": "g14_485014",

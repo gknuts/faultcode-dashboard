@@ -96,6 +96,42 @@ export function PatternCard({
   }, [occurrences, pattern.id, dates])
 
   const hasFrame = frameStartDi >= 0 && frameEndDi >= 0
+
+  const FRAME_STYLE = {
+    unclassified: {
+      bg: '#232323',
+      bar: '#474747',
+      dot: '#999999',
+      overlayBg: 'rgba(153,153,153,0.15)',
+      borderTop: '1px dashed #CCC',
+      borderBottom: '1px dashed #CCC',
+      borderLeft: '1px dashed #CCC',
+      borderRight: '1px dashed #CCC',
+      borderRadius: '6px',
+    },
+    ongoing: {
+      bg: '#20183A',
+      bar: '#403175',
+      dot: '#8364F1',
+      overlayBg: 'rgba(139,106,255,0.15)',
+      borderTop: '1px dashed #8B6AFF',
+      borderBottom: '1px dashed #8B6AFF',
+      borderLeft: '1px dashed #8B6AFF',
+      borderRight: 'none',
+      borderRadius: '6px 0 0 6px',
+    },
+    new: {
+      bg: '#3C1A02',
+      bar: '#753100',
+      dot: '#FF6A00',
+      overlayBg: 'rgba(255,106,0,0.15)',
+      borderTop: '1px dashed #FF6A00',
+      borderBottom: '1px dashed #FF6A00',
+      borderLeft: '1px dashed #FF6A00',
+      borderRight: '1px dashed #FF6A00',
+      borderRadius: '7px',
+    },
+  }[status]
   const startFraction = hasFrame ? frameStartDi / dates.length : 0
   const widthFraction = hasFrame ? (frameEndDi - frameStartDi + 1) / dates.length : 0
   const frameLeft = `calc(${BADGE_WIDTH}px + ${startFraction} * (100% - ${BADGE_WIDTH}px))`
@@ -169,28 +205,31 @@ export function PatternCard({
 
       {/* Per-FC rows: label row (full width) + dots row */}
       <div style={{ position: 'relative', zIndex: 0 }}>
-        {/* #232323 background behind FC rows for frame range */}
-        {hasFrame && (
+        {/* Solid background behind FC rows for frame range */}
+        {hasFrame && FRAME_STYLE && (
           <div style={{
             position: 'absolute',
             top: 0, bottom: 0,
             left: frameLeft,
             width: frameWidth,
-            background: '#232323',
+            background: FRAME_STYLE.bg,
             zIndex: -1,
           }} />
         )}
 
         {/* Dashed border overlay on top of FC rows */}
-        {hasFrame && (
+        {hasFrame && FRAME_STYLE && (
           <div style={{
             position: 'absolute',
             top: 0, bottom: 0,
             left: frameLeft,
             width: frameWidth,
-            borderRadius: 6,
-            border: '1px dashed #CCC',
-            background: 'rgba(153,153,153,0.15)',
+            borderRadius: FRAME_STYLE.borderRadius,
+            borderTop: FRAME_STYLE.borderTop,
+            borderBottom: FRAME_STYLE.borderBottom,
+            borderLeft: FRAME_STYLE.borderLeft,
+            borderRight: FRAME_STYLE.borderRight,
+            background: FRAME_STYLE.overlayBg,
             pointerEvents: 'none',
             zIndex: 5,
           }}>
@@ -295,13 +334,13 @@ export function PatternCard({
               <div style={{ flex: 1, background: '#1A1A1A' }}>
                 <svg width="100%" height={DOTS_HEIGHT} style={{ display: 'block' }} onMouseMove={handleSvgMouseMove}>
                   {/* Frame background rect */}
-                  {hasFrame && (
+                  {hasFrame && FRAME_STYLE && (
                     <rect
                       x={`${startFraction * 100}%`}
                       y={0}
                       width={`${widthFraction * 100}%`}
                       height={DOTS_HEIGHT}
-                      fill="#474747"
+                      fill={FRAME_STYLE.bar}
                     />
                   )}
                   {/* Grid lines */}
@@ -324,10 +363,10 @@ export function PatternCard({
                     if (!occ) return null
                     const cx = `${((di + 0.5) / dates.length) * 100}%`
                     const cy = DOTS_HEIGHT / 2
-                    const inFrame = hasFrame && di >= frameStartDi && di <= frameEndDi
+                    const inFrame = hasFrame && FRAME_STYLE && di >= frameStartDi && di <= frameEndDi
                     if (inFrame) {
                       const r = Math.min(5 + occ.count * 0.9, 11)
-                      return <circle key={date} cx={cx} cy={cy} r={r} fill="#999999" fillOpacity={0.92} />
+                      return <circle key={date} cx={cx} cy={cy} r={r} fill={FRAME_STYLE.dot} fillOpacity={0.92} />
                     }
                     if (occ.occStatus === 'normal' && status !== 'unclassified') {
                       return <circle key={date} cx={cx} cy={cy} r={5} fill="#2ECC71" fillOpacity={0.8} />
