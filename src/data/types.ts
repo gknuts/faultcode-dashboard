@@ -33,6 +33,6 @@ export interface PatternOccurrence {
   status: 'abnormal' | 'normal'
 }
 
-export type DerivedStatus = 'new' | 'ongoing' | 'resolved' | 'ignored'
+export type DerivedStatus = 'new' | 'ongoing' | 'unclassified'
 
 export type ViewMode = '3D' | '1W' | '1M'

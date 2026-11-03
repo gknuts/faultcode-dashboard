@@ -10,17 +10,14 @@ interface Props {
   dates: string[]
   labelStep: number
   patternValidations: Record<string, 'abnormal' | 'normal'>
-  ignoredPatterns: Set<string>
   fcColWidth: number
   onValidate: (id: string, status: 'abnormal' | 'normal') => void
-  onIgnore: (id: string) => void
 }
 
 const HEADER_COLORS: Record<DerivedStatus, string> = {
   new: '#F0436A',
   ongoing: '#F97316',
-  resolved: '#52525B',
-  ignored: '#3F3F46',
+  unclassified: '#52525B',
 }
 
 export function PatternSection({
@@ -32,10 +29,8 @@ export function PatternSection({
   dates,
   labelStep,
   patternValidations,
-  ignoredPatterns,
   fcColWidth,
   onValidate,
-  onIgnore,
 }: Props) {
   if (patterns.length === 0) return null
 
@@ -78,10 +73,8 @@ export function PatternSection({
           dates={dates}
           labelStep={labelStep}
           validation={patternValidations[pattern.id]}
-          isIgnored={ignoredPatterns.has(pattern.id)}
           fcColWidth={fcColWidth}
           onValidate={(s) => onValidate(pattern.id, s)}
-          onIgnore={() => onIgnore(pattern.id)}
         />
       ))}
     </div>

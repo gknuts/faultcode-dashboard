@@ -14,45 +14,38 @@ interface Props {
   dates: string[]
   labelStep: number
   validation: 'abnormal' | 'normal' | undefined
-  isIgnored: boolean
   fcColWidth: number
   onValidate: (status: 'abnormal' | 'normal') => void
-  onIgnore: () => void
 }
 
 const STATUS_ACCENT: Record<DerivedStatus, string> = {
   new: '#E8394A',
   ongoing: '#D97010',
-  resolved: '#3F3F52',
-  ignored: '#2A2A30',
+  unclassified: '#3F3F52',
 }
 
 const STATUS_CARD_BG: Record<DerivedStatus, string> = {
   new: '#150C0F',
   ongoing: '#130E08',
-  resolved: '#0D0D11',
-  ignored: '#0C0C10',
+  unclassified: '#0D0D11',
 }
 
 const STATUS_BORDER: Record<DerivedStatus, string> = {
   new: '#2A1218',
   ongoing: '#201408',
-  resolved: '#1A1A20',
-  ignored: '#181818',
+  unclassified: '#1A1A20',
 }
 
 const ABNORMAL_COLORS: Record<DerivedStatus, string> = {
   new: '#E8394A',
   ongoing: '#D97010',
-  resolved: '#52525B',
-  ignored: '#3F3F46',
+  unclassified: '#52525B',
 }
 
 const ABNORMAL_BG: Record<DerivedStatus, string> = {
   new: 'rgba(232,57,74,0.10)',
   ongoing: 'rgba(217,112,16,0.10)',
-  resolved: 'rgba(82,82,91,0.04)',
-  ignored: 'rgba(63,63,70,0.04)',
+  unclassified: 'rgba(82,82,91,0.04)',
 }
 
 function formatDate(d: string) {
@@ -61,12 +54,11 @@ function formatDate(d: string) {
 
 export function PatternCard({
   pattern, status, faultCodeMap, occurrences, dates, labelStep,
-  validation, isIgnored, onValidate, onIgnore,
+  validation, onValidate,
 }: Props) {
   const accent = STATUS_ACCENT[status]
   const cardBg = STATUS_CARD_BG[status]
   const cardBorder = STATUS_BORDER[status]
-  const isResolved = status === 'resolved' || status === 'ignored'
   const abnormalColor = ABNORMAL_COLORS[status]
   const abnormalBg = ABNORMAL_BG[status]
 
@@ -89,7 +81,6 @@ export function PatternCard({
       borderLeft: `3px solid ${accent}`,
       borderRadius: 4,
       marginBottom: 8,
-      opacity: isIgnored ? 0.5 : 1,
       overflow: 'hidden',
       paddingLeft: 15,
     }}>
@@ -209,27 +200,17 @@ export function PatternCard({
           {pattern.endDate ? ` → ${formatDate(pattern.endDate)}` : ' → ongoing'}
         </span>
 
-        {!isResolved && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button onClick={onIgnore} style={{
-              background: 'transparent', border: 'none',
-              color: '#52526A', fontSize: 11, fontWeight: 500,
-              cursor: 'pointer', padding: '3px 2px',
-            }}>
-              Ignore
-            </button>
-            <Divider />
-            <GhostButton label="Create an alert" onClick={() => {}} />
-            <span style={{ color: '#2A2A3A', fontSize: 11 }}>|</span>
-            <GhostButton label="Create a ticket" onClick={() => {}} />
-            <Divider />
-            <div style={{ display: 'flex', border: '1px solid #2A2A3A', borderRadius: 20, overflow: 'hidden' }}>
-              <SegmentButton label="Abnormal" active={validation === 'abnormal'} activeColor="#E8394A" onClick={() => onValidate('abnormal')} />
-              <div style={{ width: 1, background: '#2A2A3A', flexShrink: 0 }} />
-              <SegmentButton label="Normal" active={validation === 'normal'} activeColor="#22C55E" onClick={() => onValidate('normal')} />
-            </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <GhostButton label="Create an alert" onClick={() => {}} />
+          <span style={{ color: '#2A2A3A', fontSize: 11 }}>|</span>
+          <GhostButton label="Create a ticket" onClick={() => {}} />
+          <Divider />
+          <div style={{ display: 'flex', border: '1px solid #2A2A3A', borderRadius: 20, overflow: 'hidden' }}>
+            <SegmentButton label="Abnormal" active={validation === 'abnormal'} activeColor="#E8394A" onClick={() => onValidate('abnormal')} />
+            <div style={{ width: 1, background: '#2A2A3A', flexShrink: 0 }} />
+            <SegmentButton label="Normal" active={validation === 'normal'} activeColor="#22C55E" onClick={() => onValidate('normal')} />
           </div>
-        )}
+        </div>
       </div>
     </div>
   )

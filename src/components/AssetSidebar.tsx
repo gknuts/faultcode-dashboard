@@ -76,6 +76,7 @@ export function AssetSidebar({
         {filteredAssets.map((asset) => {
           const newCount = countFor(asset.id, 'new')
           const ongoingCount = countFor(asset.id, 'ongoing')
+          const unclassifiedCount = countFor(asset.id, 'unclassified')
           const isSelected = asset.id === selectedAssetId
 
           return (
@@ -129,6 +130,20 @@ export function AssetSidebar({
                   fontFamily: 'Roboto', fontSize: 11, fontWeight: 500, lineHeight: '14px', whiteSpace: 'nowrap',
                 }}>
                   {ongoingCount} ongoing
+                </span>
+              )}
+              {unclassifiedCount > 0 && (
+                <span style={{
+                  display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10,
+                  padding: '0 5px 1px 5px',
+                  borderRadius: 4,
+                  border: '1px solid rgba(82, 82, 91, 0.25)',
+                  background: 'rgba(82, 82, 91, 0.15)',
+                  opacity: isSelected ? 1 : 0.5,
+                  color: '#71717A',
+                  fontFamily: 'Roboto', fontSize: 11, fontWeight: 500, lineHeight: '14px', whiteSpace: 'nowrap',
+                }}>
+                  {unclassifiedCount} unclassified
                 </span>
               )}
             </button>

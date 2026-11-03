@@ -12,10 +12,10 @@ const SIDEBAR_WIDTH = 200
 export default function App() {
   const {
     data, loadingState, loadData, retryLoad,
-    lastSessionAt, ignoredPatterns, patternValidations,
+    lastSessionAt, patternValidations,
     selectedAssetId, view,
     setSelectedAsset, setView, simulateNewSession,
-    ignorePattern, validatePattern,
+    validatePattern,
   } = useStore()
 
   useEffect(() => { loadData() }, [loadData])
@@ -29,14 +29,14 @@ export default function App() {
   }, [data])
 
   const derive = useMemo(() => (p: { id: string; assetId: string; faultCodes: string[]; startDate: string; endDate?: string }) =>
-    derivePatternStatus(p, lastSessionAt, ignoredPatterns),
-    [lastSessionAt, ignoredPatterns]
+    derivePatternStatus(p, lastSessionAt),
+    [lastSessionAt]
   )
 
   const assetPatterns = useMemo(() => {
-    if (!data || !selectedAssetId) return { new: [], ongoing: [], resolved: [], ignored: [] }
+    if (!data || !selectedAssetId) return { new: [], ongoing: [], unclassified: [] }
     const all = data.patterns.filter(p => p.assetId === selectedAssetId)
-    const groups: Record<DerivedStatus, typeof all> = { new: [], ongoing: [], resolved: [], ignored: [] }
+    const groups: Record<DerivedStatus, typeof all> = { new: [], ongoing: [], unclassified: [] }
     for (const p of all) groups[derive(p)].push(p)
     return groups
   }, [data, selectedAssetId, derive])
@@ -56,8 +56,7 @@ export default function App() {
   }
   if (!data) return null
 
-  const resolvedAndIgnored = [...assetPatterns.resolved, ...assetPatterns.ignored]
-  const hasNoPatterns = assetPatterns.new.length === 0 && assetPatterns.ongoing.length === 0 && resolvedAndIgnored.length === 0
+  const hasNoPatterns = assetPatterns.new.length === 0 && assetPatterns.ongoing.length === 0 && assetPatterns.unclassified.length === 0
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#0B0B10' }}>
@@ -136,16 +135,16 @@ export default function App() {
             <>
               <PatternSection title="New Anomalous Patterns" status="new" patterns={assetPatterns.new}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
-                patternValidations={patternValidations} ignoredPatterns={ignoredPatterns}
-                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} onIgnore={ignorePattern} />
+                patternValidations={patternValidations}
+                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
               <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
-                patternValidations={patternValidations} ignoredPatterns={ignoredPatterns}
-                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} onIgnore={ignorePattern} />
-              <PatternSection title="Resolved / Archived" status="resolved" patterns={resolvedAndIgnored}
+                patternValidations={patternValidations}
+                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+              <PatternSection title="Unclassified Patterns" status="unclassified" patterns={assetPatterns.unclassified}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
-                patternValidations={patternValidations} ignoredPatterns={ignoredPatterns}
-                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} onIgnore={ignorePattern} />
+                patternValidations={patternValidations}
+                fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
             </>
           )}
         </div>

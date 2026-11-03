@@ -12,15 +12,13 @@ interface Props {
 const ABNORMAL_COLORS: Record<DerivedStatus, string> = {
   new: '#E8394A',
   ongoing: '#D97010',
-  resolved: '#52525B',
-  ignored: '#3F3F46',
+  unclassified: '#52525B',
 }
 
 const ABNORMAL_BG: Record<DerivedStatus, string> = {
   new: 'rgba(232,57,74,0.10)',
   ongoing: 'rgba(217,112,16,0.10)',
-  resolved: 'rgba(82,82,91,0.04)',
-  ignored: 'rgba(63,63,70,0.04)',
+  unclassified: 'rgba(82,82,91,0.04)',
 }
 
 // Each FC code = 2 visual sub-rows: label row + dots row

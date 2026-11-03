@@ -3,7 +3,6 @@ import type { PatternData, Pattern, ViewMode, DerivedStatus } from '../data/type
 import { getPeriodRange, getDatesInRange, todayDefaultSessionAt } from '../lib/dates'
 import {
   loadLastSessionAt, saveLastSessionAt,
-  loadIgnoredPatterns, saveIgnoredPatterns,
   loadPatternValidations, savePatternValidations,
   resetStorage,
 } from '../lib/localStorage'
@@ -14,13 +13,13 @@ export type LoadingState = 'loading' | 'loaded' | 'error'
 export function derivePatternStatus(
   pattern: Pattern,
   lastSessionAt: string | null,
-  ignoredPatterns: Set<string>,
 ): DerivedStatus {
-  if (ignoredPatterns.has(pattern.id)) return 'ignored'
-  if (pattern.endDate) return 'resolved'
   if (!lastSessionAt) return 'new'
   const sessionDate = lastSessionAt.slice(0, 10)
-  return pattern.startDate >= sessionDate ? 'new' : 'ongoing'
+  if (pattern.startDate >= sessionDate) return 'new'
+  const today = new Date().toISOString().slice(0, 10)
+  if (!pattern.endDate || pattern.endDate >= today) return 'ongoing'
+  return 'unclassified'
 }
 
 export interface AppState {
@@ -28,7 +27,6 @@ export interface AppState {
   loadingState: LoadingState
 
   lastSessionAt: string | null
-  ignoredPatterns: Set<string>
   patternValidations: Record<string, 'abnormal' | 'normal'>
 
   selectedAssetId: string | null
@@ -39,12 +37,10 @@ export interface AppState {
   setSelectedAsset: (id: string | null) => void
   setView: (v: ViewMode) => void
   simulateNewSession: () => void
-  ignorePattern: (id: string) => void
   validatePattern: (id: string, status: 'abnormal' | 'normal') => void
 }
 
 const storedSession = loadLastSessionAt() ?? todayDefaultSessionAt()
-const storedIgnored = new Set(loadIgnoredPatterns())
 const storedValidations = loadPatternValidations()
 
 export const useStore = create<AppState>((set, get) => ({
@@ -52,7 +48,6 @@ export const useStore = create<AppState>((set, get) => ({
   loadingState: 'loading',
 
   lastSessionAt: storedSession,
-  ignoredPatterns: storedIgnored,
   patternValidations: storedValidations,
 
   selectedAssetId: null,
@@ -80,17 +75,6 @@ export const useStore = create<AppState>((set, get) => ({
     const ts = new Date().toISOString()
     saveLastSessionAt(ts)
     set({ lastSessionAt: ts })
-  },
-
-  ignorePattern: (id) => {
-    const next = new Set(get().ignoredPatterns)
-    if (next.has(id)) {
-      next.delete(id)
-    } else {
-      next.add(id)
-    }
-    saveIgnoredPatterns([...next])
-    set({ ignoredPatterns: next })
   },
 
   validatePattern: (id, status) => {
