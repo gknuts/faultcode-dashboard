@@ -118,33 +118,37 @@ export function AssetSidebar({
                   </span>
                 )}
               </div>
-              {ongoingCount > 0 && (
-                <span style={{
-                  display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10,
-                  padding: '0 5px 1px 5px',
-                  borderRadius: 4,
-                  border: '1px solid rgba(139, 106, 255, 0.19)',
-                  background: 'rgba(139, 106, 255, 0.20)',
-                  opacity: isSelected ? 1 : 0.5,
-                  color: '#8B6AFF',
-                  fontFamily: 'Roboto', fontSize: 11, fontWeight: 500, lineHeight: '14px', whiteSpace: 'nowrap',
-                }}>
-                  {ongoingCount} ongoing
-                </span>
-              )}
-              {unclassifiedCount > 0 && (
-                <span style={{
-                  display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10,
-                  padding: '0 5px 1px 5px',
-                  borderRadius: 4,
-                  border: '1px solid rgba(82, 82, 91, 0.25)',
-                  background: 'rgba(82, 82, 91, 0.15)',
-                  opacity: isSelected ? 1 : 0.5,
-                  color: '#71717A',
-                  fontFamily: 'Roboto', fontSize: 11, fontWeight: 500, lineHeight: '14px', whiteSpace: 'nowrap',
-                }}>
-                  {unclassifiedCount} unclassified
-                </span>
+              {(ongoingCount > 0 || unclassifiedCount > 0) && (
+                <div style={{ display: 'flex', gap: 4 }}>
+                  {ongoingCount > 0 && (
+                    <span style={{
+                      display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10,
+                      padding: '0 5px 1px 5px',
+                      borderRadius: 4,
+                      border: '1px solid rgba(139, 106, 255, 0.19)',
+                      background: 'rgba(139, 106, 255, 0.20)',
+                      opacity: isSelected ? 1 : 0.5,
+                      color: '#8B6AFF',
+                      fontFamily: 'Roboto', fontSize: 11, fontWeight: 500, lineHeight: '14px', whiteSpace: 'nowrap',
+                    }}>
+                      {ongoingCount} ongoing
+                    </span>
+                  )}
+                  {unclassifiedCount > 0 && (
+                    <span style={{
+                      display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10,
+                      padding: '0 5px 1px 5px',
+                      borderRadius: 4,
+                      border: '1px solid rgba(82, 82, 91, 0.25)',
+                      background: 'rgba(82, 82, 91, 0.15)',
+                      opacity: isSelected ? 1 : 0.5,
+                      color: '#71717A',
+                      fontFamily: 'Roboto', fontSize: 11, fontWeight: 500, lineHeight: '14px', whiteSpace: 'nowrap',
+                    }}>
+                      {unclassifiedCount} unclassified
+                    </span>
+                  )}
+                </div>
               )}
             </button>
           )
