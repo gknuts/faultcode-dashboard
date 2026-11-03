@@ -13,6 +13,9 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 export default defineConfig({
   base: '/faultcode-dashboard/',
   plugins: [react()],
+  optimizeDeps: {
+    include: ['zustand'],
+  },
   test: {
     projects: [{
       extends: true,
