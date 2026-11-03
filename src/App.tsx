@@ -205,43 +205,6 @@ function DashboardView({
 }: DashboardViewProps) {
   return (
     <>
-      {/* Column header row */}
-      <div style={{
-        height: 36,
-        flexShrink: 0,
-        display: 'flex',
-        background: '#0F0F16',
-        borderBottom: '1px solid #1E1E28',
-      }}>
-        <div style={{
-          width: SIDEBAR_WIDTH,
-          flexShrink: 0,
-          borderRight: '1px solid #1E1E28',
-          display: 'flex',
-          alignItems: 'center',
-          padding: '0 16px',
-        }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: '#52526A', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            Asset
-          </span>
-        </div>
-        <div style={{ flex: 1, display: 'flex', alignItems: 'stretch' }}>
-          <div style={{
-            width: FC_COL_WIDTH,
-            flexShrink: 0,
-            borderRight: '1px solid #1A1A26',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <span style={{ fontSize: 9, fontWeight: 700, color: '#2A2A3C', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Code
-            </span>
-          </div>
-          <DateAxisSvg dates={dates} labelStep={labelStep} showTodayMarker />
-        </div>
-      </div>
-
       {/* Main content */}
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <AssetSidebar
@@ -285,20 +248,6 @@ function DashboardView({
         </div>
       </div>
 
-      {/* Footer date axis */}
-      <div style={{
-        height: 36,
-        flexShrink: 0,
-        display: 'flex',
-        background: '#0F0F16',
-        borderTop: '1px solid #1E1E28',
-      }}>
-        <div style={{ width: SIDEBAR_WIDTH, flexShrink: 0, borderRight: '1px solid #1E1E28' }} />
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-          <div style={{ width: FC_COL_WIDTH, flexShrink: 0 }} />
-          <DateAxisSvg dates={dates} labelStep={labelStep} />
-        </div>
-      </div>
     </>
   )
 }

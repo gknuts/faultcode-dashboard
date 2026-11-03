@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect } from 'storybook/test'
+import { userEvent, within } from 'storybook/test'
 import App from './App'
 import { useStore } from './store/index'
 
@@ -10,7 +11,6 @@ const meta = {
     layout: 'fullscreen',
   },
   beforeEach: () => {
-    // Reset store so each story mount triggers a fresh data load
     useStore.setState({ data: null, loadingState: 'loading', selectedAssetId: null })
   },
 } satisfies Meta<typeof App>
@@ -18,10 +18,19 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {
+export const Dashboard: Story = {
   play: async ({ canvas }) => {
-    // Wait for data to load — first asset label appears once fetch resolves
     const asset = await canvas.findByText('485 001', {}, { timeout: 5000 })
     await expect(asset).toBeVisible()
+    await expect(canvas.queryByText('Dashboard')).toBeTruthy()
+  },
+}
+
+export const Inspect: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await canvas.findByText('485 001', {}, { timeout: 5000 })
+    await userEvent.click(canvas.getByText('Inspect'))
+    await expect(canvas.getByText('Inspect')).toBeVisible()
   },
 }
