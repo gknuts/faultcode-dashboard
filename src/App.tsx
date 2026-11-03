@@ -118,7 +118,7 @@ export default function App() {
                   Code
                 </span>
               </div>
-              <DateAxisSvg dates={dates} labelStep={labelStep} showTodayMarker />
+              <DateAxisSvg dates={dates} labelStep={labelStep} />
             </div>
           </div>
 
@@ -133,15 +133,6 @@ export default function App() {
               sidebarWidth={SIDEBAR_WIDTH}
             />
             <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', position: 'relative' }}>
-              <div style={{
-                position: 'absolute',
-                top: 0, bottom: 0,
-                left: `calc(76px + ${(dates.length - 0.5) / dates.length} * (100% - 92px))`,
-                width: 1,
-                background: 'rgba(110,110,200,0.18)',
-                pointerEvents: 'none',
-                zIndex: 2,
-              }} />
               {hasNoPatterns ? (
                 <div style={{ color: '#3F3F52', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
                   No patterns to display for this asset.
@@ -216,15 +207,6 @@ function DashboardView({
           sidebarWidth={SIDEBAR_WIDTH}
         />
         <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', position: 'relative' }}>
-          <div style={{
-            position: 'absolute',
-            top: 0, bottom: 0,
-            left: `calc(76px + ${(dates.length - 0.5) / dates.length} * (100% - 92px))`,
-            width: 1,
-            background: 'rgba(110,110,200,0.18)',
-            pointerEvents: 'none',
-            zIndex: 2,
-          }} />
           {hasNoPatterns ? (
             <div style={{ color: '#3F3F52', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
               No patterns to display for this asset.

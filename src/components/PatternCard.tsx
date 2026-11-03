@@ -368,14 +368,6 @@ export function PatternCard({
                     const x = `${((di + 0.5) / dates.length) * 100}%`
                     return <line key={`g${di}`} x1={x} y1={0} x2={x} y2={DOTS_HEIGHT} stroke="#1A1A24" strokeWidth={1} />
                   })}
-                  {/* Today dashed line */}
-                  <line
-                    x1={`${((dates.length - 0.5) / dates.length) * 100}%`}
-                    y1={0}
-                    x2={`${((dates.length - 0.5) / dates.length) * 100}%`}
-                    y2={DOTS_HEIGHT}
-                    stroke="rgba(150,150,220,0.22)" strokeWidth={1.5} strokeDasharray="3 3"
-                  />
                   {/* Dots */}
                   {dates.map((date, di) => {
                     const occ = fcMap?.get(date)
