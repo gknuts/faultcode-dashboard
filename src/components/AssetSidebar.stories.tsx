@@ -29,7 +29,7 @@ const meta = {
     selectedAssetId: 'a1',
     deriveStatus,
     onSelect: () => {},
-    sidebarWidth: 210,
+    sidebarWidth: 200,
   },
 } satisfies Meta<typeof AssetSidebar>
 

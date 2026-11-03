@@ -7,7 +7,7 @@ import { getPeriodRange, getDatesInRange, formatAxisLabel } from './lib/dates'
 import type { DerivedStatus } from './data/types'
 
 const FC_COL_WIDTH = 60  // = BADGE_WIDTH — dates align with dots start
-const SIDEBAR_WIDTH = 210
+const SIDEBAR_WIDTH = 200
 
 export default function App() {
   const {

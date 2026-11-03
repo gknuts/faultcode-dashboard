@@ -47,7 +47,7 @@ export function AssetSidebar({
                 width: '100%',
                 padding: '4px 4px 4px 9px',
                 background: '#000',
-                border: '2px solid #000',
+                border: isSelected ? '2px solid #FFF' : '2px solid #000',
                 borderRadius: 12,
                 cursor: 'pointer',
                 textAlign: 'left',
@@ -65,7 +65,8 @@ export function AssetSidebar({
                     borderRadius: 4,
                     border: '1px solid rgba(255, 106, 0, 0.19)',
                     background: 'rgba(255, 106, 0, 0.20)',
-                    fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap',
+                    color: '#FF6A00',
+                    fontFamily: 'Roboto', fontSize: 11, fontWeight: 500, lineHeight: '14px', whiteSpace: 'nowrap',
                   }}>
                     {newCount} new
                   </span>
@@ -78,7 +79,9 @@ export function AssetSidebar({
                   borderRadius: 4,
                   border: '1px solid rgba(139, 106, 255, 0.19)',
                   background: 'rgba(139, 106, 255, 0.20)',
-                  fontSize: 10, fontWeight: 700, whiteSpace: 'nowrap',
+                  opacity: isSelected ? 1 : 0.5,
+                  color: '#8B6AFF',
+                  fontFamily: 'Roboto', fontSize: 11, fontWeight: 500, lineHeight: '14px', whiteSpace: 'nowrap',
                 }}>
                   {ongoingCount} ongoing
                 </span>
