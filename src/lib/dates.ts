@@ -9,14 +9,16 @@ export function fromISO(s: ISODate): Date {
   return parseISO(s)
 }
 
+const DEMO_TODAY = '2026-11-03'
+
 export function todayISO(): ISODate {
-  return toISO(new Date())
+  return DEMO_TODAY
 }
 
 // Returns [startDate, endDate] — endDate is always today
 export function getPeriodRange(view: ViewMode): [ISODate, ISODate] {
   const end = todayISO()
-  const endDate = new Date()
+  const endDate = fromISO(DEMO_TODAY)
   if (view === '3D') return [toISO(subDays(endDate, 2)), end]
   if (view === '1W') return [toISO(subDays(endDate, 6)), end]
   return [toISO(subMonths(endDate, 1)), end]
@@ -56,5 +58,5 @@ export function formatAxisLabel(date: ISODate): string {
 
 export function todayDefaultSessionAt(): string {
   // Default: 7 days ago, so recent patterns show as "new" on first visit
-  return subDays(new Date(), 7).toISOString()
+  return subDays(fromISO(DEMO_TODAY), 7).toISOString()
 }

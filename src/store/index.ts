@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import type { PatternData, Pattern, ViewMode, DerivedStatus } from '../data/types'
-import { getPeriodRange, getDatesInRange, todayDefaultSessionAt } from '../lib/dates'
+import { getPeriodRange, getDatesInRange, todayDefaultSessionAt, todayISO } from '../lib/dates'
 import {
   loadLastSessionAt, saveLastSessionAt,
   loadPatternValidations, savePatternValidations,
@@ -17,7 +17,7 @@ export function derivePatternStatus(
   if (!lastSessionAt) return 'new'
   const sessionDate = lastSessionAt.slice(0, 10)
   if (pattern.startDate >= sessionDate) return 'new'
-  const today = new Date().toISOString().slice(0, 10)
+  const today = todayISO()
   if (!pattern.endDate || pattern.endDate >= today) return 'ongoing'
   return 'unclassified'
 }
@@ -72,7 +72,7 @@ export const useStore = create<AppState>((set, get) => ({
   setView: (view) => set({ view }),
 
   simulateNewSession: () => {
-    const ts = new Date().toISOString()
+    const ts = new Date(`${todayISO()}T12:00:00Z`).toISOString()
     saveLastSessionAt(ts)
     set({ lastSessionAt: ts })
   },
