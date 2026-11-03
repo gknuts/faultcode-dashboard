@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import type { Pattern, PatternOccurrence, FaultCode, DerivedStatus } from '../data/types'
 import { LABEL_HEIGHT, DOTS_HEIGHT } from './PatternTimeline'
 import { fromISO } from '../lib/dates'
@@ -62,6 +62,14 @@ export function PatternCard({
   const abnormalColor = ABNORMAL_COLORS[status]
   const abnormalBg = ABNORMAL_BG[status]
 
+  const [hoveredDi, setHoveredDi] = useState<number | null>(null)
+
+  const handleSvgMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const di = Math.floor(((e.clientX - rect.left) / rect.width) * dates.length)
+    setHoveredDi(Math.max(0, Math.min(di, dates.length - 1)))
+  }
+
   // Pre-build occurrence map per FC code
   const occMap = useMemo(() => {
     const map = new Map<string, Map<string, { count: number; occStatus: 'abnormal' | 'normal' }>>()
@@ -75,15 +83,45 @@ export function PatternCard({
   }, [occurrences, pattern.id])
 
   return (
-    <div style={{
-      background: cardBg,
-      border: `1px solid ${cardBorder}`,
-      borderLeft: `3px solid ${accent}`,
-      borderRadius: 4,
-      marginBottom: 8,
-      overflow: 'hidden',
-      paddingLeft: 15,
-    }}>
+    <div
+      style={{
+        background: cardBg,
+        border: `1px solid ${cardBorder}`,
+        borderLeft: `3px solid ${accent}`,
+        borderRadius: 4,
+        marginBottom: 8,
+        overflow: 'hidden',
+        paddingLeft: 15,
+        position: 'relative',
+      }}
+      onMouseLeave={() => setHoveredDi(null)}
+    >
+      {/* Hover date header */}
+      <div style={{ display: 'flex', height: hoveredDi !== null ? 22 : 0, overflow: 'hidden', transition: 'height 0.1s' }}>
+        <div style={{ width: BADGE_WIDTH, flexShrink: 0 }} />
+        <div style={{ flex: 1, position: 'relative' }}>
+          {hoveredDi !== null && (
+            <div style={{
+              position: 'absolute',
+              left: `${((hoveredDi + 0.5) / dates.length) * 100}%`,
+              transform: 'translateX(-50%)',
+              top: 3,
+              background: '#1E1E2E',
+              border: '1px solid #4A4A6A',
+              borderRadius: 3,
+              padding: '1px 7px',
+              fontSize: 11,
+              color: '#C0C0E0',
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              zIndex: 10,
+            }}>
+              {formatDate(dates[hoveredDi])}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Per-FC rows: label row (full width) + dots row */}
       {pattern.faultCodes.map((code, i) => {
         const fc = faultCodeMap.get(code)
@@ -152,7 +190,7 @@ export function PatternCard({
               </div>
               {/* Mini timeline for this FC code */}
               <div style={{ flex: 1, background: '#211519' }}>
-                <svg width="100%" height={DOTS_HEIGHT} style={{ display: 'block' }}>
+                <svg width="100%" height={DOTS_HEIGHT} style={{ display: 'block' }} onMouseMove={handleSvgMouseMove}>
                   {/* Grid lines */}
                   {dates.map((_, di) => {
                     if (di % labelStep !== 0) return null
@@ -167,6 +205,18 @@ export function PatternCard({
                     y2={DOTS_HEIGHT}
                     stroke="rgba(150,150,220,0.22)" strokeWidth={1.5} strokeDasharray="3 3"
                   />
+                  {/* Hover vertical line */}
+                  {hoveredDi !== null && (
+                    <line
+                      x1={`${((hoveredDi + 0.5) / dates.length) * 100}%`}
+                      y1={0}
+                      x2={`${((hoveredDi + 0.5) / dates.length) * 100}%`}
+                      y2={DOTS_HEIGHT}
+                      stroke="rgba(150,150,220,0.5)"
+                      strokeWidth={1}
+                      pointerEvents="none"
+                    />
+                  )}
                   {/* Dots */}
                   {dates.map((date, di) => {
                     const occ = fcMap?.get(date)
