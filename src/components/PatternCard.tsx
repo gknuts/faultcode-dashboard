@@ -259,10 +259,37 @@ export function PatternCard({
         padding: '7px 14px',
         borderTop: `1px solid ${cardBorder}`,
       }}>
-        <span style={{ fontSize: 11, color: '#42424E' }}>
-          {formatDate(pattern.startDate)}
-          {pattern.endDate ? ` → ${formatDate(pattern.endDate)}` : ' → ongoing'}
-        </span>
+        <div style={{ position: 'relative', flexShrink: 0 }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ display: 'block', aspectRatio: '1/1' }}>
+            <g clipPath="url(#clip0_4295_1920)">
+              <path d="M8 4V8H12" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+              <path d="M14.5924 6.99992C14.1098 3.79241 11.3422 1.33325 8.00016 1.33325C4.31826 1.33325 1.3335 4.31802 1.3335 7.99992C1.3335 11.6818 4.31826 14.6666 8.00016 14.6666C10.7339 14.6666 13.0834 13.0211 14.1121 10.6666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+              <path d="M11.3335 10.6667H14.2668C14.4878 10.6667 14.6668 10.8458 14.6668 11.0667V14.0001" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+            </g>
+            <defs>
+              <clipPath id="clip0_4295_1920">
+                <rect width="16" height="16" fill="white"/>
+              </clipPath>
+            </defs>
+          </svg>
+          <div style={{
+            display: 'flex',
+            width: 14,
+            height: 14,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            aspectRatio: '1/1',
+            position: 'absolute',
+            right: -7,
+            top: -9,
+            borderRadius: 40,
+            border: '1px solid #999',
+            background: 'rgba(153,153,153,0.50)',
+          }}>
+            <span style={{ fontFamily: 'Roboto', fontSize: 10, fontStyle: 'normal', fontWeight: 500, lineHeight: '16.5px', color: '#FFF' }}>6</span>
+          </div>
+        </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <GhostButton label="Create an alert" onClick={() => {}} />
