@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect } from 'storybook/test'
 import { PatternSection } from './PatternSection'
 import type { FaultCode, Pattern, PatternOccurrence } from '../data/types'
+import rawData from '../../public/data/patterns.json'
 
 function makeDates(count: number): string[] {
   const dates: string[] = []
@@ -16,33 +17,39 @@ function makeDates(count: number): string[] {
 
 const DATES = makeDates(30)
 
-const FAULT_CODE_MAP = new Map<string, FaultCode>([
-  ['FC001', { code: 'FC001', description: 'Brake pressure anomaly' }],
-  ['FC002', { code: 'FC002', description: 'Engine temperature exceeded' }],
-  ['FC003', { code: 'FC003', description: 'Door sensor malfunction' }],
-])
+const faultCodeMap = new Map<string, FaultCode>(
+  rawData.faultCodes.map((fc) => [fc.code, fc as FaultCode])
+)
 
-const PATTERNS: Pattern[] = [
-  { id: 'p1', assetId: 'a1', faultCodes: ['FC001', 'FC002'], startDate: '2026-10-15' },
-  { id: 'p2', assetId: 'a1', faultCodes: ['FC003'], startDate: '2026-10-28' },
-]
+// Curated pattern IDs per status category
+const NEW_IDS = ['g14_485014', 'g10_485010', 'g5_485005', 'g55_485017']
+const ONGOING_IDS = ['g123_485003', 'g51_485012', 'g34_485010', 'g117_485020', 'g126_485018', 'g129_485014']
+const UNCLASSIFIED_IDS = (rawData.patterns as Pattern[])
+  .filter((p) => !!p.endDate)
+  .map((p) => p.id)
 
-const OCCURRENCES: PatternOccurrence[] = [
-  { patternId: 'p1', faultCode: 'FC001', date: '2026-10-20', count: 3, status: 'abnormal' },
-  { patternId: 'p1', faultCode: 'FC002', date: '2026-10-22', count: 2, status: 'abnormal' },
-  { patternId: 'p2', faultCode: 'FC003', date: '2026-11-01', count: 1, status: 'abnormal' },
-]
+function pickPatterns(ids: string[]): Pattern[] {
+  return ids
+    .map((id) => rawData.patterns.find((p) => p.id === id))
+    .filter((p): p is Pattern => p != null) as Pattern[]
+}
+
+function pickOccurrences(patterns: Pattern[]): PatternOccurrence[] {
+  const ids = new Set(patterns.map((p) => p.id))
+  return (rawData.occurrences as PatternOccurrence[]).filter((o) => ids.has(o.patternId))
+}
+
+const NEW_PATTERNS = pickPatterns(NEW_IDS)
+const ONGOING_PATTERNS = pickPatterns(ONGOING_IDS)
+const UNCLASSIFIED_PATTERNS = pickPatterns(UNCLASSIFIED_IDS)
 
 const SHARED = {
-  faultCodeMap: FAULT_CODE_MAP,
-  occurrences: OCCURRENCES,
+  faultCodeMap,
   dates: DATES,
   labelStep: 5,
   fcColWidth: 200,
   patternValidations: {},
-  ignoredPatterns: new Set<string>(),
   onValidate: () => {},
-  onIgnore: () => {},
 }
 
 const meta = {
@@ -58,11 +65,12 @@ export const NewPatterns: Story = {
     ...SHARED,
     title: 'New',
     status: 'new',
-    patterns: PATTERNS,
+    patterns: NEW_PATTERNS,
+    occurrences: pickOccurrences(NEW_PATTERNS),
   },
   play: async ({ canvas }) => {
     await expect(canvas.getByText('New')).toBeVisible()
-    await expect(canvas.getByText('(2)')).toBeVisible()
+    await expect(canvas.getByText(`(${NEW_PATTERNS.length})`)).toBeVisible()
   },
 }
 
@@ -71,7 +79,8 @@ export const OngoingPatterns: Story = {
     ...SHARED,
     title: 'Ongoing',
     status: 'ongoing',
-    patterns: [PATTERNS[0]],
+    patterns: ONGOING_PATTERNS,
+    occurrences: pickOccurrences(ONGOING_PATTERNS),
   },
 }
 
@@ -80,6 +89,7 @@ export const UnclassifiedPatterns: Story = {
     ...SHARED,
     title: 'Unclassified',
     status: 'unclassified',
-    patterns: [{ ...PATTERNS[0], endDate: '2026-10-30' }],
+    patterns: UNCLASSIFIED_PATTERNS,
+    occurrences: pickOccurrences(UNCLASSIFIED_PATTERNS),
   },
 }
