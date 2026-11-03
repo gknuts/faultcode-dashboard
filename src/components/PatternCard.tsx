@@ -96,8 +96,22 @@ export function PatternCard({
       }}
       onMouseLeave={() => setHoveredDi(null)}
     >
+      {/* Full-height hover vertical line */}
+      {hoveredDi !== null && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: `calc(75px + (100% - 75px) * ${(hoveredDi + 0.5) / dates.length})`,
+          width: 1,
+          background: 'rgba(150,150,220,0.5)',
+          pointerEvents: 'none',
+          zIndex: 5,
+        }} />
+      )}
+
       {/* Hover date header */}
-      <div style={{ display: 'flex', height: hoveredDi !== null ? 22 : 0, overflow: 'hidden', transition: 'height 0.1s' }}>
+      <div style={{ display: 'flex', height: 32 }}>
         <div style={{ width: BADGE_WIDTH, flexShrink: 0 }} />
         <div style={{ flex: 1, position: 'relative' }}>
           {hoveredDi !== null && (
@@ -205,18 +219,6 @@ export function PatternCard({
                     y2={DOTS_HEIGHT}
                     stroke="rgba(150,150,220,0.22)" strokeWidth={1.5} strokeDasharray="3 3"
                   />
-                  {/* Hover vertical line */}
-                  {hoveredDi !== null && (
-                    <line
-                      x1={`${((hoveredDi + 0.5) / dates.length) * 100}%`}
-                      y1={0}
-                      x2={`${((hoveredDi + 0.5) / dates.length) * 100}%`}
-                      y2={DOTS_HEIGHT}
-                      stroke="rgba(150,150,220,0.5)"
-                      strokeWidth={1}
-                      pointerEvents="none"
-                    />
-                  )}
                   {/* Dots */}
                   {dates.map((date, di) => {
                     const occ = fcMap?.get(date)
