@@ -37,14 +37,14 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
       const occs = occurrences.filter(o => o.faultCode === fc && patternIds.has(o.patternId) && datesSet.has(o.date))
       const description = faultCodeMap.get(fc)?.description ?? ''
 
-      const spanMap = new Map<string | number, { minDi: number; maxDi: number }>()
+      const spanMap = new Map<string | number, { minDi: number; maxDi: number; patternIds: Set<string> }>()
       for (const occ of occs) {
         const di = dates.indexOf(occ.date)
         if (di < 0) continue
         const key = occ.correlationGroupId ?? occ.patternId
         const s = spanMap.get(key)
-        if (!s) spanMap.set(key, { minDi: di, maxDi: di })
-        else { s.minDi = Math.min(s.minDi, di); s.maxDi = Math.max(s.maxDi, di) }
+        if (!s) spanMap.set(key, { minDi: di, maxDi: di, patternIds: new Set([occ.patternId]) })
+        else { s.minDi = Math.min(s.minDi, di); s.maxDi = Math.max(s.maxDi, di); s.patternIds.add(occ.patternId) }
       }
       const spans = [...spanMap.values()]
 
@@ -171,16 +171,20 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
                 {/* Timeline */}
                 <div style={{ flex: 1, height: '100%', position: 'relative' }}>
                   <svg width="100%" height="100%" style={{ display: 'block', overflow: 'visible' }}>
-                    {spans.map(({ minDi, maxDi }, i) => (
-                      <rect
-                        key={i}
-                        x={`${(minDi / dates.length) * 100}%`}
-                        y={0}
-                        width={`${((maxDi - minDi + 1) / dates.length) * 100}%`}
-                        height={ROW_HEIGHT}
-                        fill="#383642"
-                      />
-                    ))}
+                    {spans.map(({ minDi, maxDi, patternIds }, i) => {
+                      const isClassified = [...patternIds].some(id => patternValidations[id])
+                      if (!isClassified) return null
+                      return (
+                        <rect
+                          key={i}
+                          x={`${(minDi / dates.length) * 100}%`}
+                          y={0}
+                          width={`${((maxDi - minDi + 1) / dates.length) * 100}%`}
+                          height={ROW_HEIGHT}
+                          fill="#383642"
+                        />
+                      )
+                    })}
                     {occs.map(occ => {
                       const di = dates.indexOf(occ.date)
                       if (di < 0) return null
