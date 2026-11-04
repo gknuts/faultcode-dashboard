@@ -3,6 +3,7 @@ import { useStore, derivePatternStatus } from './store/index'
 import FilterBar from './components/FilterBar'
 import { AssetSidebar } from './components/AssetSidebar'
 import { PatternSection } from './components/PatternSection'
+import { InspectAssetRow, INSPECT_LEFT_WIDTH } from './components/InspectAssetRow'
 import { getPeriodRange, getDatesInRange, formatAxisLabel, getMonthRange, navigateEnd, todayISO } from './lib/dates'
 import type { DerivedStatus, ISODate, PanelMode } from './data/types'
 
@@ -54,15 +55,17 @@ export default function App() {
     return groups
   }, [data, selectedAssetId, derive])
 
-  const inspectPatterns = useMemo(() => {
-    if (!data) return { new: [], ongoing: [], unclassified: [] }
-    let patterns = data.patterns
-    if (inspectAssetIds.length > 0) patterns = patterns.filter(p => inspectAssetIds.includes(p.assetId))
-    if (inspectFaultCodes.length > 0) patterns = patterns.filter(p => p.faultCodes.some(fc => inspectFaultCodes.includes(fc)))
-    const groups: Record<DerivedStatus, typeof patterns> = { new: [], ongoing: [], unclassified: [] }
-    for (const p of patterns) groups[derive(p)].push(p)
-    return groups
-  }, [data, inspectAssetIds, inspectFaultCodes, derive])
+  const inspectPatternsByAsset = useMemo(() => {
+    if (!data) return []
+    let assets = data.assets
+    if (inspectAssetIds.length > 0) assets = assets.filter(a => inspectAssetIds.includes(a.id))
+    return assets.map(asset => {
+      let patterns = data.patterns.filter(p => p.assetId === asset.id)
+      if (inspectFaultCodes.length > 0) patterns = patterns.filter(p => p.faultCodes.some(fc => inspectFaultCodes.includes(fc)))
+      patterns = patterns.filter(p => p.startDate <= inspectEnd && (!p.endDate || p.endDate >= inspectStart))
+      return { asset, patterns }
+    }).filter(({ patterns }) => patterns.length > 0)
+  }, [data, inspectAssetIds, inspectFaultCodes, inspectStart, inspectEnd])
 
   const totalCounts = useMemo(() => {
     if (!data) return { new: 0, ongoing: 0 }
@@ -122,7 +125,7 @@ export default function App() {
         />
       ) : (
         <>
-          {/* Column header row: ASSET | ANOMALOUS PATTERNS | date axis */}
+          {/* Timeline header */}
           <div style={{
             height: 36,
             flexShrink: 0,
@@ -131,83 +134,37 @@ export default function App() {
             borderBottom: '1px solid #1E1E28',
           }}>
             <div style={{
-              width: SIDEBAR_WIDTH,
+              width: INSPECT_LEFT_WIDTH,
               flexShrink: 0,
-              borderRight: '1px solid #1E1E28',
+              borderRight: '1px solid #1A1A26',
               display: 'flex',
               alignItems: 'center',
-              padding: '0 16px',
+              padding: '0 14px',
             }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#52526A', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                Asset
-              </span>
+              <span style={{ fontSize: 9, fontWeight: 700, color: '#2A2A3C', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Fault code</span>
             </div>
-            <div style={{ flex: 1, display: 'flex', alignItems: 'stretch' }}>
-              <div style={{
-                width: FC_COL_WIDTH,
-                flexShrink: 0,
-                borderRight: '1px solid #1A1A26',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-                <span style={{ fontSize: 9, fontWeight: 700, color: '#2A2A3C', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                  Code
-                </span>
+            <DateAxisSvg dates={inspectDates} labelStep={inspectLabelStep} />
+          </div>
+
+          {/* Asset rows */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '12px 16px' }}>
+            {inspectPatternsByAsset.length === 0 ? (
+              <div style={{ color: '#3F3F52', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
+                No patterns match the current filters.
               </div>
-              <DateAxisSvg dates={inspectDates} labelStep={inspectLabelStep} />
-            </div>
-          </div>
-
-          {/* Main content */}
-          <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-            <AssetSidebar
-              assets={data.assets}
-              patterns={data.patterns}
-              selectedAssetId={selectedAssetId}
-              deriveStatus={derive}
-              onSelect={setSelectedAsset}
-              sidebarWidth={SIDEBAR_WIDTH}
-            />
-            <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', position: 'relative' }}>
-              {inspectPatterns.new.length === 0 && inspectPatterns.ongoing.length === 0 && inspectPatterns.unclassified.length === 0 ? (
-                <div style={{ color: '#3F3F52', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
-                  No patterns match the current filters.
-                </div>
-              ) : (
-                <>
-                  <PatternSection title="New Anomalous Patterns" status="new" patterns={inspectPatterns.new}
-                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
-                    patternValidations={patternValidations}
-                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern}
-                    unclassifiedPatterns={inspectPatterns.unclassified} />
-                  <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={inspectPatterns.ongoing}
-                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
-                    patternValidations={patternValidations}
-                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern}
-                    unclassifiedPatterns={inspectPatterns.unclassified} />
-                  <PatternSection title="Unclassified Patterns" status="unclassified" patterns={inspectPatterns.unclassified}
-                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
-                    patternValidations={patternValidations}
-                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Footer date axis */}
-          <div style={{
-            height: 36,
-            flexShrink: 0,
-            display: 'flex',
-            background: '#0F0F16',
-            borderTop: '1px solid #1E1E28',
-          }}>
-            <div style={{ width: SIDEBAR_WIDTH, flexShrink: 0, borderRight: '1px solid #1E1E28' }} />
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: FC_COL_WIDTH, flexShrink: 0 }} />
-              <DateAxisSvg dates={inspectDates} labelStep={inspectLabelStep} />
-            </div>
+            ) : (
+              inspectPatternsByAsset.map(({ asset, patterns }) => (
+                <InspectAssetRow
+                  key={asset.id}
+                  asset={asset}
+                  patterns={patterns}
+                  faultCodeMap={faultCodeMap}
+                  occurrences={data.occurrences}
+                  dates={inspectDates}
+                  deriveStatus={derive}
+                />
+              ))
+            )}
           </div>
         </>
       )}

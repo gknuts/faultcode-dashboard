@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { InspectAssetRow } from './InspectAssetRow'
-import { getDatesInRange } from '../lib/dates'
+import { InspectAssetRow, INSPECT_LEFT_WIDTH } from './InspectAssetRow'
+import { getDatesInRange, formatAxisLabel } from '../lib/dates'
 import type { Asset, Pattern, FaultCode, PatternOccurrence } from '../data/types'
 
 const DATES = getDatesInRange('2026-10-03', '2026-11-03')
@@ -116,17 +116,52 @@ export const AssetUnclassified: Story = {
 
 export const AllAssets: Story = {
   name: 'All assets stacked',
-  render: (args) => (
-    <div style={{ background: '#0B0B10', padding: 16 }}>
-      {ASSETS.map(asset => (
-        <InspectAssetRow
-          key={asset.id}
-          {...args}
-          asset={asset}
-          patterns={PATTERNS.filter(p => p.assetId === asset.id)}
-        />
-      ))}
-    </div>
-  ),
+  parameters: { layout: 'fullscreen' },
+  render: (args) => {
+    const labelStep = DATES.length <= 7 ? 1 : DATES.length <= 14 ? 2 : 5
+    return (
+      <div style={{ background: '#0B0B10', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        {/* Timeline header */}
+        <div style={{
+          height: 36, flexShrink: 0, display: 'flex',
+          background: '#0F0F16', borderBottom: '1px solid #1E1E28',
+        }}>
+          <div style={{
+            width: INSPECT_LEFT_WIDTH, flexShrink: 0,
+            borderRight: '1px solid #1A1A26',
+            display: 'flex', alignItems: 'center', padding: '0 14px',
+          }}>
+            <span style={{ fontSize: 9, fontWeight: 700, color: '#2A2A3C', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Fault code</span>
+          </div>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <svg width="100%" height="100%" style={{ display: 'block' }}>
+              {DATES.map((date, i) => {
+                const isFirst = i === 0, isLast = i === DATES.length - 1
+                if (!isFirst && !isLast && i % labelStep !== 0) return null
+                const x = `${((i + 0.5) / DATES.length) * 100}%`
+                return (
+                  <text key={date} x={x} y="50%" dominantBaseline="middle" textAnchor="middle" fontSize={10} fill="#4A4A62">
+                    {formatAxisLabel(date)}
+                  </text>
+                )
+              })}
+            </svg>
+          </div>
+        </div>
+
+        {/* Asset rows */}
+        <div style={{ padding: '12px 16px' }}>
+          {ASSETS.map(asset => (
+            <InspectAssetRow
+              key={asset.id}
+              {...args}
+              asset={asset}
+              patterns={PATTERNS.filter(p => p.assetId === asset.id)}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  },
   args: {},
 }
