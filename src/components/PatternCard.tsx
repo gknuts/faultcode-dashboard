@@ -269,7 +269,7 @@ export function PatternCard({
       {/* Per-FC rows: label row (full width) + dots row */}
       <div style={{ position: 'relative', zIndex: 0 }}>
         {/* Solid background behind FC rows for frame range */}
-        {hasFrame && FRAME_STYLE && (
+        {hasFrame && FRAME_STYLE && !validation && (
           <div style={{
             position: 'absolute',
             top: 0, bottom: 0,
@@ -288,14 +288,15 @@ export function PatternCard({
             left: frameLeft,
             width: frameWidth,
             borderRadius: FRAME_STYLE.borderRadius,
-            borderTop: frameSelected ? FRAME_STYLE.borderTop.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderTop,
-            borderBottom: frameSelected ? FRAME_STYLE.borderBottom.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderBottom,
-            borderLeft: frameSelected ? FRAME_STYLE.borderLeft.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderLeft,
-            borderRight: frameSelected ? FRAME_STYLE.borderRight.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderRight,
-            background: FRAME_STYLE.overlayBg,
-            cursor: 'pointer',
+            borderTop: validation ? 'none' : frameSelected ? FRAME_STYLE.borderTop.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderTop,
+            borderBottom: validation ? 'none' : frameSelected ? FRAME_STYLE.borderBottom.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderBottom,
+            borderLeft: validation ? 'none' : frameSelected ? FRAME_STYLE.borderLeft.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderLeft,
+            borderRight: validation ? 'none' : frameSelected ? FRAME_STYLE.borderRight.replace('dashed', 'solid').replace('1px', '2px') : FRAME_STYLE.borderRight,
+            background: validation ? 'transparent' : FRAME_STYLE.overlayBg,
+            cursor: validation ? 'default' : 'pointer',
+            pointerEvents: validation ? 'none' : 'auto',
             zIndex: 5,
-          }} onClick={() => { setFrameSelected(s => { if (!s) { setMenuOpen(false); setSelectedRelatedId(null) } return !s }) }}>
+          }} onClick={validation ? undefined : () => { setFrameSelected(s => { if (!s) { setMenuOpen(false); setSelectedRelatedId(null) } return !s }) }}>
             {/* Date range label above the frame */}
             <div style={{
               position: 'absolute',
@@ -336,9 +337,9 @@ export function PatternCard({
                 pointerEvents: 'all',
               }} onClick={e => e.stopPropagation()}>
                 <div style={{ display: 'flex', border: '1px solid #2A2A3A', borderRadius: 20, overflow: 'hidden' }}>
-                  <SegmentButton label="Abnormal" active={validation === 'abnormal'} activeColor="#E8394A" onClick={() => onValidate('abnormal')} />
+                  <SegmentButton label="Abnormal" active={validation === 'abnormal'} activeColor="#E8394A" onClick={() => { onValidate('abnormal'); setFrameSelected(false) }} />
                   <div style={{ width: 1, background: '#2A2A3A', flexShrink: 0 }} />
-                  <SegmentButton label="Normal" active={validation === 'normal'} activeColor="#22C55E" onClick={() => onValidate('normal')} />
+                  <SegmentButton label="Normal" active={validation === 'normal'} activeColor="#22C55E" onClick={() => { onValidate('normal'); setFrameSelected(false) }} />
                 </div>
               </div>
             )}
@@ -493,7 +494,8 @@ export function PatternCard({
                     const inFrame = hasFrame && FRAME_STYLE && di >= frameStartDi && di <= frameEndDi
                     if (inFrame) {
                       const r = Math.min(5 + occ.count * 0.9, 11)
-                      return <circle key={date} cx={cx} cy={cy} r={r} fill={FRAME_STYLE.dot} fillOpacity={0.92} />
+                      const fill = validation === 'abnormal' ? '#FF1F60' : validation === 'normal' ? '#30C27E' : FRAME_STYLE.dot
+                      return <circle key={date} cx={cx} cy={cy} r={r} fill={fill} fillOpacity={0.92} />
                     }
                     if (occ.occStatus === 'normal' && status !== 'unclassified') {
                       return <circle key={date} cx={cx} cy={cy} r={5} fill="#2ECC71" fillOpacity={0.8} />

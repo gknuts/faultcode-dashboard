@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect } from 'storybook/test'
 import { PatternCard } from './PatternCard'
@@ -176,6 +177,28 @@ export const NewWithUnclassified: Story = {
   },
 }
 
+
+// Simulates having already clicked Abnormal
+export const UnclassifiedAbnormal: Story = {
+  args: {
+    pattern: UNC_PATTERN,
+    occurrences: UNC_OCCS,
+    faultCodeMap: UNC_FC_MAP,
+    status: 'unclassified',
+    validation: 'abnormal',
+  },
+}
+
+// Simulates having already clicked Normal
+export const UnclassifiedNormal: Story = {
+  args: {
+    pattern: UNC_PATTERN,
+    occurrences: UNC_OCCS,
+    faultCodeMap: UNC_FC_MAP,
+    status: 'unclassified',
+    validation: 'normal',
+  },
+}
 
 export const ValidatedAbnormal: Story = {
   args: { validation: 'abnormal' },
