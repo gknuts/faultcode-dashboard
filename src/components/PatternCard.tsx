@@ -300,7 +300,7 @@ export function PatternCard({
             <div style={{
               position: 'absolute',
               bottom: '100%',
-              left: 0,
+              left: 'min(0px, calc(100% - 160px))',
               marginBottom: 4,
               whiteSpace: 'nowrap',
               display: 'flex',
@@ -330,8 +330,7 @@ export function PatternCard({
               <div style={{
                 position: 'absolute',
                 top: '100%',
-                left: '50%',
-                transform: 'translateX(-50%)',
+                right: 'max(0px, calc(50% - 75px))',
                 marginTop: 6,
                 display: 'flex',
                 pointerEvents: 'all',
@@ -371,7 +370,7 @@ export function PatternCard({
                 return next
               })}
             >
-              <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 4, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4, pointerEvents: 'none' }}>
+              <div style={{ position: 'absolute', bottom: '100%', left: 'min(0px, calc(100% - 160px))', marginBottom: 4, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4, pointerEvents: 'none' }}>
                 <span style={{ fontSize: 10, fontFamily: 'Roboto, sans-serif', fontWeight: 400, color: '#CCCCCC' }}>
                   {formatDate(dates[rgFrameStartDi])} – {formatDate(dates[rgFrameEndDi])}
                 </span>
@@ -386,7 +385,7 @@ export function PatternCard({
                 </svg>
               </div>
               {sel && (
-                <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: 6, display: 'flex', pointerEvents: 'all' }}
+                <div style={{ position: 'absolute', top: '100%', right: 'max(0px, calc(50% - 75px))', marginTop: 6, display: 'flex', pointerEvents: 'all' }}
                   onClick={e => e.stopPropagation()}>
                   <div style={{ display: 'flex', border: '1px solid #2A2A3A', borderRadius: 20, overflow: 'hidden' }}>
                     <SegmentButton label="Abnormal" active={relatedValidations[rg.pattern.id] === 'abnormal'} activeColor="#E8394A" onClick={() => onValidateRelated?.(rg.pattern.id, 'abnormal')} />
