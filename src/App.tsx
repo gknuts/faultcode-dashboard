@@ -20,6 +20,8 @@ export default function App() {
 
   const [panelMode, setPanelMode] = useState<PanelMode>('dashboard')
   const [inspectEnd, setInspectEnd] = useState<ISODate>(() => todayISO())
+  const [inspectAssetIds, setInspectAssetIds] = useState<string[]>([])
+  const [inspectFaultCodes, setInspectFaultCodes] = useState<string[]>([])
 
   useEffect(() => { loadData() }, [loadData])
 
@@ -51,6 +53,16 @@ export default function App() {
     for (const p of all) groups[derive(p)].push(p)
     return groups
   }, [data, selectedAssetId, derive])
+
+  const inspectPatterns = useMemo(() => {
+    if (!data) return { new: [], ongoing: [], unclassified: [] }
+    let patterns = data.patterns
+    if (inspectAssetIds.length > 0) patterns = patterns.filter(p => inspectAssetIds.includes(p.assetId))
+    if (inspectFaultCodes.length > 0) patterns = patterns.filter(p => p.faultCodes.some(fc => inspectFaultCodes.includes(fc)))
+    const groups: Record<DerivedStatus, typeof patterns> = { new: [], ongoing: [], unclassified: [] }
+    for (const p of patterns) groups[derive(p)].push(p)
+    return groups
+  }, [data, inspectAssetIds, inspectFaultCodes, derive])
 
   const totalCounts = useMemo(() => {
     if (!data) return { new: 0, ongoing: 0 }
@@ -89,6 +101,9 @@ export default function App() {
         ongoingCount={totalCounts.ongoing}
         inspectStart={inspectStart} inspectEnd={inspectEnd}
         onNavigateInspect={handleNavigateInspect}
+        assets={data.assets} faultCodes={data.faultCodes}
+        inspectAssetIds={inspectAssetIds} inspectFaultCodes={inspectFaultCodes}
+        onSetInspectAssetIds={setInspectAssetIds} onSetInspectFaultCodes={setInspectFaultCodes}
       />
 
       {panelMode === 'dashboard' ? (
@@ -155,23 +170,23 @@ export default function App() {
               sidebarWidth={SIDEBAR_WIDTH}
             />
             <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', position: 'relative' }}>
-              {hasNoPatterns ? (
+              {inspectPatterns.new.length === 0 && inspectPatterns.ongoing.length === 0 && inspectPatterns.unclassified.length === 0 ? (
                 <div style={{ color: '#3F3F52', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
-                  No patterns to display for this asset.
+                  No patterns match the current filters.
                 </div>
               ) : (
                 <>
-                  <PatternSection title="New Anomalous Patterns" status="new" patterns={assetPatterns.new}
+                  <PatternSection title="New Anomalous Patterns" status="new" patterns={inspectPatterns.new}
                     faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
                     patternValidations={patternValidations}
                     fcColWidth={FC_COL_WIDTH} onValidate={validatePattern}
-                    unclassifiedPatterns={assetPatterns.unclassified} />
-                  <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
+                    unclassifiedPatterns={inspectPatterns.unclassified} />
+                  <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={inspectPatterns.ongoing}
                     faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
                     patternValidations={patternValidations}
                     fcColWidth={FC_COL_WIDTH} onValidate={validatePattern}
-                    unclassifiedPatterns={assetPatterns.unclassified} />
-                  <PatternSection title="Unclassified Patterns" status="unclassified" patterns={assetPatterns.unclassified}
+                    unclassifiedPatterns={inspectPatterns.unclassified} />
+                  <PatternSection title="Unclassified Patterns" status="unclassified" patterns={inspectPatterns.unclassified}
                     faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
                     patternValidations={patternValidations}
                     fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />

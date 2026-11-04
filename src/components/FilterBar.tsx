@@ -1,4 +1,5 @@
-import type { ISODate, ViewMode, PanelMode } from '../data/types'
+import { useState, useEffect, useRef } from 'react'
+import type { Asset, FaultCode, ISODate, ViewMode, PanelMode } from '../data/types'
 import { formatPeriodLabel, todayISO } from '../lib/dates'
 
 interface Props {
@@ -12,11 +13,17 @@ interface Props {
   inspectStart?: ISODate
   inspectEnd?: ISODate
   onNavigateInspect?: (dir: -1 | 1) => void
+  assets?: Asset[]
+  faultCodes?: FaultCode[]
+  inspectAssetIds?: string[]
+  inspectFaultCodes?: string[]
+  onSetInspectAssetIds?: (ids: string[]) => void
+  onSetInspectFaultCodes?: (codes: string[]) => void
 }
 
 const VIEWS: ViewMode[] = ['3D', '1W', '1M']
 
-export default function FilterBar({ view, onSetView, onSimulateSession, panelMode, onSetPanelMode, newCount, ongoingCount, inspectStart, inspectEnd, onNavigateInspect }: Props) {
+export default function FilterBar({ view, onSetView, onSimulateSession, panelMode, onSetPanelMode, newCount, ongoingCount, inspectStart, inspectEnd, onNavigateInspect, assets = [], faultCodes = [], inspectAssetIds = [], inspectFaultCodes = [], onSetInspectAssetIds, onSetInspectFaultCodes }: Props) {
   return (
     <div style={{ flexShrink: 0, background: '#12121A', borderBottom: '1px solid #1E1E2C' }}>
       {/* Top nav row */}
@@ -123,31 +130,32 @@ export default function FilterBar({ view, onSetView, onSimulateSession, panelMod
           </>
         ) : (
           <>
-            {/* Asset dropdown (cosmetic) */}
-            <div style={{
-              display: 'flex', flexDirection: 'column', justifyContent: 'center',
-              background: '#1A1A26', border: '1px solid #2A2A3C', borderRadius: 6,
-              padding: '4px 12px', minWidth: 160, cursor: 'pointer',
-            }}>
-              <span style={{ fontSize: 10, color: '#52526A', fontWeight: 600, letterSpacing: '0.06em' }}>ASSET</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: 13, color: '#8A8AB0' }}>Select...</span>
-                <span style={{ color: '#52526A', fontSize: 11, marginLeft: 'auto' }}>▾</span>
-              </div>
-            </div>
-
-            {/* Fault codes dropdown (cosmetic) */}
-            <div style={{
-              display: 'flex', flexDirection: 'column', justifyContent: 'center',
-              background: '#1A1A26', border: '1px solid #2A2A3C', borderRadius: 6,
-              padding: '4px 12px', minWidth: 160, cursor: 'pointer',
-            }}>
-              <span style={{ fontSize: 10, color: '#52526A', fontWeight: 600, letterSpacing: '0.06em' }}>FAULT CODES</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: 13, color: '#8A8AB0' }}>All</span>
-                <span style={{ color: '#52526A', fontSize: 11, marginLeft: 'auto' }}>▾</span>
-              </div>
-            </div>
+            <MultiSelectDropdown
+              label="ASSET"
+              placeholder="All assets"
+              options={assets.map(a => ({ id: a.id, name: a.label }))}
+              selected={inspectAssetIds}
+              onToggle={id => {
+                const next = inspectAssetIds.includes(id)
+                  ? inspectAssetIds.filter(x => x !== id)
+                  : [...inspectAssetIds, id]
+                onSetInspectAssetIds?.(next)
+              }}
+              onClear={() => onSetInspectAssetIds?.([])}
+            />
+            <MultiSelectDropdown
+              label="FAULT CODES"
+              placeholder="All codes"
+              options={faultCodes.map(fc => ({ id: fc.code, name: fc.code, sub: fc.description }))}
+              selected={inspectFaultCodes}
+              onToggle={code => {
+                const next = inspectFaultCodes.includes(code)
+                  ? inspectFaultCodes.filter(x => x !== code)
+                  : [...inspectFaultCodes, code]
+                onSetInspectFaultCodes?.(next)
+              }}
+              onClear={() => onSetInspectFaultCodes?.([])}
+            />
 
             {/* Period navigator */}
             {inspectStart && inspectEnd && (
@@ -236,6 +244,115 @@ export default function FilterBar({ view, onSetView, onSimulateSession, panelMod
           })}
         </div>
       </div>
+    </div>
+  )
+}
+
+interface MultiSelectOption {
+  id: string
+  name: string
+  sub?: string
+}
+
+function MultiSelectDropdown({ label, placeholder, options, selected, onToggle, onClear }: {
+  label: string
+  placeholder: string
+  options: MultiSelectOption[]
+  selected: string[]
+  onToggle: (id: string) => void
+  onClear: () => void
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  const displayText = selected.length === 0
+    ? placeholder
+    : selected.length === 1
+      ? (options.find(o => o.id === selected[0])?.name ?? '1 selected')
+      : `${selected.length} selected`
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <div
+        onClick={() => setOpen(o => !o)}
+        style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          background: open ? '#1E1E2E' : '#1A1A26',
+          border: `1px solid ${open ? '#6C4BF5' : selected.length > 0 ? '#4A3A8A' : '#2A2A3C'}`,
+          borderRadius: 6,
+          padding: '4px 12px',
+          minWidth: 160,
+          cursor: 'pointer',
+          userSelect: 'none',
+        }}
+      >
+        <span style={{ fontSize: 10, color: '#52526A', fontWeight: 600, letterSpacing: '0.06em' }}>{label}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 13, color: selected.length > 0 ? '#C4C4D4' : '#8A8AB0', flex: 1 }}>{displayText}</span>
+          {selected.length > 0 && (
+            <span
+              onClick={e => { e.stopPropagation(); onClear() }}
+              style={{ color: '#52526A', fontSize: 11, cursor: 'pointer', lineHeight: 1 }}
+              title="Clear"
+            >✕</span>
+          )}
+          <span style={{ color: '#52526A', fontSize: 11 }}>▾</span>
+        </div>
+      </div>
+
+      {open && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 4px)', left: 0, zIndex: 200,
+          background: '#1A1A26', border: '1px solid #2A2A3C', borderRadius: 6,
+          minWidth: 220, maxHeight: 260, overflowY: 'auto',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+        }}>
+          {options.map(opt => {
+            const checked = selected.includes(opt.id)
+            return (
+              <div
+                key={opt.id}
+                onClick={() => onToggle(opt.id)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  padding: '8px 12px', cursor: 'pointer',
+                  background: checked ? 'rgba(108,75,245,0.08)' : 'transparent',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = checked ? 'rgba(108,75,245,0.14)' : 'rgba(255,255,255,0.04)')}
+                onMouseLeave={e => (e.currentTarget.style.background = checked ? 'rgba(108,75,245,0.08)' : 'transparent')}
+              >
+                <div style={{
+                  width: 14, height: 14, flexShrink: 0,
+                  border: `1px solid ${checked ? '#6C4BF5' : '#3A3A4C'}`,
+                  borderRadius: 3,
+                  background: checked ? '#6C4BF5' : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  {checked && <span style={{ color: '#fff', fontSize: 9, lineHeight: 1 }}>✓</span>}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                  <span style={{ fontSize: 13, color: '#C4C4D4', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{opt.name}</span>
+                  {opt.sub && (
+                    <span style={{ fontSize: 11, color: '#52526A', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{opt.sub}</span>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+          {options.length === 0 && (
+            <div style={{ padding: '12px', color: '#52526A', fontSize: 13 }}>No options</div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

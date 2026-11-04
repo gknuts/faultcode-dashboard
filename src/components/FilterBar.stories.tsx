@@ -23,5 +23,24 @@ export const DashboardMode: Story = {
 }
 
 export const InspectMode: Story = {
-  args: { panelMode: 'inspect' },
+  args: {
+    panelMode: 'inspect',
+    inspectStart: '2026-10-03',
+    inspectEnd: '2026-11-03',
+    onNavigateInspect: () => {},
+    assets: [
+      { id: '1', label: '485 001' },
+      { id: '2', label: '485 002' },
+      { id: '3', label: '485 003' },
+    ],
+    faultCodes: [
+      { code: 'A001', description: 'Traction inverter fault' },
+      { code: 'B012', description: 'Pantograph pressure low' },
+      { code: 'C034', description: 'Door control unit timeout' },
+    ],
+    inspectAssetIds: [],
+    inspectFaultCodes: [],
+    onSetInspectAssetIds: () => {},
+    onSetInspectFaultCodes: () => {},
+  },
 }
