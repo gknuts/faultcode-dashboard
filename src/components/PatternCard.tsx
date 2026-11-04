@@ -57,7 +57,7 @@ export function PatternCard({
 
   const [hoveredDi, setHoveredDi] = useState<number | null>(null)
   const [frameSelected, setFrameSelected] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(true)
 
   const handleSvgMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
