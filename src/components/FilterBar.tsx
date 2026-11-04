@@ -1,4 +1,5 @@
-import type { ViewMode, PanelMode } from '../data/types'
+import type { ISODate, ViewMode, PanelMode } from '../data/types'
+import { formatPeriodLabel, todayISO } from '../lib/dates'
 
 interface Props {
   view: ViewMode
@@ -8,11 +9,14 @@ interface Props {
   onSetPanelMode: (m: PanelMode) => void
   newCount: number
   ongoingCount: number
+  inspectStart?: ISODate
+  inspectEnd?: ISODate
+  onNavigateInspect?: (dir: -1 | 1) => void
 }
 
 const VIEWS: ViewMode[] = ['3D', '1W', '1M']
 
-export default function FilterBar({ view, onSetView, onSimulateSession, panelMode, onSetPanelMode, newCount, ongoingCount }: Props) {
+export default function FilterBar({ view, onSetView, onSimulateSession, panelMode, onSetPanelMode, newCount, ongoingCount, inspectStart, inspectEnd, onNavigateInspect }: Props) {
   return (
     <div style={{ flexShrink: 0, background: '#12121A', borderBottom: '1px solid #1E1E2C' }}>
       {/* Top nav row */}
@@ -145,44 +149,50 @@ export default function FilterBar({ view, onSetView, onSimulateSession, panelMod
               </div>
             </div>
 
-            {/* Simulate session */}
-            <button
-              onClick={onSimulateSession}
-              title="Simulate opening the app in a new session"
-              style={{
-                background: 'rgba(108,75,245,0.12)',
-                border: '1px solid rgba(108,75,245,0.35)',
-                borderRadius: 6,
-                color: '#8B6EF5',
-                fontSize: 11,
-                fontWeight: 600,
-                padding: '6px 14px',
-                cursor: 'pointer',
-              }}
-            >
-              Simulate new session
-            </button>
-
-            {/* View selector */}
-            <div style={{ display: 'flex', background: '#1A1A26', borderRadius: 6, overflow: 'hidden', border: '1px solid #2A2A3C' }}>
-              {VIEWS.map((v) => (
+            {/* Period navigator */}
+            {inspectStart && inspectEnd && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <button
-                  key={v}
-                  onClick={() => onSetView(v)}
+                  onClick={() => onNavigateInspect?.(-1)}
                   style={{
-                    background: view === v ? '#6C4BF5' : 'transparent',
-                    border: 'none',
-                    color: view === v ? '#FFFFFF' : '#52526A',
+                    background: 'transparent',
+                    border: '1px solid #2A2A3C',
+                    borderRadius: 6,
+                    color: '#8A8AB0',
                     fontSize: 13,
-                    fontWeight: 700,
-                    padding: '6px 18px',
+                    width: 28, height: 28,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                     cursor: 'pointer',
+                    padding: 0,
                   }}
-                >
-                  {v}
-                </button>
-              ))}
-            </div>
+                >◀</button>
+                <span style={{
+                  color: '#C4C4D4',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  padding: '0 8px',
+                  minWidth: 160,
+                  textAlign: 'center',
+                }}>
+                  {formatPeriodLabel(inspectStart, inspectEnd)}
+                </span>
+                <button
+                  onClick={() => onNavigateInspect?.(1)}
+                  disabled={inspectEnd >= todayISO()}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid #2A2A3C',
+                    borderRadius: 6,
+                    color: inspectEnd >= todayISO() ? '#2A2A3C' : '#8A8AB0',
+                    fontSize: 13,
+                    width: 28, height: 28,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: inspectEnd >= todayISO() ? 'default' : 'pointer',
+                    padding: 0,
+                  }}
+                >▶</button>
+              </div>
+            )}
           </>
         )}
 

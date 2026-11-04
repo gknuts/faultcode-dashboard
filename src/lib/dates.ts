@@ -56,6 +56,10 @@ export function formatAxisLabel(date: ISODate): string {
   return format(fromISO(date), 'd MMM')
 }
 
+export function getMonthRange(end: ISODate): [ISODate, ISODate] {
+  return [toISO(subMonths(fromISO(end), 1)), end]
+}
+
 export function todayDefaultSessionAt(): string {
   // Default: 7 days ago, so recent patterns show as "new" on first visit
   return subDays(fromISO(DEMO_TODAY), 7).toISOString()

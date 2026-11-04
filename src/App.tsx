@@ -3,8 +3,8 @@ import { useStore, derivePatternStatus } from './store/index'
 import FilterBar from './components/FilterBar'
 import { AssetSidebar } from './components/AssetSidebar'
 import { PatternSection } from './components/PatternSection'
-import { getPeriodRange, getDatesInRange, formatAxisLabel } from './lib/dates'
-import type { DerivedStatus, PanelMode } from './data/types'
+import { getPeriodRange, getDatesInRange, formatAxisLabel, getMonthRange, navigateEnd, todayISO } from './lib/dates'
+import type { DerivedStatus, ISODate, PanelMode } from './data/types'
 
 const FC_COL_WIDTH = 60  // = BADGE_WIDTH — dates align with dots start
 const SIDEBAR_WIDTH = 200
@@ -19,11 +19,20 @@ export default function App() {
   } = useStore()
 
   const [panelMode, setPanelMode] = useState<PanelMode>('dashboard')
+  const [inspectEnd, setInspectEnd] = useState<ISODate>(() => todayISO())
 
   useEffect(() => { loadData() }, [loadData])
 
   const [periodStart, periodEnd] = useMemo(() => getPeriodRange(view), [view])
   const dates = useMemo(() => getDatesInRange(periodStart, periodEnd), [periodStart, periodEnd])
+
+  const [inspectStart] = useMemo(() => getMonthRange(inspectEnd), [inspectEnd])
+  const inspectDates = useMemo(() => getDatesInRange(inspectStart, inspectEnd), [inspectStart, inspectEnd])
+  const inspectLabelStep = inspectDates.length <= 7 ? 1 : inspectDates.length <= 14 ? 2 : 5
+
+  const handleNavigateInspect = (dir: -1 | 1) => {
+    setInspectEnd(prev => navigateEnd('1M', prev, dir))
+  }
 
   const faultCodeMap = useMemo(() => {
     if (!data) return new Map()
@@ -78,6 +87,8 @@ export default function App() {
         panelMode={panelMode} onSetPanelMode={setPanelMode}
         newCount={totalCounts.new}
         ongoingCount={totalCounts.ongoing}
+        inspectStart={inspectStart} inspectEnd={inspectEnd}
+        onNavigateInspect={handleNavigateInspect}
       />
 
       {panelMode === 'dashboard' ? (
@@ -129,7 +140,7 @@ export default function App() {
                   Code
                 </span>
               </div>
-              <DateAxisSvg dates={dates} labelStep={labelStep} />
+              <DateAxisSvg dates={inspectDates} labelStep={inspectLabelStep} />
             </div>
           </div>
 
@@ -151,17 +162,17 @@ export default function App() {
               ) : (
                 <>
                   <PatternSection title="New Anomalous Patterns" status="new" patterns={assetPatterns.new}
-                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
+                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
                     patternValidations={patternValidations}
                     fcColWidth={FC_COL_WIDTH} onValidate={validatePattern}
                     unclassifiedPatterns={assetPatterns.unclassified} />
                   <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
-                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
+                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
                     patternValidations={patternValidations}
                     fcColWidth={FC_COL_WIDTH} onValidate={validatePattern}
                     unclassifiedPatterns={assetPatterns.unclassified} />
                   <PatternSection title="Unclassified Patterns" status="unclassified" patterns={assetPatterns.unclassified}
-                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
+                    faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={inspectDates} labelStep={inspectLabelStep}
                     patternValidations={patternValidations}
                     fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
                 </>
@@ -180,7 +191,7 @@ export default function App() {
             <div style={{ width: SIDEBAR_WIDTH, flexShrink: 0, borderRight: '1px solid #1E1E28' }} />
             <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
               <div style={{ width: FC_COL_WIDTH, flexShrink: 0 }} />
-              <DateAxisSvg dates={dates} labelStep={labelStep} />
+              <DateAxisSvg dates={inspectDates} labelStep={inspectLabelStep} />
             </div>
           </div>
         </>
