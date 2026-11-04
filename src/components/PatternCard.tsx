@@ -65,17 +65,32 @@ export function PatternCard({
     setHoveredDi(Math.max(0, Math.min(di, dates.length - 1)))
   }
 
-  // Pre-build occurrence map per FC code
+  const datesSet = useMemo(() => new Set(dates), [dates])
+
+  // Pre-build occurrence map per FC code (period-filtered)
   const occMap = useMemo(() => {
     const map = new Map<string, Map<string, { count: number; occStatus: 'abnormal' | 'normal' }>>()
     for (const occ of occurrences) {
       if (occ.patternId !== pattern.id) continue
+      if (!datesSet.has(occ.date)) continue
       let inner = map.get(occ.faultCode)
       if (!inner) { inner = new Map(); map.set(occ.faultCode, inner) }
       inner.set(occ.date, { count: occ.count, occStatus: occ.status })
     }
     return map
-  }, [occurrences, pattern.id])
+  }, [occurrences, pattern.id, datesSet])
+
+  // Only show fault codes with ≥1 occurrence in the period that has a correlationGroupId
+  const visibleFaultCodes = useMemo(() => {
+    return pattern.faultCodes.filter(code =>
+      occurrences.some(occ =>
+        occ.patternId === pattern.id &&
+        occ.faultCode === code &&
+        occ.correlationGroupId != null &&
+        datesSet.has(occ.date)
+      )
+    )
+  }, [occurrences, pattern.id, pattern.faultCodes, datesSet])
 
   // Compute correlation group frame bounds
   const { frameStartDi, frameEndDi } = useMemo(() => {
@@ -93,6 +108,8 @@ export function PatternCard({
   }, [occurrences, pattern.id, dates])
 
   const hasFrame = frameStartDi >= 0 && frameEndDi >= 0
+
+  if (visibleFaultCodes.length === 0) return null
 
   const FRAME_STYLE = {
     unclassified: {
@@ -279,10 +296,10 @@ export function PatternCard({
           </div>
         )}
 
-      {pattern.faultCodes.map((code, i) => {
+      {visibleFaultCodes.map((code, i) => {
         const fc = faultCodeMap.get(code)
         const fcMap = occMap.get(code)
-const isLast = i === pattern.faultCodes.length - 1
+        const isLast = i === visibleFaultCodes.length - 1
 
         return (
           <div key={code} style={{ marginBottom: !isLast ? 5 : 0 }}>
