@@ -1,19 +1,14 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import type { Asset, Pattern, FaultCode, PatternOccurrence, ISODate, DerivedStatus } from '../data/types'
 
-export const INSPECT_LEFT_WIDTH = 300  // badge + description col
+export const INSPECT_LEFT_WIDTH = 300
+
 const ROW_HEIGHT = 44
 
 const STATUS_DOT: Record<DerivedStatus, string> = {
   new: '#FF6A00',
   ongoing: '#8B6AFF',
   unclassified: '#52526A',
-}
-
-const STATUS_ROW_BG: Record<DerivedStatus, string> = {
-  new: '#030303',
-  ongoing: '#030303',
-  unclassified: '#030303',
 }
 
 interface Props {
@@ -26,6 +21,7 @@ interface Props {
 }
 
 export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus }: Props) {
+  const [collapsed, setCollapsed] = useState(false)
   const datesSet = useMemo(() => new Set(dates), [dates])
 
   const fcRows = useMemo(() => {
@@ -62,16 +58,27 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
         gap: 10,
         padding: '0 14px',
         background: '#0B0B12',
-        borderBottom: '1px solid #1E1E28',
+        borderBottom: collapsed ? 'none' : '1px solid #1E1E28',
+        cursor: 'default',
       }}>
-        <span style={{ color: '#3A3A50', fontSize: 12 }}>^</span>
+        <span
+          onClick={() => setCollapsed(c => !c)}
+          style={{
+            color: '#52526A',
+            fontSize: 11,
+            cursor: 'pointer',
+            userSelect: 'none',
+            transform: collapsed ? 'rotate(-90deg)' : 'none',
+            display: 'inline-block',
+            transition: 'transform 0.15s',
+          }}
+        >▾</span>
         <span style={{ fontSize: 14, fontWeight: 700, color: '#E0E0F0' }}>{asset.label}</span>
       </div>
 
       {/* Fault code rows */}
-      {fcRows.map(({ fc, status, occs, description }) => {
+      {!collapsed && fcRows.map(({ fc, status, occs, description }) => {
         const dotColor = STATUS_DOT[status]
-        const rowBg = STATUS_ROW_BG[status]
 
         return (
           <div
@@ -80,7 +87,7 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
               display: 'flex',
               height: ROW_HEIGHT,
               alignItems: 'center',
-              background: rowBg,
+              background: '#030303',
               borderBottom: '1px solid #14141C',
             }}
           >
@@ -122,27 +129,27 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
               </span>
             </div>
 
-            {/* Timeline dots */}
+            {/* Timeline — SVG circles sized by count */}
             <div style={{ flex: 1, height: '100%', position: 'relative' }}>
-              {occs.map(occ => {
-                const di = dates.indexOf(occ.date)
-                if (di < 0) return null
-                return (
-                  <div
-                    key={`${occ.date}-${occ.faultCode}`}
-                    style={{
-                      position: 'absolute',
-                      left: `${((di + 0.5) / dates.length) * 100}%`,
-                      top: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      width: 8,
-                      height: 8,
-                      borderRadius: '50%',
-                      background: dotColor,
-                    }}
-                  />
-                )
-              })}
+              <svg width="100%" height="100%" style={{ display: 'block', overflow: 'visible' }}>
+                {occs.map(occ => {
+                  const di = dates.indexOf(occ.date)
+                  if (di < 0) return null
+                  const cx = `${((di + 0.5) / dates.length) * 100}%`
+                  const cy = ROW_HEIGHT / 2
+                  const r = Math.min(5 + occ.count * 0.9, 11)
+                  return (
+                    <circle
+                      key={`${occ.date}-${occ.faultCode}`}
+                      cx={cx}
+                      cy={cy}
+                      r={r}
+                      fill={dotColor}
+                      fillOpacity={0.9}
+                    />
+                  )
+                })}
+              </svg>
             </div>
           </div>
         )
