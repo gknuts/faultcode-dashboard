@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect } from 'storybook/test'
 import { PatternSection } from './PatternSection'
 import type { FaultCode, Pattern, PatternOccurrence } from '../data/types'
-import rawData from '../../public/data/patterns.json'
+import { transformRawOccurrences, type RawOccurrence } from '../data/loader'
+import rawRows from '../../public/data/fc_occurences.json'
+
+const DATA = transformRawOccurrences(rawRows as RawOccurrence[])
 
 function makeDates(count: number): string[] {
   const dates: string[] = []
@@ -18,25 +21,25 @@ function makeDates(count: number): string[] {
 const DATES = makeDates(30)
 
 const faultCodeMap = new Map<string, FaultCode>(
-  rawData.faultCodes.map((fc) => [fc.code, fc as FaultCode])
+  DATA.faultCodes.map((fc: FaultCode) => [fc.code, fc])
 )
 
 // Curated pattern IDs per status category
-const NEW_IDS = ['g14_485014', 'g10_485010', 'g5_485005', 'g55_485017']
-const ONGOING_IDS = ['g123_485003', 'g51_485012', 'g34_485010', 'g117_485020', 'g126_485018', 'g129_485014']
-const UNCLASSIFIED_IDS = (rawData.patterns as Pattern[])
-  .filter((p) => !!p.endDate)
-  .map((p) => p.id)
+const NEW_IDS = ['g14', 'g10', 'g5', 'g55']
+const ONGOING_IDS = ['g123', 'g51', 'g34', 'g117', 'g126', 'g129']
+const UNCLASSIFIED_IDS = DATA.patterns
+  .filter((p: Pattern) => !!p.endDate)
+  .map((p: Pattern) => p.id)
 
 function pickPatterns(ids: string[]): Pattern[] {
   return ids
-    .map((id) => rawData.patterns.find((p) => p.id === id))
-    .filter((p): p is Pattern => p != null) as Pattern[]
+    .map((id) => DATA.patterns.find((p: Pattern) => p.id === id))
+    .filter((p): p is Pattern => p != null)
 }
 
 function pickOccurrences(patterns: Pattern[]): PatternOccurrence[] {
-  const ids = new Set(patterns.map((p) => p.id))
-  return (rawData.occurrences as PatternOccurrence[]).filter((o) => ids.has(o.patternId))
+  const ids = new Set(patterns.map((p: Pattern) => p.id))
+  return DATA.occurrences.filter((o: PatternOccurrence) => ids.has(o.patternId))
 }
 
 const NEW_PATTERNS = pickPatterns(NEW_IDS)
