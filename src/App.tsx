@@ -215,7 +215,7 @@ interface DashboardViewProps {
   patternValidations: Record<string, 'abnormal' | 'normal'>
   onValidate: (id: string, status: 'abnormal' | 'normal') => void
   hasNoPatterns: boolean
-  onInspectPattern: (faultCodes: string[]) => void
+  onInspectPattern: (faultCodes: string[], assetId: string) => void
 }
 
 function DashboardView({
