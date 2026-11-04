@@ -18,9 +18,11 @@ interface Props {
   occurrences: PatternOccurrence[]
   dates: ISODate[]
   deriveStatus: (p: Pattern) => DerivedStatus
+  hoveredDi?: number | null
+  onHoverDi?: (di: number | null) => void
 }
 
-export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus }: Props) {
+export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus, hoveredDi = null, onHoverDi }: Props) {
   const [collapsed, setCollapsed] = useState(false)
   const datesSet = useMemo(() => new Set(dates), [dates])
 
@@ -43,6 +45,11 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
 
   if (fcRows.length === 0) return null
 
+  // x% of the timeline area → x% in the full row accounting for left col
+  const lineLeft = hoveredDi !== null
+    ? `calc(${INSPECT_LEFT_WIDTH}px + ${((hoveredDi + 0.5) / dates.length) * 100}% - ${((hoveredDi + 0.5) / dates.length) * INSPECT_LEFT_WIDTH}px)`
+    : null
+
   return (
     <div style={{
       marginBottom: 8,
@@ -59,7 +66,6 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
         padding: '0 14px',
         background: '#0B0B12',
         borderBottom: collapsed ? 'none' : '1px solid #1E1E28',
-        cursor: 'default',
       }}>
         <span
           onClick={() => setCollapsed(c => !c)}
@@ -68,92 +74,119 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
             fontSize: 11,
             cursor: 'pointer',
             userSelect: 'none',
-            transform: collapsed ? 'rotate(-90deg)' : 'none',
             display: 'inline-block',
+            transform: collapsed ? 'rotate(-90deg)' : 'none',
             transition: 'transform 0.15s',
           }}
         >▾</span>
         <span style={{ fontSize: 14, fontWeight: 700, color: '#E0E0F0' }}>{asset.label}</span>
       </div>
 
-      {/* Fault code rows */}
-      {!collapsed && fcRows.map(({ fc, status, occs, description }) => {
-        const dotColor = STATUS_DOT[status]
-
-        return (
-          <div
-            key={fc}
-            style={{
-              display: 'flex',
-              height: ROW_HEIGHT,
-              alignItems: 'center',
-              background: '#030303',
-              borderBottom: '1px solid #14141C',
-            }}
-          >
-            {/* Left col: badge + description */}
+      {/* FC rows wrapper — tracks mouse for vertical hover line */}
+      {!collapsed && (
+        <div
+          style={{ position: 'relative' }}
+          onMouseMove={e => {
+            const rect = e.currentTarget.getBoundingClientRect()
+            const timelineX = e.clientX - rect.left - INSPECT_LEFT_WIDTH
+            const timelineWidth = rect.width - INSPECT_LEFT_WIDTH
+            if (timelineX < 0) { onHoverDi?.(null); return }
+            const di = Math.floor((timelineX / timelineWidth) * dates.length)
+            onHoverDi?.(Math.max(0, Math.min(di, dates.length - 1)))
+          }}
+          onMouseLeave={() => onHoverDi?.(null)}
+        >
+          {/* Vertical hover line spanning all FC rows */}
+          {lineLeft !== null && (
             <div style={{
-              width: INSPECT_LEFT_WIDTH,
-              flexShrink: 0,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '0 14px',
-              borderRight: '1px solid #1A1A26',
-              height: '100%',
-            }}>
-              <div style={{
-                background: '#1C1C28',
-                borderRadius: 8,
-                padding: '5px 14px',
-                flexShrink: 0,
-              }}>
-                <span style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: '#FFFFFF',
-                  letterSpacing: '0.06em',
-                  fontFamily: 'monospace',
-                }}>
-                  {fc}
-                </span>
-              </div>
-              <span style={{
-                fontSize: 13,
-                color: '#5A5A74',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}>
-                {description}
-              </span>
-            </div>
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: lineLeft,
+              width: 1,
+              background: '#4A4A6A',
+              pointerEvents: 'none',
+              zIndex: 1,
+            }} />
+          )}
 
-            {/* Timeline — SVG circles sized by count */}
-            <div style={{ flex: 1, height: '100%', position: 'relative' }}>
-              <svg width="100%" height="100%" style={{ display: 'block', overflow: 'visible' }}>
-                {occs.map(occ => {
-                  const di = dates.indexOf(occ.date)
-                  if (di < 0) return null
-                  const cx = `${((di + 0.5) / dates.length) * 100}%`
-                  const cy = ROW_HEIGHT / 2
-                  const r = Math.min(5 + occ.count * 0.9, 11)
-                  return (
-                    <circle
-                      key={`${occ.date}-${occ.faultCode}`}
-                      cx={cx}
-                      cy={cy}
-                      r={r}
-                      fill={dotColor}
-                      fillOpacity={0.9}
-                    />
-                  )
-                })}
-              </svg>
-            </div>
-          </div>
-        )
-      })}
+          {fcRows.map(({ fc, status, occs, description }) => {
+            const dotColor = STATUS_DOT[status]
+
+            return (
+              <div
+                key={fc}
+                style={{
+                  display: 'flex',
+                  height: ROW_HEIGHT,
+                  alignItems: 'center',
+                  background: '#030303',
+                  borderBottom: '1px solid #14141C',
+                }}
+              >
+                {/* Left col: badge + description */}
+                <div style={{
+                  width: INSPECT_LEFT_WIDTH,
+                  flexShrink: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  padding: '0 14px',
+                  borderRight: '1px solid #1A1A26',
+                  height: '100%',
+                }}>
+                  <div style={{
+                    background: '#1C1C28',
+                    borderRadius: 8,
+                    padding: '5px 14px',
+                    flexShrink: 0,
+                  }}>
+                    <span style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: '#FFFFFF',
+                      letterSpacing: '0.06em',
+                      fontFamily: 'monospace',
+                    }}>
+                      {fc}
+                    </span>
+                  </div>
+                  <span style={{
+                    fontSize: 13,
+                    color: '#5A5A74',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    {description}
+                  </span>
+                </div>
+
+                {/* Timeline */}
+                <div style={{ flex: 1, height: '100%', position: 'relative' }}>
+                  <svg width="100%" height="100%" style={{ display: 'block', overflow: 'visible' }}>
+                    {occs.map(occ => {
+                      const di = dates.indexOf(occ.date)
+                      if (di < 0) return null
+                      const cx = `${((di + 0.5) / dates.length) * 100}%`
+                      const cy = ROW_HEIGHT / 2
+                      const r = Math.min(5 + occ.count * 0.9, 11)
+                      return (
+                        <circle
+                          key={`${occ.date}-${occ.faultCode}`}
+                          cx={cx} cy={cy} r={r}
+                          fill={dotColor}
+                          fillOpacity={0.9}
+                        />
+                      )
+                    })}
+                  </svg>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

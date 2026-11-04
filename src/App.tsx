@@ -23,6 +23,7 @@ export default function App() {
   const [inspectEnd, setInspectEnd] = useState<ISODate>(() => todayISO())
   const [inspectAssetIds, setInspectAssetIds] = useState<string[]>([])
   const [inspectFaultCodes, setInspectFaultCodes] = useState<string[]>([])
+  const [inspectHoveredDi, setInspectHoveredDi] = useState<number | null>(null)
 
   useEffect(() => { loadData() }, [loadData])
 
@@ -132,6 +133,7 @@ export default function App() {
             display: 'flex',
             background: '#0F0F16',
             borderBottom: '1px solid #1E1E28',
+            position: 'relative',
           }}>
             <div style={{
               width: INSPECT_LEFT_WIDTH,
@@ -143,11 +145,21 @@ export default function App() {
             }}>
               <span style={{ fontSize: 9, fontWeight: 700, color: '#2A2A3C', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Fault code</span>
             </div>
-            <DateAxisSvg dates={inspectDates} labelStep={inspectLabelStep} />
+            <DateAxisSvg dates={inspectDates} labelStep={inspectLabelStep} hoveredDi={inspectHoveredDi} />
+            {inspectHoveredDi !== null && (
+              <div style={{
+                position: 'absolute',
+                top: 0, bottom: 0,
+                left: `calc(${INSPECT_LEFT_WIDTH}px + ${((inspectHoveredDi + 0.5) / inspectDates.length) * 100}% - ${((inspectHoveredDi + 0.5) / inspectDates.length) * INSPECT_LEFT_WIDTH}px)`,
+                width: 1,
+                background: '#4A4A6A',
+                pointerEvents: 'none',
+              }} />
+            )}
           </div>
 
           {/* Asset rows */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '12px 16px' }}>
+          <div style={{ flex: 1, overflowY: 'auto', padding: '12px 0' }}>
             {inspectPatternsByAsset.length === 0 ? (
               <div style={{ color: '#3F3F52', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
                 No patterns match the current filters.
@@ -162,6 +174,8 @@ export default function App() {
                   occurrences={data.occurrences}
                   dates={inspectDates}
                   deriveStatus={derive}
+                  hoveredDi={inspectHoveredDi}
+                  onHoverDi={setInspectHoveredDi}
                 />
               ))
             )}
@@ -232,7 +246,7 @@ function DashboardView({
   )
 }
 
-function DateAxisSvg({ dates, labelStep, showTodayMarker }: { dates: string[]; labelStep: number; showTodayMarker?: boolean }) {
+function DateAxisSvg({ dates, labelStep, showTodayMarker, hoveredDi }: { dates: string[]; labelStep: number; showTodayMarker?: boolean; hoveredDi?: number | null }) {
   const todayPct = ((dates.length - 0.5) / dates.length) * 100
   return (
     <div style={{ flex: 1, height: '100%', position: 'relative' }}>
