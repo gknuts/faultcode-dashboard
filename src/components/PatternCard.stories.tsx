@@ -144,6 +144,39 @@ export const Unclassified: Story = {
   },
 }
 
+// Related unclassified group: same fault codes as NEW, different time window (mid-period)
+// Represents a prior unclassified occurrence of the same pattern on the same asset.
+const RELATED_UNC_ID = 'unc_related'
+const RELATED_UNC_OCCS: PatternOccurrence[] = NEW_PATTERN.faultCodes.flatMap(code =>
+  ['2026-10-18', '2026-10-19', '2026-10-20', '2026-10-21', '2026-10-22', '2026-10-23'].map(date => ({
+    patternId: RELATED_UNC_ID,
+    faultCode: code,
+    date,
+    count: 2,
+    status: 'abnormal' as const,
+    correlationGroupId: 999,
+  }))
+)
+const RELATED_UNC_PATTERN: Pattern = {
+  id: RELATED_UNC_ID,
+  assetId: NEW_PATTERN.assetId,
+  faultCodes: NEW_PATTERN.faultCodes,
+  startDate: '2026-10-18',
+  endDate: '2026-10-23',
+}
+
+// NEW card: main orange frame (Oct 7) + unclassified grey frame (Oct 18–23) on same FC rows
+export const NewWithUnclassified: Story = {
+  args: {
+    pattern: NEW_PATTERN,
+    occurrences: NEW_OCCS,
+    faultCodeMap: NEW_FC_MAP,
+    status: 'new',
+    relatedGroups: [{ pattern: RELATED_UNC_PATTERN, occurrences: RELATED_UNC_OCCS, faultCodeMap: NEW_FC_MAP }],
+  },
+}
+
+
 export const ValidatedAbnormal: Story = {
   args: { validation: 'abnormal' },
 }

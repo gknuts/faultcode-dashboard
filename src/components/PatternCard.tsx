@@ -6,6 +6,12 @@ import { format } from 'date-fns'
 
 const BADGE_WIDTH = 60
 
+export interface RelatedGroup {
+  pattern: Pattern
+  occurrences: PatternOccurrence[]
+  faultCodeMap: Map<string, FaultCode>
+}
+
 interface Props {
   pattern: Pattern
   status: DerivedStatus
@@ -16,6 +22,7 @@ interface Props {
   validation: 'abnormal' | 'normal' | undefined
   fcColWidth: number
   onValidate: (status: 'abnormal' | 'normal') => void
+  relatedGroups?: RelatedGroup[]
 }
 
 const STATUS_ACCENT: Record<DerivedStatus, string> = {
@@ -48,7 +55,7 @@ function formatDate(d: string) {
 
 export function PatternCard({
   pattern, status, faultCodeMap, occurrences, dates, labelStep,
-  validation, onValidate,
+  validation, onValidate, relatedGroups = [],
 }: Props) {
   const accent = STATUS_ACCENT[status]
   const cardBg = STATUS_CARD_BG[status]
@@ -109,6 +116,37 @@ export function PatternCard({
 
   const hasFrame = frameStartDi >= 0 && frameEndDi >= 0
 
+  const relatedGroupsData = useMemo(() => {
+    return relatedGroups.map(rg => {
+      const rgOccMap = new Map<string, Map<string, { count: number; occStatus: 'abnormal' | 'normal' }>>()
+      for (const occ of rg.occurrences) {
+        if (occ.patternId !== rg.pattern.id) continue
+        if (!datesSet.has(occ.date)) continue
+        let inner = rgOccMap.get(occ.faultCode)
+        if (!inner) { inner = new Map(); rgOccMap.set(occ.faultCode, inner) }
+        inner.set(occ.date, { count: occ.count, occStatus: occ.status })
+      }
+      const groupOccs = rg.occurrences.filter(o => o.patternId === rg.pattern.id && o.correlationGroupId != null)
+      let rgFrameStartDi = -1, rgFrameEndDi = -1
+      if (groupOccs.length) {
+        const frameDates = groupOccs.map(o => o.date)
+        const minDate = frameDates.reduce((a, b) => a < b ? a : b)
+        const maxDate = frameDates.reduce((a, b) => a > b ? a : b)
+        rgFrameStartDi = dates.findIndex(d => d >= minDate)
+        for (let i = dates.length - 1; i >= 0; i--) {
+          if (dates[i] <= maxDate) { rgFrameEndDi = i; break }
+        }
+      }
+      const rgHasFrame = rgFrameStartDi >= 0 && rgFrameEndDi >= 0
+      const rgStartFraction = rgHasFrame ? rgFrameStartDi / dates.length : 0
+      const rgWidthFraction = rgHasFrame ? (rgFrameEndDi - rgFrameStartDi + 1) / dates.length : 0
+      const rgFrameLeft = `calc(${BADGE_WIDTH}px + ${rgStartFraction} * (100% - ${BADGE_WIDTH}px))`
+      const rgFrameWidth = `calc(${rgWidthFraction} * (100% - ${BADGE_WIDTH}px))`
+      const overlapsMain = rgHasFrame && hasFrame && rgFrameStartDi <= frameEndDi && rgFrameEndDi >= frameStartDi
+      return { rg, rgOccMap, rgFrameStartDi, rgFrameEndDi, rgHasFrame, rgStartFraction, rgWidthFraction, rgFrameLeft, rgFrameWidth, overlapsMain }
+    }).filter(d => d.rgHasFrame && !d.overlapsMain)
+  }, [relatedGroups, datesSet, dates, hasFrame, frameStartDi, frameEndDi])
+
   if (visibleFaultCodes.length === 0) return null
 
   const FRAME_STYLE = {
@@ -146,6 +184,15 @@ export function PatternCard({
       borderRadius: '7px',
     },
   }[status]
+
+  const UNC_FRAME_STYLE = {
+    bg: '#232323', bar: '#474747', dot: '#999999',
+    overlayBg: 'rgba(153,153,153,0.15)',
+    borderTop: '1px dashed #CCC', borderBottom: '1px dashed #CCC',
+    borderLeft: '1px dashed #CCC', borderRight: '1px dashed #CCC',
+    borderRadius: '6px',
+  }
+
   const startFraction = hasFrame ? frameStartDi / dates.length : 0
   const widthFraction = hasFrame ? (frameEndDi - frameStartDi + 1) / dates.length : 0
   const frameLeft = `calc(${BADGE_WIDTH}px + ${startFraction} * (100% - ${BADGE_WIDTH}px))`
@@ -296,6 +343,12 @@ export function PatternCard({
           </div>
         )}
 
+        {/* Related unclassified group frame overlays — same FC rows, different time window */}
+        {relatedGroupsData.flatMap(({ rg, rgFrameLeft, rgFrameWidth }) => [
+          <div key={`${rg.pattern.id}-bg`} style={{ position: 'absolute', top: 0, bottom: 0, left: rgFrameLeft, width: rgFrameWidth, background: UNC_FRAME_STYLE.bg, zIndex: -1 }} />,
+          <div key={`${rg.pattern.id}-border`} style={{ position: 'absolute', top: 0, bottom: 0, left: rgFrameLeft, width: rgFrameWidth, borderRadius: UNC_FRAME_STYLE.borderRadius, borderTop: UNC_FRAME_STYLE.borderTop, borderBottom: UNC_FRAME_STYLE.borderBottom, borderLeft: UNC_FRAME_STYLE.borderLeft, borderRight: UNC_FRAME_STYLE.borderRight, background: UNC_FRAME_STYLE.overlayBg, pointerEvents: 'none', zIndex: 5 }} />,
+        ])}
+
       {visibleFaultCodes.map((code, i) => {
         const fc = faultCodeMap.get(code)
         const fcMap = occMap.get(code)
@@ -373,6 +426,9 @@ export function PatternCard({
                       fill={FRAME_STYLE.bar}
                     />
                   )}
+                  {relatedGroupsData.map(({ rg, rgStartFraction, rgWidthFraction }) => (
+                    <rect key={rg.pattern.id} x={`${rgStartFraction * 100}%`} y={0} width={`${rgWidthFraction * 100}%`} height={DOTS_HEIGHT} fill={UNC_FRAME_STYLE.bar} />
+                  ))}
                   {/* Grid lines */}
                   {dates.map((_, di) => {
                     if (di % labelStep !== 0) return null
@@ -395,6 +451,22 @@ export function PatternCard({
                     }
                     const r = occ.occStatus === 'normal' ? 5 : Math.min(5 + occ.count * 0.9, 11)
                     return <circle key={date} cx={cx} cy={cy} r={r} fill={abnormalColor} fillOpacity={0.92} />
+                  })}
+                  {relatedGroupsData.flatMap(({ rg, rgOccMap, rgFrameStartDi, rgFrameEndDi, rgHasFrame }) => {
+                    const rgFcMap = rgOccMap.get(code)
+                    if (!rgFcMap) return []
+                    return dates.map((date, di) => {
+                      const occ = rgFcMap.get(date)
+                      if (!occ) return null
+                      const cx = `${((di + 0.5) / dates.length) * 100}%`
+                      const cy = DOTS_HEIGHT / 2
+                      if (rgHasFrame && di >= rgFrameStartDi && di <= rgFrameEndDi) {
+                        const r = Math.min(5 + occ.count * 0.9, 11)
+                        return <circle key={`${rg.pattern.id}-${date}`} cx={cx} cy={cy} r={r} fill={UNC_FRAME_STYLE.dot} fillOpacity={0.92} />
+                      }
+                      const r = occ.occStatus === 'normal' ? 5 : Math.min(5 + occ.count * 0.9, 11)
+                      return <circle key={`${rg.pattern.id}-${date}`} cx={cx} cy={cy} r={r} fill={ABNORMAL_COLORS['unclassified']} fillOpacity={0.92} />
+                    })
                   })}
                 </svg>
               </div>

@@ -153,11 +153,13 @@ export default function App() {
                   <PatternSection title="New Anomalous Patterns" status="new" patterns={assetPatterns.new}
                     faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                     patternValidations={patternValidations}
-                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern}
+                    unclassifiedPatterns={assetPatterns.unclassified} />
                   <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
                     faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                     patternValidations={patternValidations}
-                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern} />
+                    fcColWidth={FC_COL_WIDTH} onValidate={validatePattern}
+                    unclassifiedPatterns={assetPatterns.unclassified} />
                   <PatternSection title="Unclassified Patterns" status="unclassified" patterns={assetPatterns.unclassified}
                     faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                     patternValidations={patternValidations}
@@ -227,11 +229,13 @@ function DashboardView({
               <PatternSection title="New Anomalous Patterns" status="new" patterns={assetPatterns.new}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
-                fcColWidth={FC_COL_WIDTH} onValidate={onValidate} />
+                fcColWidth={FC_COL_WIDTH} onValidate={onValidate}
+                unclassifiedPatterns={assetPatterns.unclassified} />
               <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
-                fcColWidth={FC_COL_WIDTH} onValidate={onValidate} />
+                fcColWidth={FC_COL_WIDTH} onValidate={onValidate}
+                unclassifiedPatterns={assetPatterns.unclassified} />
               <PatternSection title="Unclassified Patterns" status="unclassified" patterns={assetPatterns.unclassified}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
