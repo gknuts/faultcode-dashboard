@@ -177,6 +177,7 @@ export default function App() {
                   patternValidations={patternValidations}
                   hoveredDi={inspectHoveredDi}
                   onHoverDi={setInspectHoveredDi}
+                  filterFaultCodes={inspectFaultCodes}
                 />
               ))
             )}

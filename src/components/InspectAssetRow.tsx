@@ -18,15 +18,18 @@ interface Props {
   patternValidations: Record<string, 'abnormal' | 'normal'>
   hoveredDi?: number | null
   onHoverDi?: (di: number | null) => void
+  filterFaultCodes?: string[]
 }
 
-export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus: _deriveStatus, patternValidations = {}, hoveredDi = null, onHoverDi }: Props) {
+export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus: _deriveStatus, patternValidations = {}, hoveredDi = null, onHoverDi, filterFaultCodes }: Props) {
   const [collapsed, setCollapsed] = useState(false)
   const datesSet = useMemo(() => new Set(dates), [dates])
 
   const fcRows = useMemo(() => {
     const fcSet = new Set<string>()
-    for (const p of patterns) for (const fc of p.faultCodes) fcSet.add(fc)
+    for (const p of patterns) for (const fc of p.faultCodes) {
+      if (!filterFaultCodes || filterFaultCodes.length === 0 || filterFaultCodes.includes(fc)) fcSet.add(fc)
+    }
 
     return [...fcSet].map(fc => {
       const fcPatterns = patterns.filter(p => p.faultCodes.includes(fc))
@@ -35,7 +38,7 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
       const description = faultCodeMap.get(fc)?.description ?? ''
       return { fc, occs, description }
     }).filter(row => row.occs.length > 0)
-  }, [patterns, occurrences, datesSet, faultCodeMap])
+  }, [patterns, occurrences, datesSet, faultCodeMap, filterFaultCodes])
 
   if (fcRows.length === 0) return null
 
