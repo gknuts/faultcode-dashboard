@@ -297,34 +297,59 @@ export function PatternCard({
             pointerEvents: validation ? 'none' : 'auto',
             zIndex: 5,
           }} onClick={validation ? undefined : () => { setFrameSelected(s => { if (!s) { setMenuOpen(false); setSelectedRelatedId(null) } return !s }) }}>
-            {/* Date range label above the frame */}
+            {/* Labels above the frame: date row + validation label */}
             <div style={{
               position: 'absolute',
               bottom: '100%',
               left: 'min(0px, calc(100% - 160px))',
+              width: '100%',
               marginBottom: 4,
-              whiteSpace: 'nowrap',
               display: 'flex',
-              alignItems: 'center',
-              gap: 4,
+              flexDirection: 'column',
+              gap: 2,
               pointerEvents: 'none',
             }}>
-              <span style={{ fontSize: 10, fontFamily: 'Roboto, sans-serif', fontWeight: 400, color: '#CCCCCC' }}>
-                {formatDate(dates[frameStartDi])} – {formatDate(dates[frameEndDi])}
-              </span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, aspectRatio: '1/1' }}>
-                <g clipPath="url(#clip0_4292_1863)">
-                  <path d="M7.5 2V1M7.5 2V3M7.5 2H5.25M1.5 5V9.5C1.5 10.0523 1.94771 10.5 2.5 10.5H9.5C10.0523 10.5 10.5 10.0523 10.5 9.5V5H1.5Z" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
-                  <path d="M1.5 5V3C1.5 2.44771 1.94771 2 2.5 2H3.5" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
-                  <path d="M3.5 1V3" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
-                  <path d="M10.5 5V3C10.5 2.44771 10.0523 2 9.5 2H9.25" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
-                </g>
-                <defs>
-                  <clipPath id="clip0_4292_1863">
-                    <rect width="12" height="12" fill="white"/>
-                  </clipPath>
-                </defs>
-              </svg>
+              <div style={{ minHeight: 1, flexShrink: 0 }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4, whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 10, fontFamily: 'Roboto, sans-serif', fontWeight: 400, color: '#CCCCCC' }}>
+                  {formatDate(dates[frameStartDi])} – {formatDate(dates[frameEndDi])}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, aspectRatio: '1/1' }}>
+                  <g clipPath="url(#clip0_4292_1863)">
+                    <path d="M7.5 2V1M7.5 2V3M7.5 2H5.25M1.5 5V9.5C1.5 10.0523 1.94771 10.5 2.5 10.5H9.5C10.0523 10.5 10.5 10.0523 10.5 9.5V5H1.5Z" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                    <path d="M1.5 5V3C1.5 2.44771 1.94771 2 2.5 2H3.5" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                    <path d="M3.5 1V3" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                    <path d="M10.5 5V3C10.5 2.44771 10.0523 2 9.5 2H9.25" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_4292_1863">
+                      <rect width="12" height="12" fill="white"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%', background: '#383642', visibility: validation ? 'visible' : 'hidden' }}>
+                {validation === 'abnormal' && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, aspectRatio: '1/1' }}>
+                    <path d="M3.37891 8.62128L6.00022 5.99998M6.00022 5.99998L8.62152 3.37866M6.00022 5.99998L3.37891 3.37866M6.00022 5.99998L8.62152 8.62128" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="#FF2060"/>
+                  </svg>
+                )}
+                {validation === 'normal' && (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0, aspectRatio: '1/1' }}>
+                    <path d="M2.5 6.5L4.5 8.5L9.5 3.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" stroke="#2DB173"/>
+                  </svg>
+                )}
+                <span style={{
+                  color: '#999',
+                  fontFamily: 'Roboto, sans-serif',
+                  fontSize: 11,
+                  fontStyle: 'normal',
+                  fontWeight: 400,
+                  lineHeight: '15px',
+                }}>
+                  {validation === 'abnormal' ? 'Abnormal' : 'Normal'}
+                </span>
+              </div>
             </div>
             {/* Abnormal/Normal buttons below the frame */}
             {frameSelected && (
