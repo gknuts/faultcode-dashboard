@@ -19,9 +19,10 @@ interface Props {
   hoveredDi?: number | null
   onHoverDi?: (di: number | null) => void
   filterFaultCodes?: string[]
+  'data-asset-id'?: string
 }
 
-export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus: _deriveStatus, patternValidations = {}, hoveredDi = null, onHoverDi, filterFaultCodes }: Props) {
+export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus: _deriveStatus, patternValidations = {}, hoveredDi = null, onHoverDi, filterFaultCodes, 'data-asset-id': dataAssetId }: Props) {
   const [collapsed, setCollapsed] = useState(false)
   const datesSet = useMemo(() => new Set(dates), [dates])
 
@@ -60,7 +61,7 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
     : null
 
   return (
-    <div style={{
+    <div data-asset-id={dataAssetId} style={{
       marginBottom: 8,
       border: '1px solid #1E1E28',
       borderRadius: 6,

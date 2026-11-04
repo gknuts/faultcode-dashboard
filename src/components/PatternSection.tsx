@@ -15,7 +15,7 @@ interface Props {
   fcColWidth: number
   onValidate: (id: string, status: 'abnormal' | 'normal') => void
   unclassifiedPatterns?: Pattern[]
-  onInspectPattern?: (faultCodes: string[]) => void
+  onInspectPattern?: (faultCodes: string[], assetId: string) => void
 }
 
 function sameFaultCodes(a: string[], b: string[]): boolean {

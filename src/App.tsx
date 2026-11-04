@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useStore, derivePatternStatus } from './store/index'
 import FilterBar from './components/FilterBar'
 import { AssetSidebar } from './components/AssetSidebar'
@@ -24,6 +24,8 @@ export default function App() {
   const [inspectAssetIds, setInspectAssetIds] = useState<string[]>([])
   const [inspectFaultCodes, setInspectFaultCodes] = useState<string[]>([])
   const [inspectHoveredDi, setInspectHoveredDi] = useState<number | null>(null)
+  const [scrollToAssetId, setScrollToAssetId] = useState<string | null>(null)
+  const inspectScrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => { loadData() }, [loadData])
 
@@ -33,6 +35,13 @@ export default function App() {
   const [inspectStart] = useMemo(() => getMonthRange(inspectEnd), [inspectEnd])
   const inspectDates = useMemo(() => getDatesInRange(inspectStart, inspectEnd), [inspectStart, inspectEnd])
   const inspectLabelStep = inspectDates.length <= 7 ? 1 : inspectDates.length <= 14 ? 2 : 5
+
+  useEffect(() => {
+    if (panelMode !== 'inspect' || !scrollToAssetId) return
+    const el = inspectScrollRef.current?.querySelector(`[data-asset-id="${scrollToAssetId}"]`)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setScrollToAssetId(null)
+  }, [panelMode, scrollToAssetId])
 
   const handleNavigateInspect = (dir: -1 | 1) => {
     setInspectEnd(prev => navigateEnd('1M', prev, dir))
@@ -123,8 +132,9 @@ export default function App() {
           patternValidations={patternValidations}
           onValidate={validatePattern}
           hasNoPatterns={hasNoPatterns}
-          onInspectPattern={(faultCodes) => {
+          onInspectPattern={(faultCodes, assetId) => {
             setInspectFaultCodes(faultCodes)
+            setScrollToAssetId(assetId)
             setPanelMode('inspect')
           }}
         />
@@ -163,7 +173,7 @@ export default function App() {
           </div>
 
           {/* Asset rows */}
-          <div style={{ flex: 1, overflowY: 'auto', padding: '12px 0' }}>
+          <div ref={inspectScrollRef} style={{ flex: 1, overflowY: 'auto', padding: '12px 0' }}>
             {inspectPatternsByAsset.length === 0 ? (
               <div style={{ color: '#3F3F52', fontSize: 14, marginTop: 40, textAlign: 'center' }}>
                 No patterns match the current filters.
@@ -172,6 +182,7 @@ export default function App() {
               inspectPatternsByAsset.map(({ asset, patterns }) => (
                 <InspectAssetRow
                   key={asset.id}
+                  data-asset-id={asset.id}
                   asset={asset}
                   patterns={patterns}
                   faultCodeMap={faultCodeMap}

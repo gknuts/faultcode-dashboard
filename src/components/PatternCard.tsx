@@ -25,7 +25,7 @@ interface Props {
   relatedGroups?: RelatedGroup[]
   onValidateRelated?: (patternId: string, status: 'abnormal' | 'normal') => void
   relatedValidations?: Record<string, 'abnormal' | 'normal'>
-  onInspectPattern?: (faultCodes: string[]) => void
+  onInspectPattern?: (faultCodes: string[], assetId: string) => void
 }
 
 const STATUS_ACCENT: Record<DerivedStatus, string> = {
@@ -600,7 +600,7 @@ export function PatternCard({
           <div style={{ display: 'flex', gap: 4 }}>
             {(['Ignore this pattern', 'Create an alert', 'Add to pattern', 'Inspect pattern'] as const).map(label => (
               <button key={label} onClick={() => {
-                if (label === 'Inspect pattern') onInspectPattern?.(pattern.faultCodes)
+                if (label === 'Inspect pattern') onInspectPattern?.(pattern.faultCodes, pattern.assetId)
               }} style={{
                 background: 'transparent',
                 border: '1px solid #3D3D3D',
