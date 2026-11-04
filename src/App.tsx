@@ -174,6 +174,7 @@ export default function App() {
                   occurrences={data.occurrences}
                   dates={inspectDates}
                   deriveStatus={derive}
+                  patternValidations={patternValidations}
                   hoveredDi={inspectHoveredDi}
                   onHoverDi={setInspectHoveredDi}
                 />

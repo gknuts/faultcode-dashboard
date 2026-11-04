@@ -5,11 +5,8 @@ export const INSPECT_LEFT_WIDTH = 300
 
 const ROW_HEIGHT = 44
 
-const STATUS_DOT: Record<DerivedStatus, string> = {
-  new: '#FF6A00',
-  ongoing: '#8B6AFF',
-  unclassified: '#52526A',
-}
+const DOT_NORMAL = '#30C27E'
+const DOT_ABNORMAL = '#FF1F60'
 
 interface Props {
   asset: Asset
@@ -18,11 +15,12 @@ interface Props {
   occurrences: PatternOccurrence[]
   dates: ISODate[]
   deriveStatus: (p: Pattern) => DerivedStatus
+  patternValidations: Record<string, 'abnormal' | 'normal'>
   hoveredDi?: number | null
   onHoverDi?: (di: number | null) => void
 }
 
-export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus, hoveredDi = null, onHoverDi }: Props) {
+export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus, patternValidations = {}, hoveredDi = null, onHoverDi }: Props) {
   const [collapsed, setCollapsed] = useState(false)
   const datesSet = useMemo(() => new Set(dates), [dates])
 
@@ -32,16 +30,12 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
 
     return [...fcSet].map(fc => {
       const fcPatterns = patterns.filter(p => p.faultCodes.includes(fc))
-      const statuses = fcPatterns.map(p => deriveStatus(p))
-      const status: DerivedStatus = statuses.includes('new') ? 'new'
-        : statuses.includes('ongoing') ? 'ongoing'
-        : 'unclassified'
       const patternIds = new Set(fcPatterns.map(p => p.id))
       const occs = occurrences.filter(o => o.faultCode === fc && patternIds.has(o.patternId) && datesSet.has(o.date))
       const description = faultCodeMap.get(fc)?.description ?? ''
-      return { fc, status, occs, description }
+      return { fc, occs, description }
     }).filter(row => row.occs.length > 0)
-  }, [patterns, occurrences, datesSet, deriveStatus, faultCodeMap])
+  }, [patterns, occurrences, datesSet, faultCodeMap])
 
   if (fcRows.length === 0) return null
 
@@ -85,7 +79,7 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
       {/* FC rows wrapper — tracks mouse for vertical hover line */}
       {!collapsed && (
         <div
-          style={{ position: 'relative' }}
+          style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 1 }}
           onMouseMove={e => {
             const rect = e.currentTarget.getBoundingClientRect()
             const timelineX = e.clientX - rect.left - INSPECT_LEFT_WIDTH
@@ -110,9 +104,7 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
             }} />
           )}
 
-          {fcRows.map(({ fc, status, occs, description }) => {
-            const dotColor = STATUS_DOT[status]
-
+          {fcRows.map(({ fc, occs, description }) => {
             return (
               <div
                 key={fc}
@@ -121,7 +113,6 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
                   height: ROW_HEIGHT,
                   alignItems: 'center',
                   background: '#030303',
-                  borderBottom: '1px solid #14141C',
                 }}
               >
                 {/* Left col: badge + description */}
@@ -168,16 +159,25 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
                     {occs.map(occ => {
                       const di = dates.indexOf(occ.date)
                       if (di < 0) return null
+                      const validation = patternValidations[occ.patternId]
+                      const isNormal = validation ? validation === 'normal' : occ.status === 'normal'
+                      const fill = isNormal ? DOT_NORMAL : DOT_ABNORMAL
                       const cx = `${((di + 0.5) / dates.length) * 100}%`
                       const cy = ROW_HEIGHT / 2
                       const r = Math.min(5 + occ.count * 0.9, 11)
                       return (
-                        <circle
-                          key={`${occ.date}-${occ.faultCode}`}
-                          cx={cx} cy={cy} r={r}
-                          fill={dotColor}
-                          fillOpacity={0.9}
-                        />
+                        <g key={`${occ.date}-${occ.faultCode}`}>
+                          {validation && (
+                            <rect
+                              x={`${(di / dates.length) * 100}%`}
+                              y={0}
+                              width={`${(1 / dates.length) * 100}%`}
+                              height={ROW_HEIGHT}
+                              fill="#383642"
+                            />
+                          )}
+                          <circle cx={cx} cy={cy} r={r} fill={fill} fillOpacity={0.9} />
+                        </g>
                       )
                     })}
                   </svg>

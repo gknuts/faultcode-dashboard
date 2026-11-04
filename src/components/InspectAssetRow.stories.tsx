@@ -76,6 +76,7 @@ const meta = {
     occurrences: OCCURRENCES,
     dates: DATES,
     deriveStatus,
+    patternValidations: {},
   },
 } satisfies Meta<typeof InspectAssetRow>
 
