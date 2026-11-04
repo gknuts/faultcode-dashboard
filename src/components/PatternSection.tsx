@@ -15,9 +15,9 @@ interface Props {
 }
 
 const HEADER_COLORS: Record<DerivedStatus, string> = {
-  new: '#F0436A',
-  ongoing: '#F97316',
-  unclassified: '#52525B',
+  new: '#FF6A00',
+  ongoing: '#8B6AFF',
+  unclassified: '#999999',
 }
 
 export function PatternSection({
