@@ -473,7 +473,7 @@ export function PatternCard({
                       y={0}
                       width={`${widthFraction * 100}%`}
                       height={DOTS_HEIGHT}
-                      fill={FRAME_STYLE.bar}
+                      fill={validation ? '#383642' : FRAME_STYLE.bar}
                     />
                   )}
                   {relatedGroupsData.map(({ rg, rgStartFraction, rgWidthFraction }) => (
