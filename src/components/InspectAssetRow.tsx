@@ -36,9 +36,21 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
       const patternIds = new Set(fcPatterns.map(p => p.id))
       const occs = occurrences.filter(o => o.faultCode === fc && patternIds.has(o.patternId) && datesSet.has(o.date))
       const description = faultCodeMap.get(fc)?.description ?? ''
-      return { fc, occs, description }
+
+      const spanMap = new Map<string | number, { minDi: number; maxDi: number }>()
+      for (const occ of occs) {
+        const di = dates.indexOf(occ.date)
+        if (di < 0) continue
+        const key = occ.correlationGroupId ?? occ.patternId
+        const s = spanMap.get(key)
+        if (!s) spanMap.set(key, { minDi: di, maxDi: di })
+        else { s.minDi = Math.min(s.minDi, di); s.maxDi = Math.max(s.maxDi, di) }
+      }
+      const spans = [...spanMap.values()]
+
+      return { fc, occs, description, spans }
     }).filter(row => row.occs.length > 0)
-  }, [patterns, occurrences, datesSet, faultCodeMap, filterFaultCodes])
+  }, [patterns, occurrences, datesSet, faultCodeMap, filterFaultCodes, dates])
 
   if (fcRows.length === 0) return null
 
@@ -107,7 +119,7 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
             }} />
           )}
 
-          {fcRows.map(({ fc, occs, description }) => {
+          {fcRows.map(({ fc, occs, description, spans }) => {
             return (
               <div
                 key={fc}
@@ -159,6 +171,16 @@ export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, da
                 {/* Timeline */}
                 <div style={{ flex: 1, height: '100%', position: 'relative' }}>
                   <svg width="100%" height="100%" style={{ display: 'block', overflow: 'visible' }}>
+                    {spans.map(({ minDi, maxDi }, i) => (
+                      <rect
+                        key={i}
+                        x={`${(minDi / dates.length) * 100}%`}
+                        y={0}
+                        width={`${((maxDi - minDi + 1) / dates.length) * 100}%`}
+                        height={ROW_HEIGHT}
+                        fill="#383642"
+                      />
+                    ))}
                     {occs.map(occ => {
                       const di = dates.indexOf(occ.date)
                       if (di < 0) return null
