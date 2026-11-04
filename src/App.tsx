@@ -123,6 +123,10 @@ export default function App() {
           patternValidations={patternValidations}
           onValidate={validatePattern}
           hasNoPatterns={hasNoPatterns}
+          onInspectPattern={(faultCodes) => {
+            setInspectFaultCodes(faultCodes)
+            setPanelMode('inspect')
+          }}
         />
       ) : (
         <>
@@ -200,11 +204,12 @@ interface DashboardViewProps {
   patternValidations: Record<string, 'abnormal' | 'normal'>
   onValidate: (id: string, status: 'abnormal' | 'normal') => void
   hasNoPatterns: boolean
+  onInspectPattern: (faultCodes: string[]) => void
 }
 
 function DashboardView({
   dates, labelStep, data, selectedAssetId, onSelectAsset, deriveStatus,
-  assetPatterns, faultCodeMap, patternValidations, onValidate, hasNoPatterns,
+  assetPatterns, faultCodeMap, patternValidations, onValidate, hasNoPatterns, onInspectPattern,
 }: DashboardViewProps) {
   return (
     <>
@@ -229,16 +234,19 @@ function DashboardView({
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
                 fcColWidth={FC_COL_WIDTH} onValidate={onValidate}
-                unclassifiedPatterns={assetPatterns.unclassified} />
+                unclassifiedPatterns={assetPatterns.unclassified}
+                onInspectPattern={onInspectPattern} />
               <PatternSection title="Ongoing Anomalous Patterns" status="ongoing" patterns={assetPatterns.ongoing}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
                 fcColWidth={FC_COL_WIDTH} onValidate={onValidate}
-                unclassifiedPatterns={assetPatterns.unclassified} />
+                unclassifiedPatterns={assetPatterns.unclassified}
+                onInspectPattern={onInspectPattern} />
               <PatternSection title="Unclassified Patterns" status="unclassified" patterns={assetPatterns.unclassified}
                 faultCodeMap={faultCodeMap} occurrences={data.occurrences} dates={dates} labelStep={labelStep}
                 patternValidations={patternValidations}
-                fcColWidth={FC_COL_WIDTH} onValidate={onValidate} />
+                fcColWidth={FC_COL_WIDTH} onValidate={onValidate}
+                onInspectPattern={onInspectPattern} />
             </>
           )}
         </div>

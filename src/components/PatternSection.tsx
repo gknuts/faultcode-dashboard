@@ -15,6 +15,7 @@ interface Props {
   fcColWidth: number
   onValidate: (id: string, status: 'abnormal' | 'normal') => void
   unclassifiedPatterns?: Pattern[]
+  onInspectPattern?: (faultCodes: string[]) => void
 }
 
 function sameFaultCodes(a: string[], b: string[]): boolean {
@@ -41,6 +42,7 @@ export function PatternSection({
   fcColWidth,
   onValidate,
   unclassifiedPatterns = [],
+  onInspectPattern,
 }: Props) {
   if (patterns.length === 0) return null
 
@@ -104,6 +106,7 @@ export function PatternSection({
           relatedGroups={relatedGroupsByPatternId.get(pattern.id)}
           onValidateRelated={onValidate}
           relatedValidations={patternValidations}
+          onInspectPattern={onInspectPattern}
         />
       ))}
     </div>
