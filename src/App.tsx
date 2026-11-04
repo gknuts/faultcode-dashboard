@@ -247,7 +247,7 @@ function DashboardView({
   )
 }
 
-function DateAxisSvg({ dates, labelStep, showTodayMarker, hoveredDi }: { dates: string[]; labelStep: number; showTodayMarker?: boolean; hoveredDi?: number | null }) {
+function DateAxisSvg({ dates, labelStep, showTodayMarker }: { dates: string[]; labelStep: number; showTodayMarker?: boolean; hoveredDi?: number | null }) {
   const todayPct = ((dates.length - 0.5) / dates.length) * 100
   return (
     <div style={{ flex: 1, height: '100%', position: 'relative' }}>

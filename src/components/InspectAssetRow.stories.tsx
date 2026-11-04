@@ -118,6 +118,10 @@ export const AssetUnclassified: Story = {
 export const AllAssets: Story = {
   name: 'All assets stacked',
   parameters: { layout: 'fullscreen' },
+  args: {
+    asset: ASSETS[0],
+    patterns: PATTERNS,
+  },
   render: (args) => {
     const labelStep = DATES.length <= 7 ? 1 : DATES.length <= 14 ? 2 : 5
     return (
@@ -164,5 +168,4 @@ export const AllAssets: Story = {
       </div>
     )
   },
-  args: {},
 }

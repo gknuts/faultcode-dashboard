@@ -20,7 +20,7 @@ interface Props {
   onHoverDi?: (di: number | null) => void
 }
 
-export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus, patternValidations = {}, hoveredDi = null, onHoverDi }: Props) {
+export function InspectAssetRow({ asset, patterns, faultCodeMap, occurrences, dates, deriveStatus: _deriveStatus, patternValidations = {}, hoveredDi = null, onHoverDi }: Props) {
   const [collapsed, setCollapsed] = useState(false)
   const datesSet = useMemo(() => new Set(dates), [dates])
 

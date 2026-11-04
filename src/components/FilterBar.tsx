@@ -21,9 +21,7 @@ interface Props {
   onSetInspectFaultCodes?: (codes: string[]) => void
 }
 
-const VIEWS: ViewMode[] = ['3D', '1W', '1M']
-
-export default function FilterBar({ view, onSetView, onSimulateSession, panelMode, onSetPanelMode, newCount, ongoingCount, inspectStart, inspectEnd, onNavigateInspect, assets = [], faultCodes = [], inspectAssetIds = [], inspectFaultCodes = [], onSetInspectAssetIds, onSetInspectFaultCodes }: Props) {
+export default function FilterBar({ view: _view, onSetView: _onSetView, onSimulateSession: _onSimulateSession, panelMode, onSetPanelMode, newCount, ongoingCount, inspectStart, inspectEnd, onNavigateInspect, assets = [], faultCodes = [], inspectAssetIds = [], inspectFaultCodes = [], onSetInspectAssetIds, onSetInspectFaultCodes }: Props) {
   return (
     <div style={{ flexShrink: 0, background: '#12121A', borderBottom: '1px solid #1E1E2C' }}>
       {/* Top nav row */}
