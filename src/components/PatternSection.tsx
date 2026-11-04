@@ -102,6 +102,8 @@ export function PatternSection({
           fcColWidth={fcColWidth}
           onValidate={(s) => onValidate(pattern.id, s)}
           relatedGroups={relatedGroupsByPatternId.get(pattern.id)}
+          onValidateRelated={onValidate}
+          relatedValidations={patternValidations}
         />
       ))}
     </div>

@@ -23,6 +23,8 @@ interface Props {
   fcColWidth: number
   onValidate: (status: 'abnormal' | 'normal') => void
   relatedGroups?: RelatedGroup[]
+  onValidateRelated?: (patternId: string, status: 'abnormal' | 'normal') => void
+  relatedValidations?: Record<string, 'abnormal' | 'normal'>
 }
 
 const STATUS_ACCENT: Record<DerivedStatus, string> = {
@@ -55,7 +57,7 @@ function formatDate(d: string) {
 
 export function PatternCard({
   pattern, status, faultCodeMap, occurrences, dates, labelStep,
-  validation, onValidate, relatedGroups = [],
+  validation, onValidate, relatedGroups = [], onValidateRelated, relatedValidations = {},
 }: Props) {
   const accent = STATUS_ACCENT[status]
   const cardBg = STATUS_CARD_BG[status]
@@ -65,6 +67,7 @@ export function PatternCard({
   const [hoveredDi, setHoveredDi] = useState<number | null>(null)
   const [frameSelected, setFrameSelected] = useState(false)
   const [menuOpen, setMenuOpen] = useState(true)
+  const [selectedRelatedId, setSelectedRelatedId] = useState<string | null>(null)
 
   const handleSvgMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -292,7 +295,7 @@ export function PatternCard({
             background: FRAME_STYLE.overlayBg,
             cursor: 'pointer',
             zIndex: 5,
-          }} onClick={() => { setFrameSelected(s => { if (!s) setMenuOpen(false); return !s }) }}>
+          }} onClick={() => { setFrameSelected(s => { if (!s) { setMenuOpen(false); setSelectedRelatedId(null) } return !s }) }}>
             {/* Date range label above the frame */}
             <div style={{
               position: 'absolute',
@@ -344,10 +347,57 @@ export function PatternCard({
         )}
 
         {/* Related unclassified group frame overlays — same FC rows, different time window */}
-        {relatedGroupsData.flatMap(({ rg, rgFrameLeft, rgFrameWidth }) => [
-          <div key={`${rg.pattern.id}-bg`} style={{ position: 'absolute', top: 0, bottom: 0, left: rgFrameLeft, width: rgFrameWidth, background: UNC_FRAME_STYLE.bg, zIndex: -1 }} />,
-          <div key={`${rg.pattern.id}-border`} style={{ position: 'absolute', top: 0, bottom: 0, left: rgFrameLeft, width: rgFrameWidth, borderRadius: UNC_FRAME_STYLE.borderRadius, borderTop: UNC_FRAME_STYLE.borderTop, borderBottom: UNC_FRAME_STYLE.borderBottom, borderLeft: UNC_FRAME_STYLE.borderLeft, borderRight: UNC_FRAME_STYLE.borderRight, background: UNC_FRAME_STYLE.overlayBg, pointerEvents: 'none', zIndex: 5 }} />,
-        ])}
+        {relatedGroupsData.flatMap(({ rg, rgFrameLeft, rgFrameWidth, rgFrameStartDi, rgFrameEndDi }) => {
+          const sel = selectedRelatedId === rg.pattern.id
+          const b = (s: string) => sel ? s.replace('dashed', 'solid').replace('1px', '2px') : s
+          return [
+            <div key={`${rg.pattern.id}-bg`} style={{ position: 'absolute', top: 0, bottom: 0, left: rgFrameLeft, width: rgFrameWidth, background: UNC_FRAME_STYLE.bg, zIndex: -1 }} />,
+            <div
+              key={`${rg.pattern.id}-border`}
+              style={{
+                position: 'absolute', top: 0, bottom: 0,
+                left: rgFrameLeft, width: rgFrameWidth,
+                borderRadius: UNC_FRAME_STYLE.borderRadius,
+                borderTop: b(UNC_FRAME_STYLE.borderTop),
+                borderBottom: b(UNC_FRAME_STYLE.borderBottom),
+                borderLeft: b(UNC_FRAME_STYLE.borderLeft),
+                borderRight: b(UNC_FRAME_STYLE.borderRight),
+                background: UNC_FRAME_STYLE.overlayBg,
+                cursor: 'pointer', zIndex: 5,
+              }}
+              onClick={() => setSelectedRelatedId(id => {
+                const next = id === rg.pattern.id ? null : rg.pattern.id
+                if (next) { setFrameSelected(false); setMenuOpen(false) }
+                return next
+              })}
+            >
+              <div style={{ position: 'absolute', bottom: '100%', left: 0, marginBottom: 4, whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 4, pointerEvents: 'none' }}>
+                <span style={{ fontSize: 10, fontFamily: 'Roboto, sans-serif', fontWeight: 400, color: '#CCCCCC' }}>
+                  {formatDate(dates[rgFrameStartDi])} – {formatDate(dates[rgFrameEndDi])}
+                </span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ flexShrink: 0 }}>
+                  <g clipPath="url(#rg-cal)">
+                    <path d="M7.5 2V1M7.5 2V3M7.5 2H5.25M1.5 5V9.5C1.5 10.0523 1.94771 10.5 2.5 10.5H9.5C10.0523 10.5 10.5 10.0523 10.5 9.5V5H1.5Z" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                    <path d="M1.5 5V3C1.5 2.44771 1.94771 2 2.5 2H3.5" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                    <path d="M3.5 1V3" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                    <path d="M10.5 5V3C10.5 2.44771 10.0523 2 9.5 2H9.25" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" stroke="#999999"/>
+                  </g>
+                  <defs><clipPath id="rg-cal"><rect width="12" height="12" fill="white"/></clipPath></defs>
+                </svg>
+              </div>
+              {sel && (
+                <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: 6, display: 'flex', pointerEvents: 'all' }}
+                  onClick={e => e.stopPropagation()}>
+                  <div style={{ display: 'flex', border: '1px solid #2A2A3A', borderRadius: 20, overflow: 'hidden' }}>
+                    <SegmentButton label="Abnormal" active={relatedValidations[rg.pattern.id] === 'abnormal'} activeColor="#E8394A" onClick={() => onValidateRelated?.(rg.pattern.id, 'abnormal')} />
+                    <div style={{ width: 1, background: '#2A2A3A', flexShrink: 0 }} />
+                    <SegmentButton label="Normal" active={relatedValidations[rg.pattern.id] === 'normal'} activeColor="#22C55E" onClick={() => onValidateRelated?.(rg.pattern.id, 'normal')} />
+                  </div>
+                </div>
+              )}
+            </div>,
+          ]
+        })}
 
       {visibleFaultCodes.map((code, i) => {
         const fc = faultCodeMap.get(code)
